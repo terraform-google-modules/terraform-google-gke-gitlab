@@ -18,7 +18,6 @@ output "project_id" {
   value = "${var.project_id}"
 }
 
-output "bucket_name" {
-  description = "Bucket name"
-  value       = "${module.example.bucket_name}"
+output "gitlab_url" {
+  value = "${module.gke-gitlab.gitlab_url}"
 }

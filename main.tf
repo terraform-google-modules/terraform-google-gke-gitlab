@@ -310,7 +310,7 @@ resource "kubernetes_secret" "gitlab_rails_storage" {
   data {
     connection = <<EOT
 provider: Google
-google_project: ${var.project}
+google_project: ${var.project_id}
 google_client_email: ${google_service_account.gitlab_gcs.email}
 google_json_key_string: '${base64decode(google_service_account_key.gitlab_gcs.private_key)}'
 EOT

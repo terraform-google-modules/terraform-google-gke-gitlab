@@ -7,6 +7,6 @@ attributes:
   - name: project_id
     required: true
     type: string
-  - name: bucket_name
+  - name: certmanager_email
     required: true
     type: string

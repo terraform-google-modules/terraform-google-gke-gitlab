@@ -22,9 +22,9 @@ resource "random_string" "random_suffix" {
   special = "false"
 }
 
-module "example" {
+module "gke-gitlab" {
   source = "../../../examples/simple_example"
 
   project_id  = "${var.project_id}"
-  bucket_name = "simple-example-${random_string.random_suffix.result}"
+  certmanager_email = "test@example.com"
 }
