@@ -1,9 +1,11 @@
 # terraform-google-gke-gitlab
 
-This module was generated from [terraform-google-module-template](https://github.com/terraform-google-modules/terraform-google-module-template/), which by default generates a module that simply creates a GCS bucket. As the module develops, this README should be updated.
-
-The resources/services/activations/deletions that this module will create/trigger are:
-- Create a GCS bucket with the provided name
+This module creates a reslient and fault tolerant GitLab installation using Google
+Kubernetes Engine (GKE) as the computing environment and the following services for storing
+data:
+- CloudSQL for PostgreSQL
+- Memorystore for Redis
+- Cloud Storage
 
 ## Usage
 There are examples included in the [examples](./examples/) folder but simple usage is as follows:
@@ -34,7 +36,6 @@ Before this module can be used on a project, you must ensure that the following 
 
 1. Terraform is [installed](#software-dependencies) on the machine where Terraform is executed.
 2. The Service Account you execute the module with has the right [permissions](#configure-a-service-account).
-3. The necessary APIs are [active](#enable-apis) on the project.
 
 The [project factory](https://github.com/terraform-google-modules/terraform-google-project-factory) can be used to provision projects with the correct APIs active.
 
@@ -46,12 +47,7 @@ The [project factory](https://github.com/terraform-google-modules/terraform-goog
 ### Configure a Service Account
 In order to execute this module you must have a Service Account with the
 following project roles:
-- roles/storage.admin
-
-### Enable APIs
-In order to operate with the Service Account you must activate the following APIs on the project where the Service Account was created:
-
-- Storage JSON API - storage-api.googleapis.com
+- roles/owner
 
 ## Install
 
