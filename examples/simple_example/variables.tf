@@ -18,6 +18,6 @@ variable "project_id" {
   description = "The project ID to deploy to"
 }
 
-variable "bucket_name" {
-  description = "The name of the bucket ot create"
+variable "certmanager_email" {
+  description = "Email used to retrieve SSL certificates from Let's Encrypt"
 }

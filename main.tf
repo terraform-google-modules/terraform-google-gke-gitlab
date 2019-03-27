@@ -14,28 +14,12 @@
  * limitations under the License.
  */
 
-variable "project" {
-  description = "GCP Project to deploy resources"
-}
-
-variable "gitlab-db-password" {
-  description = "Password for the GitLab Postgres user"
-}
-
-variable "certmanager_email" {
-  description = "Email used to retrieve SSL certificates from Let's Encrypt"
-}
-
-variable "region" {
-  default = "us-central1"
-}
-
 provider "google" {
-  project = "${var.project}"
+  project = "${var.project_id}"
 }
 
 provider "google-beta" {
-  project = "${var.project}"
+  project = "${var.project_id}"
 }
 
 provider "helm" {
@@ -60,37 +44,37 @@ provider "kubernetes" {
 
 // IAM
 resource "google_project_service" "compute" {
-  project            = "${var.project}"
+  project            = "${var.project_id}"
   service            = "compute.googleapis.com"
   disable_on_destroy = false
 }
 
 resource "google_project_service" "gke" {
-  project            = "${var.project}"
+  project            = "${var.project_id}"
   service            = "container.googleapis.com"
   disable_on_destroy = false
 }
 
 resource "google_project_service" "service_networking" {
-  project            = "${var.project}"
+  project            = "${var.project_id}"
   service            = "servicenetworking.googleapis.com"
   disable_on_destroy = false
 }
 
 resource "google_project_service" "cloudresourcemanager" {
-  project            = "${var.project}"
+  project            = "${var.project_id}"
   service            = "cloudresourcemanager.googleapis.com"
   disable_on_destroy = false
 }
 
 resource "google_project_service" "redis" {
-  project            = "${var.project}"
+  project            = "${var.project_id}"
   service            = "redis.googleapis.com"
   disable_on_destroy = false
 }
 
 resource "google_service_account" "gitlab_gcs" {
-  project      = "${var.project}"
+  project      = "${var.project_id}"
   account_id   = "gitlab-gcs"
   display_name = "GitLab Cloud Storage"
 }
@@ -100,7 +84,7 @@ resource "google_service_account_key" "gitlab_gcs" {
 }
 
 resource "google_project_iam_member" "project" {
-  project = "${var.project}"
+  project = "${var.project_id}"
   role    = "roles/storage.admin"
   member  = "serviceAccount:${google_service_account.gitlab_gcs.email}"
 }
@@ -108,7 +92,7 @@ resource "google_project_iam_member" "project" {
 // Networking
 resource "google_compute_network" "gitlab" {
   name                    = "gitlab"
-  project                 = "${var.project}"
+  project                 = "${var.project_id}"
   auto_create_subnetworks = false
   depends_on              = ["google_project_service.compute"]
 }
@@ -131,7 +115,7 @@ resource "google_compute_address" "gitlab" {
 // Database
 resource "google_compute_global_address" "gitlab_sql" {
   provider      = "google-beta"
-  project       = "${var.project}"
+  project       = "${var.project_id}"
   name          = "gitlab-sql"
   purpose       = "VPC_PEERING"
   address_type  = "INTERNAL"
@@ -171,7 +155,7 @@ resource "google_sql_database" "gitlabhq_production" {
 resource "google_sql_user" "gitlab" {
   name     = "gitlab"
   instance = "${google_sql_database_instance.gitlab_db.name}"
-  password = "${var.gitlab-db-password}"
+  password = "${var.gitlab_db_password}"
 }
 
 // Redis
@@ -191,33 +175,33 @@ resource "google_redis_instance" "gitlab" {
 
 // Cloud Storage
 resource "google_storage_bucket" "gitlab-uploads" {
-  name     = "${var.project}-uploads"
+  name     = "${var.project_id}-uploads"
   location = "${var.region}"
 }
 
 resource "google_storage_bucket" "gitlab-artifacts" {
-  name     = "${var.project}-artifacts"
+  name     = "${var.project_id}-artifacts"
   location = "${var.region}"
 }
 
 resource "google_storage_bucket" "gitlab-lfs" {
-  name     = "${var.project}-lfs"
+  name     = "${var.project_id}-lfs"
   location = "${var.region}"
 }
 
 resource "google_storage_bucket" "gitlab-packages" {
-  name     = "${var.project}-packages"
+  name     = "${var.project_id}-packages"
   location = "${var.region}"
 }
 
 resource "google_storage_bucket" "gitlab-registry" {
-  name     = "${var.project}-registry"
+  name     = "${var.project_id}-registry"
   location = "${var.region}"
 } 
 
 // GKE Cluster
 resource "google_container_cluster" "gitlab" {
-  project            = "${var.project}"
+  project            = "${var.project_id}"
   name               = "gitlab"
   region             = "${var.region}"
   min_master_version = "1.11"
@@ -314,7 +298,7 @@ resource "kubernetes_secret" "gitlab_pg" {
   }
 
   data {
-    password = "${var.gitlab-db-password}"
+    password = "${var.gitlab_db_password}"
   }
 }
 
@@ -349,7 +333,7 @@ data "template_file" "helm_values" {
     INGRESS_IP = "${google_compute_address.gitlab.address}"
     DB_PRIVATE_IP = "${google_sql_database_instance.gitlab_db.private_ip_address}"
     REDIS_PRIVATE_IP = "${google_redis_instance.gitlab.host}"
-    PROJECT_ID = "${var.project}"
+    PROJECT_ID = "${var.project_id}"
     CERT_MANAGER_EMAIL = "${var.certmanager_email}"
   }
 }

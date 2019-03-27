@@ -16,4 +16,5 @@
 
 output "gitlab_url" {
   value = "https://gitlab.${google_compute_address.gitlab.address}.xip.io"
+  description = "URL where you can access your GitLab instance"
 }

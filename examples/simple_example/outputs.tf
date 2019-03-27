@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 
-output "bucket_name" {
-  value = "${module.gke-gitlab.default_bucket_name}"
+output "gitlab_url" {
+  value = "${module.gke-gitlab.gitlab_url}"
 }

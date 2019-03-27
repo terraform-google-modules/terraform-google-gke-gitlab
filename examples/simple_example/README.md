@@ -4,6 +4,20 @@ This example illustrates how to use the `gke-gitlab` module.
 
 [^]: (autogen_docs_start)
 
+## Inputs
+
+| Name | Description | Type | Default | Required |
+|------|-------------|:----:|:-----:|:-----:|
+| certmanager\_email | Email used to retrieve SSL certificates from Let's Encrypt | string | n/a | yes |
+| project\_id | The project ID to deploy to | string | n/a | yes |
+
+## Outputs
+
+| Name | Description |
+|------|-------------|
+| gitlab\_url |  |
+| project\_id |  |
+
 [^]: (autogen_docs_end)
 
 To provision this example, run the following from within this directory:
