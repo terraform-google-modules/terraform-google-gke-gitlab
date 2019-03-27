@@ -11,10 +11,10 @@ data:
 There are examples included in the [examples](./examples/) folder but simple usage is as follows:
 
 ```hcl
-module "bucket" {
+module "gke-gitlab" {
   source                     = "terraform-google-modules/gke-gitlab/google"
   project_id                 = "<PROJECT ID>"
-  bucket_name                = "gcs-test-bucket"
+  certmanager_email          = "test@example.com"
 }
 ```
 
