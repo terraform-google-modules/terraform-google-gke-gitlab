@@ -17,6 +17,7 @@ This example illustrates how to use the `gke-gitlab` module.
 |------|-------------|
 | gitlab\_url |  |
 | project\_id |  |
+| root\_password\_instructions |  |
 
 [^]: (autogen_docs_end)
 
