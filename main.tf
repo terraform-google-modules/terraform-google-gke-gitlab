@@ -209,7 +209,7 @@ resource "google_storage_bucket" "gitlab-registry" {
 resource "google_container_cluster" "gitlab" {
   project            = "${var.project_id}"
   name               = "gitlab"
-  region             = "${var.region}"
+  location           = "${var.region}"
   min_master_version = "1.11"
 
   # We can't create a cluster with no node pool defined, but we want to only use
@@ -249,8 +249,7 @@ resource "google_container_cluster" "gitlab" {
 
 resource "google_container_node_pool" "gitlab" {
   name       = "gitlab"
-  region     = "${var.region}"
-  zone       = "${var.region}-a"
+  location   = "${var.region}"
   cluster    = "${google_container_cluster.gitlab.name}"
   node_count = 1
   depends_on = []
@@ -266,11 +265,6 @@ resource "google_container_node_pool" "gitlab" {
       "https://www.googleapis.com/auth/monitoring",
     ]
   }
-}
-
-resource "helm_repository" "gitlab" {
-  name = "gitlab"
-  url  = "https://charts.gitlab.io"
 }
 
 resource "kubernetes_service_account" "tiller" {
@@ -333,6 +327,11 @@ resource "kubernetes_secret" "gitlab_gcs_credentials" {
   }
 }
 
+data "helm_repository" "gitlab" {
+  name = "gitlab"
+  url  = "https://charts.gitlab.io"
+}
+
 data "template_file" "helm_values" {
   template = "${file("${path.module}/values.yaml.tpl")}"
   vars = {
@@ -346,7 +345,7 @@ data "template_file" "helm_values" {
 
 resource "helm_release" "gitlab" {
   name       = "gitlab"
-  repository = "${helm_repository.gitlab.0.name}"
+  repository = "${data.helm_repository.gitlab.0.name}"
   chart      = "gitlab"
   version    = "1.7.1"
   timeout    = 600
