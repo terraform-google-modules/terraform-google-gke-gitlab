@@ -7,6 +7,8 @@ data:
 - Memorystore for Redis
 - Cloud Storage
 
+![GitLab on GKE architecture diagram](img/arch.png)
+
 ## Usage
 There are examples included in the [examples](./examples/) folder but simple usage is as follows:
 
