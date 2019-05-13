@@ -25,6 +25,6 @@ resource "random_string" "random_suffix" {
 module "gke-gitlab" {
   source = "../../../examples/simple_example"
 
-  project_id  = "${var.project_id}"
+  project_id        = "${var.project_id}"
   certmanager_email = "test@example.com"
 }
