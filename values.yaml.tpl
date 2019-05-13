@@ -80,6 +80,10 @@ redis:
   enabled: false
 
 gitlab:
+  gitaly:
+    persistence:
+      size: 200Gi
+      storageClass: "pd-ssd"
   task-runner:
     backups:
       objectStorage:
