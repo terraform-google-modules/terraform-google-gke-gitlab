@@ -292,6 +292,18 @@ resource "kubernetes_cluster_role_binding" "tiller-admin" {
   }
 }
 
+resource "kubernetes_storage_class" "pd-ssd" {
+  metadata {
+    name = "pd-ssd"
+  }
+
+  storage_provisioner = "kubernetes.io/gce-pd"
+
+  parameters {
+    type = "pd-ssd"
+  }
+}
+
 resource "kubernetes_secret" "gitlab_pg" {
   metadata {
     name = "gitlab-pg"
@@ -350,14 +362,12 @@ resource "helm_release" "gitlab" {
   version    = "1.7.1"
   timeout    = 600
 
-
-  values = [ "${data.template_file.helm_values.rendered}" ]
-
+  values = ["${data.template_file.helm_values.rendered}"]
 
   depends_on = ["google_redis_instance.gitlab",
     "google_sql_database.gitlabhq_production",
     "google_sql_user.gitlab",
     "kubernetes_cluster_role_binding.tiller-admin",
+    "kubernetes_storage_class.pd-ssd"
   ]
 }
-
