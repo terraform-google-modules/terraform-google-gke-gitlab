@@ -91,6 +91,7 @@ gitlab:
         config:
           secret: google-application-credentials
           key: gcs-application-credentials-file
+          gcpProject: ${PROJECT_ID}
 
 postgresql:
   install: false
