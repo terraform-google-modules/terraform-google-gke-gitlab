@@ -181,22 +181,22 @@ resource "google_redis_instance" "gitlab" {
 
 // Cloud Storage
 resource "google_storage_bucket" "gitlab-uploads" {
-  name     = "${var.project_id}-uploads"
+  name     = "${var.project_id}-gitlab-uploads"
   location = "${var.region}"
 }
 
 resource "google_storage_bucket" "gitlab-artifacts" {
-  name     = "${var.project_id}-artifacts"
+  name     = "${var.project_id}-gitlab-artifacts"
   location = "${var.region}"
 }
 
 resource "google_storage_bucket" "gitlab-lfs" {
-  name     = "${var.project_id}-lfs"
+  name     = "${var.project_id}-gitlab-lfs"
   location = "${var.region}"
 }
 
 resource "google_storage_bucket" "gitlab-packages" {
-  name     = "${var.project_id}-packages"
+  name     = "${var.project_id}-gitlab-packages"
   location = "${var.region}"
 }
 
@@ -316,6 +316,24 @@ google_json_key_string: '${base64decode(google_service_account_key.gitlab_gcs.pr
 EOT
   }
 }
+
+resource "kubernetes_secret" "gitlab_registry_storage" {
+  metadata {
+    name = "gitlab-registry-storage"
+  }
+
+  data = {
+    "gcs.json" = <<EOT
+${base64decode(google_service_account_key.gitlab_gcs.private_key)}
+EOT
+    storage = <<EOT
+gcs:
+  bucket: ${var.project_id}-registry
+  keyfile: /etc/docker/registry/storage/gcs.json
+EOT
+  }
+}
+
 
 resource "kubernetes_secret" "gitlab_gcs_credentials" {
   metadata {

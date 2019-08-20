@@ -102,3 +102,10 @@ gitlab-runner:
       gcsBucketname: ${PROJECT_ID}-runner-cache
       secretName: google-application-credentials
       cacheShared: true
+
+registry:
+  enabled: true
+  storage:
+    secret: gitlab-registry-storage
+    key: storage
+    extraKey: gcs.json
