@@ -80,6 +80,10 @@ redis:
   enabled: false
 
 gitlab:
+  gitaly:
+    persistence:
+      size: 200Gi
+      storageClass: "pd-ssd"
   task-runner:
     backups:
       objectStorage:
@@ -87,6 +91,7 @@ gitlab:
         config:
           secret: google-application-credentials
           key: gcs-application-credentials-file
+          gcpProject: ${PROJECT_ID}
 
 postgresql:
   install: false

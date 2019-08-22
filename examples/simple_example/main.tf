@@ -17,7 +17,7 @@
 provider "google" {}
 
 module "gke-gitlab" {
-  source      = "../../"
-  project_id  = "${var.project_id}"
+  source            = "../../"
+  project_id        = "${var.project_id}"
   certmanager_email = "no-reply@${var.project_id}.example.com"
 }

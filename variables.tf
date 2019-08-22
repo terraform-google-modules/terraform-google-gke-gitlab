@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 variable "project_id" {
   description = "GCP Project to deploy resources"
 }
@@ -25,10 +24,10 @@ variable "certmanager_email" {
 
 variable "gitlab_db_password" {
   description = "Password for the GitLab Postgres user"
-  default = ""
+  default     = ""
 }
 
 variable "region" {
-  default = "us-central1"
+  default     = "us-central1"
   description = "GCP region to deploy resources to"
 }
