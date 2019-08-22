@@ -373,7 +373,7 @@ data "template_file" "helm_values" {
 
 resource "helm_release" "gitlab" {
   name       = "gitlab"
-  repository = "${data.helm_repository.gitlab.0.name}"
+  repository = "${data.helm_repository.gitlab.name}"
   chart      = "gitlab"
   version    = "1.7.1"
   timeout    = 600
