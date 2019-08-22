@@ -375,7 +375,7 @@ resource "helm_release" "gitlab" {
   name       = "gitlab"
   repository = "${data.helm_repository.gitlab.name}"
   chart      = "gitlab"
-  version    = "1.7.1"
+  version    = "2.0.3"
   timeout    = 600
 
 
