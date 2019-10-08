@@ -309,7 +309,7 @@ resource "kubernetes_storage_class" "pd-ssd" {
 
   storage_provisioner = "kubernetes.io/gce-pd"
 
-  parameters {
+  parameters = {
     type = "pd-ssd"
   }
 }
