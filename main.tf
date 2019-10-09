@@ -219,7 +219,7 @@ resource "google_container_cluster" "gitlab" {
   project            = "${var.project_id}"
   name               = "gitlab"
   location           = "${var.region}"
-  min_master_version = "1.11"
+  min_master_version = "1.12"
 
   # We can't create a cluster with no node pool defined, but we want to only use
   # separately managed node pools. So we create the smallest possible default
