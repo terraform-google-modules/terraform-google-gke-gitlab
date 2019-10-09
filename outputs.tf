@@ -14,6 +14,11 @@
  * limitations under the License.
  */
 
+output "gitlab_address" {
+  value       = "${google_compute_address.gitlab.address}"
+  description = "IP address where you can connect to your GitLab instance"
+}
+   
 output "gitlab_url" {
   value       = "https://gitlab.${google_compute_address.gitlab.address}.xip.io"
   description = "URL where you can access your GitLab instance"
