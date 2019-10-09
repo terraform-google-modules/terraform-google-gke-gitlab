@@ -2,7 +2,7 @@
 global:
   edition: ce
   hosts:
-    domain: ${INGRESS_IP}.xip.io
+    domain: ${DOMAIN}
     https: true
     externalIP: ${INGRESS_IP}
     ssh: ~

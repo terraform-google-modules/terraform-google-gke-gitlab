@@ -18,6 +18,10 @@ variable "project_id" {
   description = "GCP Project to deploy resources"
 }
 
+variable "domain" {
+  description = "Domain for hosting gitlab functionality (ie mydomain.com would access gitlab at gitlab.mydomain.com)"
+}
+
 variable "certmanager_email" {
   description = "Email used to retrieve SSL certificates from Let's Encrypt"
 }
