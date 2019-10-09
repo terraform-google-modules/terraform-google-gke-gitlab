@@ -20,6 +20,7 @@ variable "project_id" {
 
 variable "domain" {
   description = "Domain for hosting gitlab functionality (ie mydomain.com would access gitlab at gitlab.mydomain.com)"
+  default     = ""
 }
 
 variable "certmanager_email" {

@@ -369,28 +369,28 @@ resource "kubernetes_secret" "gitlab_gcs_credentials" {
 
 data "helm_repository" "gitlab" {
   name = "gitlab"
-  url  = "https://charts.gitlab.io"
+  url = "https://charts.gitlab.io"
 }
 
 data "template_file" "helm_values" {
   template = "${file("${path.module}/values.yaml.tpl")}"
 
   vars = {
-    DOMAIN             = "${var.domain}"
-    INGRESS_IP         = "${google_compute_address.gitlab.address}"
-    DB_PRIVATE_IP      = "${google_sql_database_instance.gitlab_db.private_ip_address}"
-    REDIS_PRIVATE_IP   = "${google_redis_instance.gitlab.host}"
-    PROJECT_ID         = "${var.project_id}"
+    DOMAIN = "${var.domain != "" ? var.domain : "gitlab." + google_compute_address.gitlab.address + ".xip.io"}"
+    INGRESS_IP = "${google_compute_address.gitlab.address}"
+    DB_PRIVATE_IP = "${google_sql_database_instance.gitlab_db.private_ip_address}"
+    REDIS_PRIVATE_IP = "${google_redis_instance.gitlab.host}"
+    PROJECT_ID = "${var.project_id}"
     CERT_MANAGER_EMAIL = "${var.certmanager_email}"
   }
 }
 
 resource "helm_release" "gitlab" {
-  name       = "gitlab"
+  name = "gitlab"
   repository = "${data.helm_repository.gitlab.name}"
-  chart      = "gitlab"
-  version    = "2.3.7"
-  timeout    = 600
+  chart = "gitlab"
+  version = "2.3.7"
+  timeout = 600
 
   values = ["${data.template_file.helm_values.rendered}"]
 
