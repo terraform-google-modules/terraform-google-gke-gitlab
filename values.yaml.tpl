@@ -97,7 +97,7 @@ postgresql:
   install: false
 
 gitlab-runner:
-  install: true
+  install: ${GITLAB_RUNNER_INSTALL}
   rbac:
     create: true
   runners:

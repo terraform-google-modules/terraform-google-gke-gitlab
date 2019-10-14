@@ -382,6 +382,7 @@ data "template_file" "helm_values" {
     REDIS_PRIVATE_IP = "${google_redis_instance.gitlab.host}"
     PROJECT_ID = "${var.project_id}"
     CERT_MANAGER_EMAIL = "${var.certmanager_email}"
+    GITLAB_RUNNER_INSTALL = "${var.gitlab_runner_install}"
   }
 }
 
