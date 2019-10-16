@@ -36,6 +36,7 @@ provider "helm" {
 }
 
 provider "kubernetes" {
+  load_config_file       = false
   host                   = "${google_container_cluster.gitlab.endpoint}"
   client_certificate     = "${base64decode(google_container_cluster.gitlab.master_auth.0.client_certificate)}"
   client_key             = "${base64decode(google_container_cluster.gitlab.master_auth.0.client_key)}"
