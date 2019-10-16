@@ -244,6 +244,10 @@ resource "google_container_cluster" "gitlab" {
   master_auth {
     username = ""
     password = ""
+    
+    client_certificate_config {
+      issue_client_certificate = true
+    }
   }
 
   node_config {
