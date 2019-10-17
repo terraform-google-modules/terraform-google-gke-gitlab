@@ -381,7 +381,7 @@ data "template_file" "helm_values" {
   template = "${file("${path.module}/values.yaml.tpl")}"
 
   vars = {
-    DOMAIN = "${var.domain != "" ? var.domain : "gitlab." + google_compute_address.gitlab.address + ".xip.io"}"
+    DOMAIN = "${var.domain != "" ? var.domain : "gitlab.${google_compute_address.gitlab.address}.xip.io"}"
     INGRESS_IP = "${google_compute_address.gitlab.address}"
     DB_PRIVATE_IP = "${google_sql_database_instance.gitlab_db.private_ip_address}"
     REDIS_PRIVATE_IP = "${google_redis_instance.gitlab.host}"
