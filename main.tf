@@ -240,7 +240,7 @@ resource "google_container_cluster" "gitlab" {
     services_ipv4_cidr_block = ""
   }
 
-  enable_legacy_abac = true
+  enable_legacy_abac = false
 
   # Setting an empty username and password explicitly disables basic auth
   master_auth {
