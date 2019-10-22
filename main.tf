@@ -215,6 +215,7 @@ resource "google_storage_bucket" "gitlab-runner-cache" {
   name     = "${var.project_id}-runner-cache"
   location = "${var.region}"
 }
+
 // GKE Cluster
 resource "google_container_cluster" "gitlab" {
   project            = "${var.project_id}"
@@ -244,7 +245,7 @@ resource "google_container_cluster" "gitlab" {
   master_auth {
     username = ""
     password = ""
-    
+
     client_certificate_config {
       issue_client_certificate = true
     }
@@ -353,6 +354,7 @@ resource "kubernetes_secret" "gitlab_registry_storage" {
     "gcs.json" = <<EOT
 ${base64decode(google_service_account_key.gitlab_gcs.private_key)}
 EOT
+
     storage = <<EOT
 gcs:
   bucket: ${var.project_id}-registry
@@ -360,7 +362,6 @@ gcs:
 EOT
   }
 }
-
 
 resource "kubernetes_secret" "gitlab_gcs_credentials" {
   metadata {
@@ -374,29 +375,29 @@ resource "kubernetes_secret" "gitlab_gcs_credentials" {
 
 data "helm_repository" "gitlab" {
   name = "gitlab"
-  url = "https://charts.gitlab.io"
+  url  = "https://charts.gitlab.io"
 }
 
 data "template_file" "helm_values" {
   template = "${file("${path.module}/values.yaml.tpl")}"
 
   vars = {
-    DOMAIN = "${var.domain != "" ? var.domain : "gitlab." + google_compute_address.gitlab.address + ".xip.io"}"
-    INGRESS_IP = "${google_compute_address.gitlab.address}"
-    DB_PRIVATE_IP = "${google_sql_database_instance.gitlab_db.private_ip_address}"
-    REDIS_PRIVATE_IP = "${google_redis_instance.gitlab.host}"
-    PROJECT_ID = "${var.project_id}"
-    CERT_MANAGER_EMAIL = "${var.certmanager_email}"
+    DOMAIN                = "${var.domain != "" ? var.domain : "gitlab." + google_compute_address.gitlab.address + ".xip.io"}"
+    INGRESS_IP            = "${google_compute_address.gitlab.address}"
+    DB_PRIVATE_IP         = "${google_sql_database_instance.gitlab_db.private_ip_address}"
+    REDIS_PRIVATE_IP      = "${google_redis_instance.gitlab.host}"
+    PROJECT_ID            = "${var.project_id}"
+    CERT_MANAGER_EMAIL    = "${var.certmanager_email}"
     GITLAB_RUNNER_INSTALL = "${var.gitlab_runner_install}"
   }
 }
 
 resource "helm_release" "gitlab" {
-  name = "gitlab"
+  name       = "gitlab"
   repository = "${data.helm_repository.gitlab.name}"
-  chart = "gitlab"
-  version = "2.3.7"
-  timeout = 600
+  chart      = "gitlab"
+  version    = "2.3.7"
+  timeout    = 600
 
   values = ["${data.template_file.helm_values.rendered}"]
 
