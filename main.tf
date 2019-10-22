@@ -179,7 +179,7 @@ resource "google_redis_instance" "gitlab" {
   depends_on = ["google_project_service.redis"]
 
   location_id             = "${var.region}-a"
-  alternative_location_id = "${var.region}-f"
+  alternative_location_id = "${var.region}-c"
   display_name            = "GitLab Redis"
 }
 
