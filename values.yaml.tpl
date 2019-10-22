@@ -19,7 +19,7 @@ global:
 
   ## doc/charts/globals.md#configure-postgresql-settings
   psql:
-    password: 
+    password:
       secret: gitlab-pg
       key: password
     host: ${DB_PRIVATE_IP}
