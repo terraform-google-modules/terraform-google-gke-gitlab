@@ -41,6 +41,7 @@ Then perform the following commands on the root folder:
 | domain | Domain for hosting gitlab functionality (ie mydomain.com would access gitlab at gitlab.mydomain.com) | string | `""` | no |
 | gitlab\_chart\_version | Version of Gitlab Helm Chart | string | `"2.3.7"` | no |
 | gitlab\_db\_password | Password for the GitLab Postgres user | string | `""` | no |
+| gitlab\_edition | Edition of Gitlab. Allowed values: ce, ee | string | `"ce"` | no |
 | gitlab\_runner\_install | Choose whether to install the gitlab runner in the cluster | string | `"true"` | no |
 | gke\_default\_pool\_nodes\_type | Type of GKE worker node | string | `"n1-standard-4"` | no |
 | gke\_min\_version | Minimal Kubernetes version on GKE | string | `"1.13"` | no |

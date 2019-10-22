@@ -37,6 +37,11 @@ variable "gitlab_runner_install" {
   default     = true
 }
 
+variable "gitlab_edition" {
+  description = "Edition of Gitlab. Allowed values: ce, ee"
+  default     = "ce"
+}
+
 variable "region" {
   default     = "us-central1"
   description = "GCP region to deploy resources to"
@@ -83,6 +88,6 @@ variable "gitlab_chart_version" {
 }
 
 variable "network_cidr" {
-  default = "10.0.0.0/16"
+  default     = "10.0.0.0/16"
   description = "Kubernetes network CIDR"
 }

@@ -1,6 +1,6 @@
 # Values for gitlab/gitlab chart on GKE
 global:
-  edition: ce
+  edition: ${GITLAB_EDITION}
   hosts:
     domain: ${DOMAIN}
     https: true
