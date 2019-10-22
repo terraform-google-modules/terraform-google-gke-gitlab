@@ -73,6 +73,21 @@ global:
         secret: gitlab-rails-storage
         key: connection
 
+    omniauth:
+      enabled: ${OMNIAUTH_ENABLED}
+      allowSingleSignOn: ${OMNIAUTH_SSO_PROVIDERS}
+      autoLinkLdapUser: false
+      autoLinkSamlUser: false
+      blockAutoCreatedUsers: false
+      externalProviders: []
+      syncProfileFromProvider: ${OMNIAUTH_SYNC_PROFILE_PROVIDERS}
+      syncProfileAttributes: ${OMNIAUTH_SYNC_PROFILE_ATTRIBUTES}
+      allowBypassTwoFactor: []
+      autoSignInWithProvider:
+      providers:
+        - secret: gitlab-google-oauth2
+          key: provider
+
 certmanager-issuer:
   email: ${CERT_MANAGER_EMAIL}
 

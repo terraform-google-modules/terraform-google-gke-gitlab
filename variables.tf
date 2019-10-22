@@ -96,3 +96,36 @@ variable "network_cidr" {
   default     = "10.0.0.0/16"
   description = "Kubernetes network CIDR"
 }
+
+variable "omniauth_enabled" {
+  default     = false
+  description = "Should the omniauth configuration be enabled or not"
+}
+
+variable "omniauth_sso_providers" {
+  type        = list(string)
+  default     = []
+  description = "A list of single sign on providers to enable"
+}
+
+variable "omniauth_sync_profile_providers" {
+  type        = list(string)
+  default     = []
+  description = "List of provider names that GitLab should automatically sync profile information from."
+}
+
+variable "omniauth_sync_profile_attributes" {
+  type        = list(string)
+  default     = ["email"]
+  description = "List of profile attributes to sync from the provider upon login."
+}
+
+variable "omniauth_google_client_id" {
+  default     = ""
+  description = "The client ID to use for Google OAuth2"
+}
+
+variable "omniauth_google_client_secret" {
+  default     = ""
+  description = "The client secret to use for Google OAuth2"
+}
