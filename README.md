@@ -92,9 +92,17 @@ The project has the following folders and files:
 - /examples: examples for using this module
 - /helpers: Helper scripts
 - /test: Folders with files for testing the module (see Testing section on this file)
-- /main.tf: main file for this module, contains all the resources to create
+- /cloud_sql.tf: resources required to provision Cloud SQL for PostgreSQL
+- /cloud_storage.tf: resources required to provision all used Cloud Storage buckets
+- /gitlab.tf: contains Gitlab deployment resources on Kubernetes
+- /gke.tf: resources required to provision Google Kubernetes Engine (GKE)
+- /iam.tf: service accounts and identify resources
+- /main.tf: main file for this module
+- /networks.tf: shared networking resources
+- /redis.tf: resources to provision Cloud Memorystore for Redis
 - /variables.tf: all the variables for the module
 - /output.tf: the outputs of the module
+- /values.yaml.tpl: [Gitlab Helm Chart configuration](https://docs.gitlab.com/charts/charts/globals.html) file
 - /README.md: this file
 
 ## Testing
