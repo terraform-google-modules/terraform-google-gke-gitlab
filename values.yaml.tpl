@@ -105,6 +105,7 @@ gitlab-runner:
     create: true
   runners:
     locked: false
+    privileged: true
     cache:
       cacheType: gcs
       gcsBucketname: ${PROJECT_ID}-runner-cache
