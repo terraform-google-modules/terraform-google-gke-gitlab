@@ -7,6 +7,9 @@ global:
     externalIP: ${INGRESS_IP}
     ssh: ~
 
+    gitlab:
+      name: ${DOMAIN}
+
   ## doc/charts/globals.md#configure-ingress-settings
   ingress:
     configureCertmanager: true
