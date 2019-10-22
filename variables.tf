@@ -67,6 +67,11 @@ variable "gke_min_version" {
   description = "Minimal Kubernetes version on GKE"
 }
 
+variable "gke_enable_abac" {
+  default = false
+  description = "Insecure! Flag if deprecated ABAC authorization should be enabled."
+}
+
 variable "cloud_sql_version" {
   default     = "POSTGRES_9_6"
   description = "Version of Cloud SQL. It must be supported by Gitlab"
