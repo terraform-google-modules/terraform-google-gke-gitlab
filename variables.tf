@@ -58,7 +58,7 @@ variable "gke_default_pool_nodes_type" {
 }
 
 variable "gke_min_version" {
-  default     = "1.12"
+  default     = "1.13"
   description = "Minimal Kubernetes version on GKE"
 }
 
