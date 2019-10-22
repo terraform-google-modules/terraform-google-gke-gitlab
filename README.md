@@ -35,14 +35,26 @@ Then perform the following commands on the root folder:
 | Name | Description | Type | Default | Required |
 |------|-------------|:----:|:-----:|:-----:|
 | certmanager\_email | Email used to retrieve SSL certificates from Let's Encrypt | string | n/a | yes |
+| cloud\_sql\_availability\_type | Cloud SQL availability type. One of REGIONAL (ha) or ZONAL (single zone) | string | `"REGIONAL"` | no |
+| cloud\_sql\_tier | Tier (size) of Cloud SQL. | string | `"db-custom-4-15360"` | no |
+| cloud\_sql\_version | Version of Cloud SQL. It must be supported by Gitlab | string | `"POSTGRES_9_6"` | no |
+| domain | Domain for hosting gitlab functionality (ie mydomain.com would access gitlab at gitlab.mydomain.com) | string | `""` | no |
+| gitlab\_chart\_version | Version of Gitlab Helm Chart | string | `"2.3.7"` | no |
 | gitlab\_db\_password | Password for the GitLab Postgres user | string | `""` | no |
+| gitlab\_runner\_install | Choose whether to install the gitlab runner in the cluster | string | `"true"` | no |
+| gke\_default\_pool\_nodes\_type | Type of GKE worker node | string | `"n1-standard-4"` | no |
+| gke\_min\_version | Minimal Kubernetes version on GKE | string | `"1.13"` | no |
+| network\_cidr | Kubernetes network CIDR | string | `"10.0.0.0/16"` | no |
 | project\_id | GCP Project to deploy resources | string | n/a | yes |
+| redis\_size\_gb | Size of Cloud Memorystore for Redis | string | `"5"` | no |
+| redis\_tier | Service tier of instance. One of BASIC (standalone) or STANDARD_HA (ha) | string | `"STANDARD_HA"` | no |
 | region | GCP region to deploy resources to | string | `"us-central1"` | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
+| gitlab\_address | IP address where you can connect to your GitLab instance |
 | gitlab\_url | URL where you can access your GitLab instance |
 | root\_password\_instructions | Instructions for getting the root user's password for initial setup |
 
