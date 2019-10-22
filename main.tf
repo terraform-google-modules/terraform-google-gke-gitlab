@@ -100,7 +100,7 @@ resource "google_compute_network" "gitlab" {
 
 resource "google_compute_subnetwork" "us-central" {
   name          = "gitlab"
-  ip_cidr_range = "10.0.0.0/16"
+  ip_cidr_range = "${var.network_cidr}"
   region        = "${var.region}"
   network       = "${google_compute_network.gitlab.self_link}"
 }
@@ -135,11 +135,12 @@ resource "google_sql_database_instance" "gitlab_db" {
   depends_on       = ["google_service_networking_connection.private_vpc_connection"]
   name             = "gitlab-db"
   region           = "${var.region}"
-  database_version = "POSTGRES_9_6"
+  database_version = "${var.cloud_sql_version}"
 
   settings {
-    tier            = "db-custom-4-15360"
+    tier            = "${var.cloud_sql_tier}"
     disk_autoresize = true
+	availability_type = "${var.cloud_sql_availability_type}"
 
     ip_configuration {
       ipv4_enabled    = "false"
@@ -168,8 +169,8 @@ resource "google_sql_user" "gitlab" {
 // Redis
 resource "google_redis_instance" "gitlab" {
   name               = "gitlab"
-  tier               = "STANDARD_HA"
-  memory_size_gb     = 5
+  tier               = "${var.redis_tier}"
+  memory_size_gb     = "${var.redis_size_gb}"
   region             = "${var.region}"
   authorized_network = "${google_compute_network.gitlab.self_link}"
 
@@ -221,7 +222,7 @@ resource "google_container_cluster" "gitlab" {
   project            = "${var.project_id}"
   name               = "gitlab"
   location           = "${var.region}"
-  min_master_version = "1.12"
+  min_master_version = "${var.gke_min_version}"
 
   # We can't create a cluster with no node pool defined, but we want to only use
   # separately managed node pools. So we create the smallest possible default
@@ -266,13 +267,14 @@ resource "google_container_cluster" "gitlab" {
 resource "google_container_node_pool" "gitlab" {
   name       = "gitlab"
   location   = "${var.region}"
+
   cluster    = "${google_container_cluster.gitlab.name}"
   node_count = 1
   depends_on = []
 
   node_config {
     preemptible  = false
-    machine_type = "n1-standard-4"
+    machine_type = "${var.gke_default_pool_nodes_type}"
 
     oauth_scopes = [
       "https://www.googleapis.com/auth/compute",
@@ -396,7 +398,7 @@ resource "helm_release" "gitlab" {
   name       = "gitlab"
   repository = "${data.helm_repository.gitlab.name}"
   chart      = "gitlab"
-  version    = "2.3.7"
+  version    = "${var.gitlab_chart_version}"
   timeout    = 600
 
   values = ["${data.template_file.helm_values.rendered}"]

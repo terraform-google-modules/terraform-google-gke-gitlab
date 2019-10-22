@@ -41,3 +41,48 @@ variable "region" {
   default     = "us-central1"
   description = "GCP region to deploy resources to"
 }
+
+variable "redis_tier" {
+  default     = "STANDARD_HA"
+  description = "Service tier of instance. One of BASIC (standalone) or STANDARD_HA (ha)"
+}
+
+variable "redis_size_gb" {
+  default     = 5
+  description = "Size of Cloud Memorystore for Redis"
+}
+
+variable "gke_default_pool_nodes_type" {
+  default     = "n1-standard-4"
+  description = "Type of GKE worker node"
+}
+
+variable "gke_min_version" {
+  default     = "1.12"
+  description = "Minimal Kubernetes version on GKE"
+}
+
+variable "cloud_sql_version" {
+  default     = "POSTGRES_9_6"
+  description = "Version of Cloud SQL. It must be supported by Gitlab"
+}
+
+variable "cloud_sql_tier" {
+  default     = "db-custom-4-15360"
+  description = "Tier (size) of Cloud SQL."
+}
+
+variable "cloud_sql_availability_type" {
+  default     = "REGIONAL"
+  description = "Cloud SQL availability type. One of REGIONAL (ha) or ZONAL (single zone)"
+}
+
+variable "gitlab_chart_version" {
+  default     = "2.3.7"
+  description = "Version of Gitlab Helm Chart"
+}
+
+variable "network_cidr" {
+  default = "10.0.0.0/16"
+  description = "Kubernetes network CIDR"
+}
