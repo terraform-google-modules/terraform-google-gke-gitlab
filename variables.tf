@@ -32,6 +32,11 @@ variable "gitlab_db_password" {
   default     = ""
 }
 
+variable "gitlab_address_name" {
+  description = "Name of the address to use for GitLab ingress"
+  default     = ""
+}
+
 variable "gitlab_runner_install" {
   description = "Choose whether to install the gitlab runner in the cluster"
   default     = true

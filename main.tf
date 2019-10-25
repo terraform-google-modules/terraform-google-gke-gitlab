@@ -111,6 +111,7 @@ resource "google_compute_address" "gitlab" {
   address_type = "EXTERNAL"
   description  = "Gitlab Ingress IP"
   depends_on   = ["google_project_service.compute"]
+  count        = "${var.gitlab_address_name}" == "" ? 1 : 0
 }
 
 // Database
@@ -244,7 +245,7 @@ resource "google_container_cluster" "gitlab" {
   master_auth {
     username = ""
     password = ""
-    
+
     client_certificate_config {
       issue_client_certificate = true
     }
@@ -353,7 +354,7 @@ resource "kubernetes_secret" "gitlab_registry_storage" {
     "gcs.json" = <<EOT
 ${base64decode(google_service_account_key.gitlab_gcs.private_key)}
 EOT
-    storage = <<EOT
+    storage    = <<EOT
 gcs:
   bucket: ${var.project_id}-registry
   keyfile: /etc/docker/registry/storage/gcs.json
@@ -374,29 +375,41 @@ resource "kubernetes_secret" "gitlab_gcs_credentials" {
 
 data "helm_repository" "gitlab" {
   name = "gitlab"
-  url = "https://charts.gitlab.io"
+  url  = "https://charts.gitlab.io"
+}
+
+data "google_compute_address" "gitlab" {
+  name = "${var.gitlab_address_name}"
+  region = "${var.region}"
+
+  # Do not get data if the address is being created as part of the run
+  count = "${var.gitlab_address_name}" == "" ? 0 : 1
+}
+
+locals {
+  gitlab_address = "${var.gitlab_address_name}" == "" ? "${google_compute_address.gitlab.0.address}" : "${data.google_compute_address.gitlab.0.address}"
 }
 
 data "template_file" "helm_values" {
   template = "${file("${path.module}/values.yaml.tpl")}"
 
   vars = {
-    DOMAIN = "${var.domain != "" ? var.domain : "gitlab." + google_compute_address.gitlab.address + ".xip.io"}"
-    INGRESS_IP = "${google_compute_address.gitlab.address}"
-    DB_PRIVATE_IP = "${google_sql_database_instance.gitlab_db.private_ip_address}"
-    REDIS_PRIVATE_IP = "${google_redis_instance.gitlab.host}"
-    PROJECT_ID = "${var.project_id}"
-    CERT_MANAGER_EMAIL = "${var.certmanager_email}"
+    DOMAIN                = var.domain != "" ? var.domain : "gitlab." + local.gitlab_address + ".xip.io"
+    INGRESS_IP            = "${local.gitlab_address}"
+    DB_PRIVATE_IP         = "${google_sql_database_instance.gitlab_db.private_ip_address}"
+    REDIS_PRIVATE_IP      = "${google_redis_instance.gitlab.host}"
+    PROJECT_ID            = "${var.project_id}"
+    CERT_MANAGER_EMAIL    = "${var.certmanager_email}"
     GITLAB_RUNNER_INSTALL = "${var.gitlab_runner_install}"
   }
 }
 
 resource "helm_release" "gitlab" {
-  name = "gitlab"
+  name       = "gitlab"
   repository = "${data.helm_repository.gitlab.name}"
-  chart = "gitlab"
-  version = "2.3.7"
-  timeout = 600
+  chart      = "gitlab"
+  version    = "2.3.7"
+  timeout    = 600
 
   values = ["${data.template_file.helm_values.rendered}"]
 
