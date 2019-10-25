@@ -379,7 +379,7 @@ data "helm_repository" "gitlab" {
 }
 
 data "google_compute_address" "gitlab" {
-  name = "${var.gitlab_address_name}"
+  name   = "${var.gitlab_address_name}"
   region = "${var.region}"
 
   # Do not get data if the address is being created as part of the run
@@ -388,13 +388,14 @@ data "google_compute_address" "gitlab" {
 
 locals {
   gitlab_address = "${var.gitlab_address_name}" == "" ? "${google_compute_address.gitlab.0.address}" : "${data.google_compute_address.gitlab.0.address}"
+  domain         = "${var.domain}" != "" ? "${var.domain}" : "gitlab.${local.gitlab_address}.xip.io"
 }
 
 data "template_file" "helm_values" {
   template = "${file("${path.module}/values.yaml.tpl")}"
 
   vars = {
-    DOMAIN                = var.domain != "" ? var.domain : "gitlab." + local.gitlab_address + ".xip.io"
+    DOMAIN                = "${local.domain}"
     INGRESS_IP            = "${local.gitlab_address}"
     DB_PRIVATE_IP         = "${google_sql_database_instance.gitlab_db.private_ip_address}"
     REDIS_PRIVATE_IP      = "${google_redis_instance.gitlab.host}"
