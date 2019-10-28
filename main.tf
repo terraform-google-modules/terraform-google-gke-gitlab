@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 
+terraform {
+  required_version = ">= 0.12.0"
+}
+
 provider "google" {
   project = "${var.project_id}"
 }
@@ -98,7 +102,7 @@ resource "google_compute_network" "gitlab" {
   depends_on              = ["google_project_service.compute"]
 }
 
-resource "google_compute_subnetwork" "us-central" {
+resource "google_compute_subnetwork" "subnetwork" {
   name          = "gitlab"
   ip_cidr_range = "10.0.0.0/16"
   region        = "${var.region}"
@@ -231,7 +235,7 @@ resource "google_container_cluster" "gitlab" {
   initial_node_count = 1
 
   network    = "${google_compute_network.gitlab.self_link}"
-  subnetwork = "${google_compute_subnetwork.us-central.self_link}"
+  subnetwork = "${google_compute_subnetwork.subnetwork.self_link}"
 
   ip_allocation_policy {
     # Allocate ranges automatically
