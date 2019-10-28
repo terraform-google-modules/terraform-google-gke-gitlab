@@ -59,8 +59,8 @@ resource "kubernetes_secret" "google_omniauth_provider" {
   data = {
     provider = <<EOT
 name: google_oauth2
-app_id: "${var.omniauth_google_client_id}"
-app_secret: "${var.omniauth_google_client_secret}"
+app_id: "${var.omniauth.google_client_id}"
+app_secret: "${var.omniauth.google_client_secret}"
 args:
   access_type: offline
   approval_prompt: ''
@@ -85,10 +85,10 @@ data "template_file" "helm_values" {
     CERT_MANAGER_EMAIL               = "${var.certmanager_email}"
     GITLAB_RUNNER_INSTALL            = "${var.gitlab_runner_install ? "true" : "false"}"
     GITLAB_EDITION                   = "${var.gitlab_edition}"
-    OMNIAUTH_ENABLED                 = "${var.omniauth_enabled}"
-    OMNIAUTH_SSO_PROVIDERS           = "${jsonencode(var.omniauth_sso_providers)}"
-    OMNIAUTH_SYNC_PROFILE_PROVIDERS  = "${jsonencode(var.omniauth_sync_profile_providers)}"
-    OMNIAUTH_SYNC_PROFILE_ATTRIBUTES = "${jsonencode(var.omniauth_sync_profile_attributes)}"
+    OMNIAUTH_ENABLED                 = var.omniauth.enabled
+    OMNIAUTH_SSO_PROVIDERS           = jsonencode(var.omniauth.sso_providers)
+    OMNIAUTH_SYNC_PROFILE_PROVIDERS  = jsonencode(var.omniauth.sync_profile_providers)
+    OMNIAUTH_SYNC_PROFILE_ATTRIBUTES = jsonencode(var.omniauth.sync_profile_attributes)
   }
 }
 
