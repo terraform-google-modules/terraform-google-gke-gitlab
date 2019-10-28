@@ -15,12 +15,12 @@
  */
 
 output "gitlab_address" {
-  value       = "${google_compute_address.gitlab.address}"
+  value       = "${var.gitlab_address_name}" == "" ? "${google_compute_address.gitlab.0.address}" : "${data.google_compute_address.gitlab.0.address}"
   description = "IP address where you can connect to your GitLab instance"
 }
-   
+
 output "gitlab_url" {
-  value       = "https://gitlab.${google_compute_address.gitlab.address}.xip.io"
+  value       = "https://gitlab.${google_compute_address.gitlab.0.address}.xip.io"
   description = "URL where you can access your GitLab instance"
 }
 
