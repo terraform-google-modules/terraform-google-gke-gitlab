@@ -392,14 +392,14 @@ data "google_compute_address" "gitlab" {
 
 locals {
   gitlab_address = "${var.gitlab_address_name}" == "" ? "${google_compute_address.gitlab.0.address}" : "${data.google_compute_address.gitlab.0.address}"
-  domain         = "${var.domain}" != "" ? "${var.domain}" : "gitlab.${local.gitlab_address}.xip.io"
+  domain         = "${var.domain}" != "" ? "${var.domain}" : "${local.gitlab_address}.xip.io"
 }
 
 data "template_file" "helm_values" {
   template = "${file("${path.module}/values.yaml.tpl")}"
 
   vars = {
-    DOMAIN                = "${local.domain}"
+    DOMAIN                = "gitlab.${local.domain}"
     INGRESS_IP            = "${local.gitlab_address}"
     DB_PRIVATE_IP         = "${google_sql_database_instance.gitlab_db.private_ip_address}"
     REDIS_PRIVATE_IP      = "${google_redis_instance.gitlab.host}"

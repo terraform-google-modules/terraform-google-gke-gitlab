@@ -4,6 +4,7 @@ global:
   hosts:
     domain: ${DOMAIN}
     https: true
+    gitlab: {}
     externalIP: ${INGRESS_IP}
     ssh: ~
 
