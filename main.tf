@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 
+terraform {
+  required_version = ">= 0.12.0"
+}
+
 provider "google" {
   project = "${var.project_id}"
 }
@@ -98,7 +102,7 @@ resource "google_compute_network" "gitlab" {
   depends_on              = ["google_project_service.compute"]
 }
 
-resource "google_compute_subnetwork" "us-central" {
+resource "google_compute_subnetwork" "subnetwork" {
   name          = "gitlab"
   ip_cidr_range = "10.0.0.0/16"
   region        = "${var.region}"
@@ -230,7 +234,7 @@ resource "google_container_cluster" "gitlab" {
   initial_node_count = 1
 
   network    = "${google_compute_network.gitlab.self_link}"
-  subnetwork = "${google_compute_subnetwork.us-central.self_link}"
+  subnetwork = "${google_compute_subnetwork.subnetwork.self_link}"
 
   ip_allocation_policy {
     # Allocate ranges automatically
@@ -392,11 +396,11 @@ data "template_file" "helm_values" {
 }
 
 resource "helm_release" "gitlab" {
-  name = "gitlab"
+  name       = "gitlab"
   repository = "${data.helm_repository.gitlab.name}"
-  chart = "gitlab"
-  version = "2.3.7"
-  timeout = 600
+  chart      = "gitlab"
+  version    = "2.3.7"
+  timeout    = 600
 
   values = ["${data.template_file.helm_values.rendered}"]
 
