@@ -68,7 +68,7 @@ variable "gke_min_version" {
 }
 
 variable "gke_enable_abac" {
-  default = false
+  default     = false
   description = "Insecure! Flag if deprecated ABAC authorization should be enabled."
 }
 
@@ -95,4 +95,35 @@ variable "gitlab_chart_version" {
 variable "network_cidr" {
   default     = "10.0.0.0/16"
   description = "Kubernetes network CIDR"
+}
+
+variable "omniauth" {
+  description = <<EOF
+
+  enabled: Should the omniauth configuration be enabled in Gitlab or not.
+  sso_providers: A list of single sign on providers to enable.
+  sso_profile_providers: List of provider names that GitLab should automatically sync profile information from.
+  sso_profile_attributes: List of profile attributes to sync from the provider upon login.
+  google_client_id: The client ID to use for Google OAuth2.
+  google_client_secret: The client secret to use for Google OAuth2.
+
+  EOF
+
+  type = object({
+    enabled                 = bool
+    sso_providers           = list(string)
+    sync_profile_providers  = list(string)
+    sync_profile_attributes = list(string)
+    google_client_id        = string
+    google_client_secret    = string
+  })
+
+  default = {
+    enabled                 = false
+    sso_providers           = []
+    sync_profile_providers  = []
+    sync_profile_attributes = ["email"]
+    google_client_id        = ""
+    google_client_secret    = ""
+  }
 }

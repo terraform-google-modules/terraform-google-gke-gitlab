@@ -51,6 +51,23 @@ resource "kubernetes_secret" "gitlab_gcs_credentials" {
   }
 }
 
+resource "kubernetes_secret" "google_omniauth_provider" {
+  metadata {
+    name = "gitlab-google-oauth2"
+  }
+
+  data = {
+    provider = <<EOT
+name: google_oauth2
+app_id: "${var.omniauth.google_client_id}"
+app_secret: "${var.omniauth.google_client_secret}"
+args:
+  access_type: offline
+  approval_prompt: ''
+EOT
+  }
+}
+
 data "helm_repository" "gitlab" {
   name = "gitlab"
   url  = "https://charts.gitlab.io"
@@ -60,14 +77,18 @@ data "template_file" "helm_values" {
   template = "${file("${path.module}/values.yaml.tpl")}"
 
   vars = {
-    DOMAIN                = "${var.domain != "" ? var.domain : "gitlab.${google_compute_address.gitlab.address}.xip.io"}"
-    INGRESS_IP            = "${google_compute_address.gitlab.address}"
-    DB_PRIVATE_IP         = "${google_sql_database_instance.gitlab_db.private_ip_address}"
-    REDIS_PRIVATE_IP      = "${google_redis_instance.gitlab.host}"
-    PROJECT_ID            = "${var.project_id}"
-    CERT_MANAGER_EMAIL    = "${var.certmanager_email}"
-    GITLAB_RUNNER_INSTALL = "${var.gitlab_runner_install ? "true" : "false"}"
-    GITLAB_EDITION        = "${var.gitlab_edition}"
+    DOMAIN                           = "${var.domain != "" ? var.domain : "gitlab.${google_compute_address.gitlab.address}.xip.io"}"
+    INGRESS_IP                       = "${google_compute_address.gitlab.address}"
+    DB_PRIVATE_IP                    = "${google_sql_database_instance.gitlab_db.private_ip_address}"
+    REDIS_PRIVATE_IP                 = "${google_redis_instance.gitlab.host}"
+    PROJECT_ID                       = "${var.project_id}"
+    CERT_MANAGER_EMAIL               = "${var.certmanager_email}"
+    GITLAB_RUNNER_INSTALL            = "${var.gitlab_runner_install ? "true" : "false"}"
+    GITLAB_EDITION                   = "${var.gitlab_edition}"
+    OMNIAUTH_ENABLED                 = var.omniauth.enabled
+    OMNIAUTH_SSO_PROVIDERS           = jsonencode(var.omniauth.sso_providers)
+    OMNIAUTH_SYNC_PROFILE_PROVIDERS  = jsonencode(var.omniauth.sync_profile_providers)
+    OMNIAUTH_SYNC_PROFILE_ATTRIBUTES = jsonencode(var.omniauth.sync_profile_attributes)
   }
 }
 
