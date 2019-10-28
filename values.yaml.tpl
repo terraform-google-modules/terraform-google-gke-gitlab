@@ -2,7 +2,7 @@
 global:
   edition: ce
   hosts:
-    domain: ${INGRESS_IP}.xip.io
+    domain: ${DOMAIN}
     https: true
     externalIP: ${INGRESS_IP}
     ssh: ~
@@ -97,7 +97,7 @@ postgresql:
   install: false
 
 gitlab-runner:
-  install: true
+  install: ${GITLAB_RUNNER_INSTALL}
   rbac:
     create: true
   runners:
@@ -107,3 +107,10 @@ gitlab-runner:
       gcsBucketname: ${PROJECT_ID}-runner-cache
       secretName: google-application-credentials
       cacheShared: true
+
+registry:
+  enabled: true
+  storage:
+    secret: gitlab-registry-storage
+    key: storage
+    extraKey: gcs.json

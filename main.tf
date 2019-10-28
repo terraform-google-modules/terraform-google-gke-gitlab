@@ -40,6 +40,7 @@ provider "helm" {
 }
 
 provider "kubernetes" {
+  load_config_file       = false
   host                   = "${google_container_cluster.gitlab.endpoint}"
   client_certificate     = "${base64decode(google_container_cluster.gitlab.master_auth.0.client_certificate)}"
   client_key             = "${base64decode(google_container_cluster.gitlab.master_auth.0.client_key)}"
@@ -185,22 +186,22 @@ resource "google_redis_instance" "gitlab" {
 
 // Cloud Storage
 resource "google_storage_bucket" "gitlab-uploads" {
-  name     = "${var.project_id}-uploads"
+  name     = "${var.project_id}-gitlab-uploads"
   location = "${var.region}"
 }
 
 resource "google_storage_bucket" "gitlab-artifacts" {
-  name     = "${var.project_id}-artifacts"
+  name     = "${var.project_id}-gitlab-artifacts"
   location = "${var.region}"
 }
 
 resource "google_storage_bucket" "gitlab-lfs" {
-  name     = "${var.project_id}-lfs"
+  name     = "${var.project_id}-gitlab-lfs"
   location = "${var.region}"
 }
 
 resource "google_storage_bucket" "gitlab-packages" {
-  name     = "${var.project_id}-packages"
+  name     = "${var.project_id}-gitlab-packages"
   location = "${var.region}"
 }
 
@@ -209,12 +210,21 @@ resource "google_storage_bucket" "gitlab-registry" {
   location = "${var.region}"
 }
 
+resource "google_storage_bucket" "gitlab-pseudo" {
+  name     = "${var.project_id}-pseudo"
+  location = "${var.region}"
+}
+
+resource "google_storage_bucket" "gitlab-runner-cache" {
+  name     = "${var.project_id}-runner-cache"
+  location = "${var.region}"
+}
 // GKE Cluster
 resource "google_container_cluster" "gitlab" {
   project            = "${var.project_id}"
   name               = "gitlab"
   location           = "${var.region}"
-  min_master_version = "1.11"
+  min_master_version = "1.12"
 
   # We can't create a cluster with no node pool defined, but we want to only use
   # separately managed node pools. So we create the smallest possible default
@@ -238,6 +248,10 @@ resource "google_container_cluster" "gitlab" {
   master_auth {
     username = ""
     password = ""
+    
+    client_certificate_config {
+      issue_client_certificate = true
+    }
   }
 
   node_config {
@@ -334,6 +348,24 @@ EOT
   }
 }
 
+resource "kubernetes_secret" "gitlab_registry_storage" {
+  metadata {
+    name = "gitlab-registry-storage"
+  }
+
+  data = {
+    "gcs.json" = <<EOT
+${base64decode(google_service_account_key.gitlab_gcs.private_key)}
+EOT
+    storage = <<EOT
+gcs:
+  bucket: ${var.project_id}-registry
+  keyfile: /etc/docker/registry/storage/gcs.json
+EOT
+  }
+}
+
+
 resource "kubernetes_secret" "gitlab_gcs_credentials" {
   metadata {
     name = "google-application-credentials"
@@ -346,18 +378,20 @@ resource "kubernetes_secret" "gitlab_gcs_credentials" {
 
 data "helm_repository" "gitlab" {
   name = "gitlab"
-  url  = "https://charts.gitlab.io"
+  url = "https://charts.gitlab.io"
 }
 
 data "template_file" "helm_values" {
   template = "${file("${path.module}/values.yaml.tpl")}"
 
   vars = {
-    INGRESS_IP         = "${google_compute_address.gitlab.address}"
-    DB_PRIVATE_IP      = "${google_sql_database_instance.gitlab_db.private_ip_address}"
-    REDIS_PRIVATE_IP   = "${google_redis_instance.gitlab.host}"
-    PROJECT_ID         = "${var.project_id}"
+    DOMAIN = "${var.domain != "" ? var.domain : "gitlab." + google_compute_address.gitlab.address + ".xip.io"}"
+    INGRESS_IP = "${google_compute_address.gitlab.address}"
+    DB_PRIVATE_IP = "${google_sql_database_instance.gitlab_db.private_ip_address}"
+    REDIS_PRIVATE_IP = "${google_redis_instance.gitlab.host}"
+    PROJECT_ID = "${var.project_id}"
     CERT_MANAGER_EMAIL = "${var.certmanager_email}"
+    GITLAB_RUNNER_INSTALL = "${var.gitlab_runner_install}"
   }
 }
 
@@ -365,7 +399,7 @@ resource "helm_release" "gitlab" {
   name       = "gitlab"
   repository = "${data.helm_repository.gitlab.name}"
   chart      = "gitlab"
-  version    = "1.7.1"
+  version    = "2.3.7"
   timeout    = 600
 
   values = ["${data.template_file.helm_values.rendered}"]
