@@ -90,6 +90,8 @@ variable "cloud_sql" {
     availability_type = string
     backup_enabled    = bool
     backup_time       = string
+	maintenance_day   = number
+	maintenance_hour  = string
   })
 
   default = {
@@ -98,6 +100,8 @@ variable "cloud_sql" {
     availability_type = "REGIONAL"
     backup_enabled    = true
     backup_time       = "23:00"
+	maintenance_day   = 7 #sunday
+	maintenance_hour  = "12"
   }
 }
 

@@ -33,6 +33,12 @@ resource "google_sql_database_instance" "gitlab_db" {
 	  start_time = var.cloud_sql.backup_time
 	}
 
+	maintenance_window {
+	  day          = var.cloud_sql.maintenance_day
+	  hour         = var.cloud_sql.maintenance_hour
+	  update_track = "stable"
+	}
+
 	ip_configuration {
 	  ipv4_enabled    = "false"
 	  private_network = google_compute_network.gitlab.self_link
