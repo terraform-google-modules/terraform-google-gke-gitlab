@@ -28,6 +28,11 @@ resource "google_sql_database_instance" "gitlab_db" {
 	disk_autoresize = true
 	availability_type = var.cloud_sql.availability_type
 
+	backup_configuration {
+	  enabled    = var.cloud_sql.backup_enabled
+	  start_time = var.cloud_sql.backup_time
+	}
+
 	ip_configuration {
 	  ipv4_enabled    = "false"
 	  private_network = google_compute_network.gitlab.self_link

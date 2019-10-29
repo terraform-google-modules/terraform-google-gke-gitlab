@@ -79,6 +79,8 @@ variable "cloud_sql" {
   version: Version of Cloud SQL. It must be supported by Gitlab.
   tier: Tier (size) of Cloud SQL.
   availability_type: Cloud SQL availability type. One of REGIONAL (ha) or ZONAL (single zone).
+  backup_enabled: Flag if Cloud SQL incremental backup should be enabled.
+  backup_time: Time when Cloud SQL backup should start. Works daily and is incremental backup.
 
   EOF
 
@@ -86,12 +88,16 @@ variable "cloud_sql" {
     version           = string
     tier              = string
     availability_type = string
+    backup_enabled    = bool
+    backup_time       = string
   })
 
   default = {
     version           = "POSTGRES_9_6"
     tier              = "db-custom-4-15360"
     availability_type = "REGIONAL"
+    backup_enabled    = true
+    backup_time       = "23:00"
   }
 }
 
