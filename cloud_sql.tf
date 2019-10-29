@@ -21,12 +21,12 @@ resource "google_sql_database_instance" "gitlab_db" {
   depends_on       = ["google_service_networking_connection.private_vpc_connection"]
   name             = "gitlab-database"
   region           = var.region
-  database_version = var.cloud_sql_version
+  database_version = var.cloud_sql.version
 
   settings {
-	tier            = var.cloud_sql_tier
+	tier            = var.cloud_sql.tier
 	disk_autoresize = true
-	availability_type = var.cloud_sql_availability_type
+	availability_type = var.cloud_sql.availability_type
 
 	ip_configuration {
 	  ipv4_enabled    = "false"

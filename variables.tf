@@ -72,19 +72,27 @@ variable "gke_enable_abac" {
   description = "Insecure! Flag if deprecated ABAC authorization should be enabled."
 }
 
-variable "cloud_sql_version" {
-  default     = "POSTGRES_9_6"
-  description = "Version of Cloud SQL. It must be supported by Gitlab"
-}
+variable "cloud_sql" {
+  description = <<EOF
+  Cloud SQL configuration.
 
-variable "cloud_sql_tier" {
-  default     = "db-custom-4-15360"
-  description = "Tier (size) of Cloud SQL."
-}
+  version: Version of Cloud SQL. It must be supported by Gitlab.
+  tier: Tier (size) of Cloud SQL.
+  availability_type: Cloud SQL availability type. One of REGIONAL (ha) or ZONAL (single zone).
 
-variable "cloud_sql_availability_type" {
-  default     = "REGIONAL"
-  description = "Cloud SQL availability type. One of REGIONAL (ha) or ZONAL (single zone)"
+  EOF
+
+  type = object({
+    version           = string
+    tier              = string
+    availability_type = string
+  })
+
+  default = {
+    version           = "POSTGRES_9_6"
+    tier              = "db-custom-4-15360"
+    availability_type = "REGIONAL"
+  }
 }
 
 variable "gitlab_chart_version" {
