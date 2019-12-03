@@ -104,9 +104,19 @@ resource "google_compute_network" "gitlab" {
 
 resource "google_compute_subnetwork" "subnetwork" {
   name          = "gitlab"
-  ip_cidr_range = "10.0.0.0/16"
+  ip_cidr_range = "10.127.0.0/20"
   region        = "${var.region}"
   network       = "${google_compute_network.gitlab.self_link}"
+
+  secondary_ip_range {
+    range_name    = "gitlab-gke-pods"
+    ip_cidr_range = "10.36.0.0/14"
+  }
+
+  secondary_ip_range {
+    range_name    = "gitlab-gke-services"
+    ip_cidr_range = "10.229.0.0/20"
+  }
 }
 
 resource "google_compute_address" "gitlab" {
@@ -238,9 +248,8 @@ resource "google_container_cluster" "gitlab" {
   subnetwork = "${google_compute_subnetwork.subnetwork.self_link}"
 
   ip_allocation_policy {
-    # Allocate ranges automatically
-    cluster_ipv4_cidr_block  = ""
-    services_ipv4_cidr_block = ""
+    cluster_secondary_range_name  = "${google_compute_subnetwork.subnetwork.secondary_ip_range[0].range_name}"
+    services_secondary_range_name = "${google_compute_subnetwork.subnetwork.secondary_ip_range[1].range_name}"
   }
 
   enable_legacy_abac = true
