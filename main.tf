@@ -196,8 +196,8 @@ resource "google_storage_bucket" "gitlab-artifacts" {
   location = "${var.region}"
 }
 
-resource "google_storage_bucket" "gitlab-lfs" {
-  name     = "${var.project_id}-gitlab-lfs"
+resource "google_storage_bucket" "git-lfs" {
+  name     = "${var.project_id}-git-lfs"
   location = "${var.region}"
 }
 
