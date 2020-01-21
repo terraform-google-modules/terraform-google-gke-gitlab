@@ -26,6 +26,11 @@ variable "domain" {
 variable "certmanager_email" {
   description = "Email used to retrieve SSL certificates from Let's Encrypt"
 }
+   
+variable "gke_version" {
+  description = "Version of GKE to use for the GitLab cluster"
+  default     = "1.14"
+}
 
 variable "gitlab_db_password" {
   description = "Password for the GitLab Postgres user"
