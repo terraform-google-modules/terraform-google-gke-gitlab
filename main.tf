@@ -409,6 +409,13 @@ data "template_file" "helm_values" {
   }
 }
 
+resource "null_resource" "sleep_for_cluster_fix_helm_6361" {
+  provisioner "local-exec" {
+    command = "sleep 120"
+  }
+  depends_on = ["google_container_cluster.gitlab"]
+}
+
 resource "helm_release" "gitlab" {
   name       = "gitlab"
   repository = "${data.helm_repository.gitlab.name}"
@@ -423,5 +430,6 @@ resource "helm_release" "gitlab" {
     "google_sql_user.gitlab",
     "kubernetes_cluster_role_binding.tiller-admin",
     "kubernetes_storage_class.pd-ssd",
+    "null_resource.sleep_for_cluster_fix_helm_6361",
   ]
 }
