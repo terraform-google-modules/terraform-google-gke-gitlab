@@ -186,6 +186,11 @@ resource "google_redis_instance" "gitlab" {
 }
 
 // Cloud Storage
+resource "google_storage_bucket" "gitlab-backups" {
+  name     = "${var.project_id}-gitlab-backups"
+  location = "${var.region}"
+}
+
 resource "google_storage_bucket" "gitlab-uploads" {
   name     = "${var.project_id}-gitlab-uploads"
   location = "${var.region}"
