@@ -416,7 +416,7 @@ data "template_file" "helm_values" {
 
 resource "null_resource" "sleep_for_cluster_fix_helm_6361" {
   provisioner "local-exec" {
-    command = "sleep 120"
+    command = "sleep 180"
   }
   depends_on = ["google_container_cluster.gitlab"]
 }
