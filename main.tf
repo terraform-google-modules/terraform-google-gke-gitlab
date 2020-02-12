@@ -17,7 +17,13 @@
 terraform {
   required_version = ">= 0.12.0"
   required_providers {
+    google = "3.8.0"
+    google-beta = "3.8.0"
     helm = "~> 0.10"
+    kubernetes = "~> 1.10.0"
+    null = "~> 2.1.2"
+    random = "~> 2.2.1"
+    template = "~> 2.1.2"
   }
 }
 
