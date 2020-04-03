@@ -32,6 +32,11 @@ variable "gke_version" {
   default     = "1.14"
 }
 
+variable "gitlab_db_name" {
+  description = "Instance name for the GitLab Postgres database."
+  default     = "gitlab-db"
+}
+
 variable "gitlab_db_password" {
   description = "Password for the GitLab Postgres user"
   default     = ""
