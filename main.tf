@@ -147,7 +147,7 @@ resource "google_service_networking_connection" "private_vpc_connection" {
 
 resource "google_sql_database_instance" "gitlab_db" {
   depends_on       = ["google_service_networking_connection.private_vpc_connection"]
-  name             = "gitlab-db"
+  name             = "${var.gitlab_db_name}"
   region           = "${var.region}"
   database_version = "POSTGRES_9_6"
 
