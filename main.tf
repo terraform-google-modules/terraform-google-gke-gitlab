@@ -116,6 +116,16 @@ resource "google_compute_subnetwork" "subnetwork" {
   ip_cidr_range = "10.0.0.0/16"
   region        = "${var.region}"
   network       = "${google_compute_network.gitlab.self_link}"
+
+  secondary_ip_range {
+    range_name    = "gitlab-cluster-pod-cidr"
+    ip_cidr_range = "10.3.0.0/16"
+  }
+
+  secondary_ip_range {
+    range_name    = "gitlab-cluster-service-cidr"
+    ip_cidr_range = "10.2.0.0/16"
+  }
 }
 
 resource "google_compute_address" "gitlab" {
@@ -135,6 +145,7 @@ resource "google_compute_global_address" "gitlab_sql" {
   purpose       = "VPC_PEERING"
   address_type  = "INTERNAL"
   network       = "${google_compute_network.gitlab.self_link}"
+  address       = "10.1.0.0"
   prefix_length = 16
 }
 
@@ -250,9 +261,8 @@ resource "google_container_cluster" "gitlab" {
   subnetwork = "${google_compute_subnetwork.subnetwork.self_link}"
 
   ip_allocation_policy {
-    # Allocate ranges automatically
-    cluster_ipv4_cidr_block  = ""
-    services_ipv4_cidr_block = ""
+    cluster_secondary_range_name  = "gitlab-cluster-pod-cidr"
+    services_secondary_range_name = "gitlab-cluster-service-cidr"
   }
 
   enable_legacy_abac = true
