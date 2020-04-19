@@ -56,3 +56,18 @@ variable "region" {
   default     = "us-central1"
   description = "GCP region to deploy resources to"
 }
+
+variable "gitlab_nodes_subnet_cidr" {
+  default     = "10.0.0.0/16"
+  description = "Cidr range to use for gitlab GKE nodes subnet"
+}
+
+variable "gitlab_pods_subnet_cidr" {
+  default     = "10.3.0.0/16"
+  description = "Cidr range to use for gitlab GKE pods subnet"
+}
+
+variable "gitlab_services_subnet_cidr" {
+  default     = "10.2.0.0/16"
+  description = "Cidr range to use for gitlab GKE services subnet"
+}
