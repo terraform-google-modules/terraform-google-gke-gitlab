@@ -418,6 +418,8 @@ locals {
 }
 
 data "template_file" "helm_values" {
+  # 12.7 changed to "redis.install"
+  # Helm Chart 3.0.0 first to use 12.x
   template = "${file("${path.module}/values.yaml.tpl")}"
 
   vars = {
@@ -442,7 +444,7 @@ resource "helm_release" "gitlab" {
   name       = "gitlab"
   repository = "${data.helm_repository.gitlab.name}"
   chart      = "gitlab"
-  version    = "2.3.7"
+  version    = "${var.helm_chart_version}"
   timeout    = 600
 
   values = ["${data.template_file.helm_values.rendered}"]
