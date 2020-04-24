@@ -26,7 +26,7 @@ variable "domain" {
 variable "certmanager_email" {
   description = "Email used to retrieve SSL certificates from Let's Encrypt"
 }
-   
+
 variable "gke_version" {
   description = "Version of GKE to use for the GitLab cluster"
   default     = "1.14"
@@ -70,4 +70,9 @@ variable "gitlab_pods_subnet_cidr" {
 variable "gitlab_services_subnet_cidr" {
   default     = "10.2.0.0/16"
   description = "Cidr range to use for gitlab GKE services subnet"
+}
+variable "helm_chart_version" {
+  type        = string
+  default     = "2.3.7"
+  description = "Helm chart version to install during deployment"
 }
