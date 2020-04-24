@@ -103,6 +103,12 @@ resource "google_project_iam_member" "project" {
   member  = "serviceAccount:${google_service_account.gitlab_gcs.email}"
 }
 
+resource "google_project_iam_member" "storageObjectAdmin" {
+  project = "${var.project_id}"
+  role    = "roles/storage.objectAdmin"
+  member  = "serviceAccount:${google_service_account.gitlab_gcs.email}"
+}
+
 // Networking
 resource "google_compute_network" "gitlab" {
   name                    = "gitlab"
