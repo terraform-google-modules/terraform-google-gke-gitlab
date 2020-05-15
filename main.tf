@@ -14,19 +14,6 @@
  * limitations under the License.
  */
 
-terraform {
-  required_version = ">= 0.12.0"
-  required_providers {
-    google = "3.8.0"
-    google-beta = "3.8.0"
-    helm = "~> 0.10"
-    kubernetes = "~> 1.10.0"
-    null = "~> 2.1.2"
-    random = "~> 2.2.1"
-    template = "~> 2.1.2"
-  }
-}
-
 provider "google" {
   project = "${var.project_id}"
 }
@@ -35,28 +22,36 @@ provider "google-beta" {
   project = "${var.project_id}"
 }
 
+module "gke_auth" {
+  source  = "git::https://github.com/terraform-google-modules/terraform-google-kubernetes-engine.git//modules/auth?ref=fix/empty-auth"
+  # version = "~> 9.0"
+
+  project_id       = var.project_id
+  cluster_name     = module.gke.name
+  location         = module.gke.location
+}
+
 provider "helm" {
   service_account = "tiller"
   install_tiller  = true
   namespace       = "kube-system"
 
   kubernetes {
-    host                   = "${google_container_cluster.gitlab.endpoint}"
-    client_certificate     = "${base64decode(google_container_cluster.gitlab.master_auth.0.client_certificate)}"
-    client_key             = "${base64decode(google_container_cluster.gitlab.master_auth.0.client_key)}"
-    cluster_ca_certificate = "${base64decode(google_container_cluster.gitlab.master_auth.0.cluster_ca_certificate)}"
+    cluster_ca_certificate = module.gke_auth.cluster_ca_certificate
+    host                   = module.gke_auth.host
+    token                  = module.gke_auth.token
   }
 }
 
 provider "kubernetes" {
-  load_config_file       = false
-  host                   = "${google_container_cluster.gitlab.endpoint}"
-  client_certificate     = "${base64decode(google_container_cluster.gitlab.master_auth.0.client_certificate)}"
-  client_key             = "${base64decode(google_container_cluster.gitlab.master_auth.0.client_key)}"
-  cluster_ca_certificate = "${base64decode(google_container_cluster.gitlab.master_auth.0.cluster_ca_certificate)}"
+  load_config_file = false
+
+  cluster_ca_certificate = module.gke_auth.cluster_ca_certificate
+  host                   = module.gke_auth.host
+  token                  = module.gke_auth.token
 }
 
-// IAM
+// Services
 resource "google_project_service" "compute" {
   project            = "${var.project_id}"
   service            = "compute.googleapis.com"
@@ -87,6 +82,7 @@ resource "google_project_service" "redis" {
   disable_on_destroy = false
 }
 
+// GCS Service Account
 resource "google_service_account" "gitlab_gcs" {
   project      = "${var.project_id}"
   account_id   = "gitlab-gcs"
@@ -244,63 +240,39 @@ resource "google_storage_bucket" "gitlab-runner-cache" {
   location = "${var.region}"
 }
 // GKE Cluster
-resource "google_container_cluster" "gitlab" {
-  project            = "${var.project_id}"
-  name               = "gitlab"
-  location           = "${var.region}"
-  min_master_version = "${var.gke_version}"
+module "gke" {
+  source = "terraform-google-modules/kubernetes-engine/google"
+  version = "~> 9.0"
 
-  # We can't create a cluster with no node pool defined, but we want to only use
-  # separately managed node pools. So we create the smallest possible default
-  # node pool and immediately delete it.
-  remove_default_node_pool = true
+  # Create an implicit dependency on service activation
+  project_id                 = google_project_service.gke.project
 
+  name                       = "gitlab"
+  region                     = var.region
+  regional = true
+  kubernetes_version = var.gke_version
+
+  remove_default_node_pool=true
   initial_node_count = 1
 
-  network    = "${google_compute_network.gitlab.self_link}"
-  subnetwork = "${google_compute_subnetwork.subnetwork.self_link}"
+  network                    = google_compute_network.gitlab.name
+  subnetwork                 = google_compute_subnetwork.subnetwork.name
+  ip_range_pods              = "gitlab-cluster-pod-cidr"
+  ip_range_services          = "gitlab-cluster-service-cidr"
 
-  ip_allocation_policy {
-    cluster_secondary_range_name  = "gitlab-cluster-pod-cidr"
-    services_secondary_range_name = "gitlab-cluster-service-cidr"
-  }
+  issue_client_certificate = true
 
-  enable_legacy_abac = true
+  node_pools = [
+    {
+      name               = "gitlab"
+      autoscaling        = false
+      machine_type       = "n1-standard-4"
+      node_count         = 1
+    },
+  ]
 
-  # Setting an empty username and password explicitly disables basic auth
-  master_auth {
-    username = ""
-    password = ""
-
-    client_certificate_config {
-      issue_client_certificate = true
-    }
-  }
-
-  node_config {
-    oauth_scopes = [
-      "https://www.googleapis.com/auth/compute",
-      "https://www.googleapis.com/auth/devstorage.read_only",
-      "https://www.googleapis.com/auth/logging.write",
-      "https://www.googleapis.com/auth/monitoring",
-    ]
-  }
-
-  depends_on = ["google_project_service.gke"]
-}
-
-resource "google_container_node_pool" "gitlab" {
-  name       = "gitlab"
-  location   = "${var.region}"
-  cluster    = "${google_container_cluster.gitlab.name}"
-  node_count = 1
-  depends_on = []
-
-  node_config {
-    preemptible  = false
-    machine_type = "n1-standard-4"
-
-    oauth_scopes = [
+  node_pools_oauth_scopes = {
+    all = [
       "https://www.googleapis.com/auth/compute",
       "https://www.googleapis.com/auth/devstorage.read_only",
       "https://www.googleapis.com/auth/logging.write",
@@ -413,7 +385,7 @@ data "google_compute_address" "gitlab" {
 }
 
 locals {
-  gitlab_address = "${var.gitlab_address_name}" == "" ? "${google_compute_address.gitlab.0.address}" : "${data.google_compute_address.gitlab.0.address}"
+  gitlab_address = var.gitlab_address_name == "" ? google_compute_address.gitlab.0.address : data.google_compute_address.gitlab.0.address
   domain         = "${var.domain}" != "" ? "${var.domain}" : "${local.gitlab_address}.xip.io"
 }
 
@@ -435,7 +407,7 @@ resource "null_resource" "sleep_for_cluster_fix_helm_6361" {
   provisioner "local-exec" {
     command = "sleep 180"
   }
-  depends_on = ["google_container_cluster.gitlab"]
+  depends_on = [module.gke.endpoint]
 }
 
 resource "helm_release" "gitlab" {
