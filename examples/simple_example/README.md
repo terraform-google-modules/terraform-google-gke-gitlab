@@ -8,7 +8,6 @@ This example illustrates how to use the `gke-gitlab` module.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|:----:|:-----:|:-----:|
-| certmanager\_email | Email used to retrieve SSL certificates from Let's Encrypt | string | n/a | yes |
 | project\_id | The project ID to deploy to | string | n/a | yes |
 
 ## Outputs

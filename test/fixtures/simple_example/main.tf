@@ -14,17 +14,8 @@
  * limitations under the License.
  */
 
-resource "random_string" "random_suffix" {
-  length  = 4
-  upper   = "false"
-  lower   = "true"
-  number  = "false"
-  special = "false"
-}
-
 module "gke-gitlab" {
   source = "../../../examples/simple_example"
 
-  project_id        = "${var.project_id}"
-  certmanager_email = "test@example.com"
+  project_id        = var.project_id
 }

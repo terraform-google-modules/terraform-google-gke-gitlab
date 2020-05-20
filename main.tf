@@ -52,34 +52,20 @@ provider "kubernetes" {
 }
 
 // Services
-resource "google_project_service" "compute" {
-  project            = "${var.project_id}"
-  service            = "compute.googleapis.com"
-  disable_on_destroy = false
-}
+module "project_services" {
+  source  = "terraform-google-modules/project-factory/google//modules/project_services"
+  version = "~> 8.0"
 
-resource "google_project_service" "gke" {
-  project            = "${var.project_id}"
-  service            = "container.googleapis.com"
-  disable_on_destroy = false
-}
+  project_id                  = var.project_id
+  disable_services_on_destroy = false
 
-resource "google_project_service" "service_networking" {
-  project            = "${var.project_id}"
-  service            = "servicenetworking.googleapis.com"
-  disable_on_destroy = false
-}
-
-resource "google_project_service" "cloudresourcemanager" {
-  project            = "${var.project_id}"
-  service            = "cloudresourcemanager.googleapis.com"
-  disable_on_destroy = false
-}
-
-resource "google_project_service" "redis" {
-  project            = "${var.project_id}"
-  service            = "redis.googleapis.com"
-  disable_on_destroy = false
+  activate_apis = [
+    "compute.googleapis.com",
+    "container.googleapis.com",
+    "servicenetworking.googleapis.com",
+    "cloudresourcemanager.googleapis.com",
+    "redis.googleapis.com"
+  ]
 }
 
 // GCS Service Account
@@ -102,9 +88,8 @@ resource "google_project_iam_member" "project" {
 // Networking
 resource "google_compute_network" "gitlab" {
   name                    = "gitlab"
-  project                 = "${var.project_id}"
+  project                 = module.project_services.project_id
   auto_create_subnetworks = false
-  depends_on              = ["google_project_service.compute"]
 }
 
 resource "google_compute_subnetwork" "subnetwork" {
@@ -129,7 +114,7 @@ resource "google_compute_address" "gitlab" {
   region       = "${var.region}"
   address_type = "EXTERNAL"
   description  = "Gitlab Ingress IP"
-  depends_on   = ["google_project_service.compute"]
+  depends_on   = [module.project_services.project_id]
   count        = "${var.gitlab_address_name}" == "" ? 1 : 0
 }
 
@@ -150,6 +135,7 @@ resource "google_service_networking_connection" "private_vpc_connection" {
   network                 = "${google_compute_network.gitlab.self_link}"
   service                 = "servicenetworking.googleapis.com"
   reserved_peering_ranges = ["${google_compute_global_address.gitlab_sql.name}"]
+  depends_on              = [module.project_services.project_id]
 }
 
 resource "google_sql_database_instance" "gitlab_db" {
@@ -194,7 +180,7 @@ resource "google_redis_instance" "gitlab" {
   region             = "${var.region}"
   authorized_network = "${google_compute_network.gitlab.self_link}"
 
-  depends_on = ["google_project_service.redis"]
+  depends_on = [module.project_services.project_id]
 
   display_name = "GitLab Redis"
 }
@@ -245,7 +231,7 @@ module "gke" {
   version = "~> 9.0"
 
   # Create an implicit dependency on service activation
-  project_id                 = google_project_service.gke.project
+  project_id                 = module.project_services.project_id
 
   name                       = "gitlab"
   region                     = var.region
