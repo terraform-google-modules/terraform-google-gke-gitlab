@@ -26,9 +26,9 @@ module "gke_auth" {
   source  = "terraform-google-modules/kubernetes-engine/google//modules/auth"
   version = "~> 9.1"
 
-  project_id       = var.project_id
-  cluster_name     = module.gke.name
-  location         = module.gke.location
+  project_id   = var.project_id
+  cluster_name = module.gke.name
+  location     = module.gke.location
 }
 
 provider "helm" {
@@ -227,33 +227,33 @@ resource "google_storage_bucket" "gitlab-runner-cache" {
 }
 // GKE Cluster
 module "gke" {
-  source = "terraform-google-modules/kubernetes-engine/google"
+  source  = "terraform-google-modules/kubernetes-engine/google"
   version = "~> 9.0"
 
   # Create an implicit dependency on service activation
-  project_id                 = module.project_services.project_id
+  project_id = module.project_services.project_id
 
-  name                       = "gitlab"
-  region                     = var.region
-  regional = true
+  name               = "gitlab"
+  region             = var.region
+  regional           = true
   kubernetes_version = var.gke_version
 
-  remove_default_node_pool=true
-  initial_node_count = 1
+  remove_default_node_pool = true
+  initial_node_count       = 1
 
-  network                    = google_compute_network.gitlab.name
-  subnetwork                 = google_compute_subnetwork.subnetwork.name
-  ip_range_pods              = "gitlab-cluster-pod-cidr"
-  ip_range_services          = "gitlab-cluster-service-cidr"
+  network           = google_compute_network.gitlab.name
+  subnetwork        = google_compute_subnetwork.subnetwork.name
+  ip_range_pods     = "gitlab-cluster-pod-cidr"
+  ip_range_services = "gitlab-cluster-service-cidr"
 
   issue_client_certificate = true
 
   node_pools = [
     {
-      name               = "gitlab"
-      autoscaling        = false
-      machine_type       = "n1-standard-4"
-      node_count         = 1
+      name         = "gitlab"
+      autoscaling  = false
+      machine_type = "n1-standard-4"
+      node_count   = 1
     },
   ]
 
