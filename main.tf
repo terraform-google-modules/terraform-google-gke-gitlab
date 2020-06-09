@@ -134,12 +134,12 @@ resource "google_service_networking_connection" "private_vpc_connection" {
   provider                = google-beta
   network                 = google_compute_network.gitlab.self_link
   service                 = "servicenetworking.googleapis.com"
-  reserved_peering_ranges = ["${google_compute_global_address.gitlab_sql.name}"]
+  reserved_peering_ranges = [google_compute_global_address.gitlab_sql.name]
   depends_on              = [module.project_services.project_id]
 }
 
 resource "google_sql_database_instance" "gitlab_db" {
-  depends_on       = ["google_service_networking_connection.private_vpc_connection"]
+  depends_on       = [google_service_networking_connection.private_vpc_connection]
   name             = var.gitlab_db_name
   region           = var.region
   database_version = "POSTGRES_9_6"
@@ -198,12 +198,12 @@ resource "google_storage_bucket" "gitlab-uploads" {
 
 resource "google_storage_bucket" "gitlab-artifacts" {
   name     = "${var.project_id}-gitlab-artifacts"
-  location = "${var.region}"
+  location = var.region
 }
 
 resource "google_storage_bucket" "git-lfs" {
   name     = "${var.project_id}-git-lfs"
-  location = "${var.region}"
+  location = var.region
 }
 
 resource "google_storage_bucket" "gitlab-packages" {
