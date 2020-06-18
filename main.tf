@@ -53,7 +53,8 @@ provider "kubernetes" {
 
 // Services
 module "project_services" {
-  source  = "terraform-google-modules/project-factory/google//modules/project_services"
+  # source  = "terraform-google-modules/project-factory/google//modules/project_services"
+  source = "github.com/WillBeebe/terraform-google-project-factory//modules/project_services"
   version = "~> 8.0"
 
   project_id                  = var.project_id
@@ -371,7 +372,7 @@ data "google_compute_address" "gitlab" {
 }
 
 locals {
-  gitlab_address = var.gitlab_address_name == "" ? google_compute_address.gitlab.0.address : (data.google_compute_address.gitlab.0.address ? google_compute_address.gitlab.0.address : data.google_compute_address.gitlab.0.address)
+  gitlab_address = var.gitlab_address_name == "" ? google_compute_address.gitlab.0.address : data.google_compute_address.gitlab.0.address
   domain         = var.domain != "" ? var.domain : "${local.gitlab_address}.xip.io"
 }
 
