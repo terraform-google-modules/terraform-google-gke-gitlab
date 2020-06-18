@@ -228,8 +228,9 @@ resource "google_storage_bucket" "gitlab-runner-cache" {
 }
 // GKE Cluster
 module "gke" {
-  source  = "terraform-google-modules/kubernetes-engine/google"
-  version = "~> 9.0"
+  source            = "github.com/WillBeebe/terraform-google-kubernetes-engine"
+  # source  = "terraform-google-modules/kubernetes-engine/google"
+  # version = "~> 9.0"
 
   # Create an implicit dependency on service activation
   project_id = module.project_services.project_id
