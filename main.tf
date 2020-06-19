@@ -32,9 +32,9 @@ module "gke_auth" {
 }
 
 provider "helm" {
-  service_account = "tiller"
-  install_tiller  = true
-  namespace       = "kube-system"
+  # service_account = "tiller"
+  # install_tiller  = true
+  # namespace       = "kube-system"
 
   kubernetes {
     cluster_ca_certificate = module.gke_auth.cluster_ca_certificate
