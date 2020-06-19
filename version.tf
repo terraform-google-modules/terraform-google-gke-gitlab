@@ -30,7 +30,7 @@ terraform {
       version = "~> 0.10"
     }
     kubernetes = {
-      source  = "terraform-providers/kubernetes"
+      source  = "hashicorp/kubernetes"
       version = "~> 1.10.0"
     }
     null = {
