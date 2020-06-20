@@ -53,9 +53,8 @@ provider "kubernetes" {
 
 // Services
 module "project_services" {
-  # source  = "terraform-google-modules/project-factory/google//modules/project_services"
-  source = "github.com/WillBeebe/terraform-google-project-factory//modules/project_services"
-  # version = "~> 8.0"
+  source  = "terraform-google-modules/project-factory/google//modules/project_services"
+  version = "~> 8.0"
 
   project_id                  = var.project_id
   disable_services_on_destroy = false
@@ -228,9 +227,8 @@ resource "google_storage_bucket" "gitlab-runner-cache" {
 }
 // GKE Cluster
 module "gke" {
-  source            = "github.com/WillBeebe/terraform-google-kubernetes-engine"
-  # source  = "terraform-google-modules/kubernetes-engine/google"
-  # version = "~> 9.0"
+  source  = "terraform-google-modules/kubernetes-engine/google"
+  version = "~> 9.0"
 
   # Create an implicit dependency on service activation
   project_id = module.project_services.project_id
