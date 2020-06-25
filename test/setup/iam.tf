@@ -14,8 +14,26 @@
  * limitations under the License.
  */
 
-module "gke-gitlab" {
-  source = "../../../examples/simple_example"
+locals {
+  int_required_roles = [
+    "roles/owner"
+  ]
+}
 
-  project_id = var.project_id
+resource "google_service_account" "int_test" {
+  project      = module.gke-gitlab-proj.project_id
+  account_id   = "gke-ci-account"
+  display_name = "gke-ci-account"
+}
+
+resource "google_project_iam_member" "int_test" {
+  count = length(local.int_required_roles)
+
+  project = module.gke-gitlab-proj.project_id
+  role    = local.int_required_roles[count.index]
+  member  = "serviceAccount:${google_service_account.int_test.email}"
+}
+
+resource "google_service_account_key" "int_test" {
+  service_account_id = google_service_account.int_test.id
 }

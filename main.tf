@@ -26,17 +26,14 @@ module "gke_auth" {
   source  = "terraform-google-modules/kubernetes-engine/google//modules/auth"
   version = "~> 9.1"
 
-  project_id   = var.project_id
+  project_id   = module.project_services.project_id
   cluster_name = module.gke.name
   location     = module.gke.location
 }
 
 provider "helm" {
-  service_account = "tiller"
-  install_tiller  = true
-  namespace       = "kube-system"
-
   kubernetes {
+    load_config_file       = false
     cluster_ca_certificate = module.gke_auth.cluster_ca_certificate
     host                   = module.gke_auth.host
     token                  = module.gke_auth.token
@@ -252,7 +249,7 @@ module "gke" {
     {
       name         = "gitlab"
       autoscaling  = false
-      machine_type = "n1-standard-4"
+      machine_type = var.gke_machine_type
       node_count   = 1
     },
   ]
@@ -264,31 +261,6 @@ module "gke" {
       "https://www.googleapis.com/auth/logging.write",
       "https://www.googleapis.com/auth/monitoring",
     ]
-  }
-}
-
-resource "kubernetes_service_account" "tiller" {
-  metadata {
-    name      = "tiller"
-    namespace = "kube-system"
-  }
-}
-
-resource "kubernetes_cluster_role_binding" "tiller-admin" {
-  metadata {
-    name = "tiller-admin"
-  }
-
-  role_ref {
-    api_group = "rbac.authorization.k8s.io"
-    kind      = "ClusterRole"
-    name      = "cluster-admin"
-  }
-
-  subject {
-    kind      = "ServiceAccount"
-    name      = "tiller"
-    namespace = "kube-system"
   }
 }
 
@@ -357,11 +329,6 @@ resource "kubernetes_secret" "gitlab_gcs_credentials" {
   }
 }
 
-data "helm_repository" "gitlab" {
-  name = "gitlab"
-  url  = "https://charts.gitlab.io"
-}
-
 data "google_compute_address" "gitlab" {
   name   = var.gitlab_address_name
   region = var.region
@@ -398,7 +365,7 @@ resource "null_resource" "sleep_for_cluster_fix_helm_6361" {
 
 resource "helm_release" "gitlab" {
   name       = "gitlab"
-  repository = data.helm_repository.gitlab.name
+  repository = "https://charts.gitlab.io"
   chart      = "gitlab"
   version    = var.helm_chart_version
   timeout    = 600
@@ -409,7 +376,6 @@ resource "helm_release" "gitlab" {
     google_redis_instance.gitlab,
     google_sql_database.gitlabhq_production,
     google_sql_user.gitlab,
-    kubernetes_cluster_role_binding.tiller-admin,
     kubernetes_storage_class.pd-ssd,
     null_resource.sleep_for_cluster_fix_helm_6361,
   ]

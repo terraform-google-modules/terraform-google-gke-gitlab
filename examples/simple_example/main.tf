@@ -14,7 +14,13 @@
  * limitations under the License.
  */
 
-provider "google" {}
+provider "google" {
+  version = "~> 3.26.0"
+}
+
+provider "google-beta" {
+  version = "~> 3.26.0"
+}
 
 module "gke-gitlab" {
   source            = "../../"

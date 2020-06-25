@@ -14,8 +14,25 @@
  * limitations under the License.
  */
 
-module "gke-gitlab" {
-  source = "../../../examples/simple_example"
+module "gke-gitlab-proj" {
+  source  = "terraform-google-modules/project-factory/google"
+  version = "~> 8.0"
 
-  project_id = var.project_id
+  name                 = "ci-gitlab"
+  random_project_id    = true
+  org_id               = var.org_id
+  folder_id            = var.folder_id
+  billing_account      = var.billing_account
+  skip_gcloud_download = true
+
+  auto_create_network = true
+
+  activate_apis = [
+    "iam.googleapis.com",
+    "serviceusage.googleapis.com",
+    "compute.googleapis.com",
+    "container.googleapis.com",
+    "cloudresourcemanager.googleapis.com",
+    "sqladmin.googleapis.com",
+  ]
 }

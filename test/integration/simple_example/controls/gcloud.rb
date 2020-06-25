@@ -1,10 +1,10 @@
-# Copyright 2018 Google LLC
+# Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#      http://www.apache.org/licenses/LICENSE-2.0
+#     https://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -12,32 +12,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-project_id = attribute('project_id')
+require 'rest-client'
+
+gitlab_url = attribute('gitlab_url')
 
 control "gcloud" do
-  title "gcloud configuration"
-  describe command("gcloud --project=#{project_id} services list --available --format=json") do
-    its(:exit_status) { should eq 0 }
-    its(:stderr) { should eq '' }
-
-    let(:data) do
-      if subject.exit_status == 0
-        JSON.parse(subject.stdout)
-      else
-        {}
-      end
-    end
-
-    describe "enabled services" do
-      it "includes storage-api" do
-        expect(data).to include(
-          including(
-            "config" => including(
-              "name" => "storage-api.googleapis.com",
-            ),
-          ),
-        )
-      end
-    end
-  end
+	title "gitlab url"
+	describe "gitlab" do
+		it "is reachable" do
+			expect {
+				10.times do
+					unless host(gitlab_url.delete_prefix("https://"), port: 443, protocol: 'tcp').reachable?
+						puts "Gitlab is not reachable, retrying.."
+						sleep 10
+					end
+				end
+				RestClient.get(gitlab_url)
+			}.to_not raise_exception
+		end
+	end
 end

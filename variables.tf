@@ -29,7 +29,12 @@ variable "certmanager_email" {
 
 variable "gke_version" {
   description = "Version of GKE to use for the GitLab cluster"
-  default     = "1.14"
+  default     = "1.16"
+}
+
+variable "gke_machine_type" {
+  description = "Machine type used for the node-pool"
+  default     = "n1-standard-4"
 }
 
 variable "gitlab_db_name" {
@@ -73,6 +78,6 @@ variable "gitlab_services_subnet_cidr" {
 }
 variable "helm_chart_version" {
   type        = string
-  default     = "2.3.7"
+  default     = "4.1.1"
   description = "Helm chart version to install during deployment"
 }
