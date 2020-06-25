@@ -28,21 +28,25 @@ Then perform the following commands on the root folder:
 - `terraform destroy` to destroy the built infrastructure
 
 
-[^]: (autogen_docs_start)
-
+ <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
-| certmanager\_email | Email used to retrieve SSL certificates from Let's Encrypt | `any` | n/a | yes |
-| domain | Domain for hosting gitlab functionality (ie mydomain.com would access gitlab at gitlab.mydomain.com) | `string` | `""` | no |
-| gitlab\_address\_name | Name of the address to use for GitLab ingress | `string` | `""` | no |
-| gitlab\_db\_name | Instance name for the GitLab Postgres database. | `string` | `"gitlab-db"` | no |
-| gitlab\_db\_password | Password for the GitLab Postgres user | `string` | `""` | no |
-| gitlab\_runner\_install | Choose whether to install the gitlab runner in the cluster | `bool` | `true` | no |
-| gke\_version | Version of GKE to use for the GitLab cluster | `string` | `"1.14"` | no |
-| project\_id | GCP Project to deploy resources | `any` | n/a | yes |
-| region | GCP region to deploy resources to | `string` | `"us-central1"` | no |
+|------|-------------|:----:|:-----:|:-----:|
+| certmanager\_email | Email used to retrieve SSL certificates from Let's Encrypt | string | n/a | yes |
+| domain | Domain for hosting gitlab functionality (ie mydomain.com would access gitlab at gitlab.mydomain.com) | string | `""` | no |
+| gitlab\_address\_name | Name of the address to use for GitLab ingress | string | `""` | no |
+| gitlab\_db\_name | Instance name for the GitLab Postgres database. | string | `"gitlab-db"` | no |
+| gitlab\_db\_password | Password for the GitLab Postgres user | string | `""` | no |
+| gitlab\_nodes\_subnet\_cidr | Cidr range to use for gitlab GKE nodes subnet | string | `"10.0.0.0/16"` | no |
+| gitlab\_pods\_subnet\_cidr | Cidr range to use for gitlab GKE pods subnet | string | `"10.3.0.0/16"` | no |
+| gitlab\_runner\_install | Choose whether to install the gitlab runner in the cluster | string | `"true"` | no |
+| gitlab\_services\_subnet\_cidr | Cidr range to use for gitlab GKE services subnet | string | `"10.2.0.0/16"` | no |
+| gke\_machine\_type | Machine type used for the node-pool | string | `"n1-standard-4"` | no |
+| gke\_version | Version of GKE to use for the GitLab cluster | string | `"1.16"` | no |
+| helm\_chart\_version | Helm chart version to install during deployment | string | `"4.1.1"` | no |
+| project\_id | GCP Project to deploy resources | string | n/a | yes |
+| region | GCP region to deploy resources to | string | `"us-central1"` | no |
 
 ## Outputs
 
@@ -52,7 +56,7 @@ Then perform the following commands on the root folder:
 | gitlab\_url | URL where you can access your GitLab instance |
 | root\_password\_instructions | Instructions for getting the root user's password for initial setup |
 
-[^]: (autogen_docs_end)
+ <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
 ## Requirements
 
