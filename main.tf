@@ -368,7 +368,7 @@ resource "helm_release" "gitlab" {
   repository = "https://charts.gitlab.io"
   chart      = "gitlab"
   version    = var.helm_chart_version
-  timeout    = 600
+  timeout    = 1200
 
   values = [data.template_file.helm_values.rendered]
 
