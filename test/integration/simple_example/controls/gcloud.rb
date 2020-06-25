@@ -27,7 +27,7 @@ control "gcloud" do
 						sleep 10
 					end
 				end
-				RestClient.get(gitlab_url)
+				RestClient::Request.execute(:url => gitlab_url, :method => :get, :verify_ssl => false)
 			}.to_not raise_exception
 		end
 	end
