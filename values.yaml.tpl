@@ -78,7 +78,6 @@ prometheus:
   install: false
 
 redis:
-  enabled: false
   install: false
 
 gitlab:

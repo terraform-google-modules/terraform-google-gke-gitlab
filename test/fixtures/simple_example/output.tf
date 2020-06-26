@@ -1,5 +1,5 @@
 /**
- * Copyright 2018 Google LLC
+ * Copyright 2020 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-// These outputs are used to test the module with inspec
-// They do not need to be included in real-world uses of this module
 
-output "project_id" {
-  value = "${var.project_id}"
+output "gitlab_url" {
+  description = "The gitlab url"
+  value       = module.gke-gitlab.gitlab_url
 }

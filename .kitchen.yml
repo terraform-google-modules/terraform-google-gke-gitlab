@@ -15,7 +15,7 @@
 ---
 driver:
   name: "terraform"
-  command_timeout: 1800
+  command_timeout: 3600
 
 provisioner:
   name: "terraform"
@@ -27,7 +27,7 @@ suites:
   - name: "simple_example"
     driver:
       name: "terraform"
-      command_timeout: 1800
+      command_timeout: 3600
       root_module_directory: test/fixtures/simple_example/
     verifier:
       name: terraform
@@ -37,10 +37,5 @@ suites:
           backend: local
           controls:
             - gcloud
-        - name: simple_example
-          backend: gcp
-          shell: true
-          controls:
-            - gcp
     provisioner:
       name: terraform

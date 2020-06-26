@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 
-output "project_id" {
-  value = "${var.project_id}"
-}
-
-output "gitlab_url" {
-  value = "${module.gke-gitlab.gitlab_url}"
+variable "project_id" {
+  type        = string
+  description = "The GCP project to use for integration tests"
 }

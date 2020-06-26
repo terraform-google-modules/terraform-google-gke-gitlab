@@ -1,5 +1,5 @@
 /**
- * Copyright 2018 Google LLC
+ * Copyright 2020 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,11 @@
  * limitations under the License.
  */
 
-variable "project_id" {
-  description = "The project ID to deploy to"
+output "project_id" {
+  value = module.gke-gitlab-proj.project_id
+}
+
+output "sa_key" {
+  value     = google_service_account_key.int_test.private_key
+  sensitive = true
 }

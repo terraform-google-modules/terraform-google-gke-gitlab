@@ -2,8 +2,7 @@
 
 This example illustrates how to use the `gke-gitlab` module.
 
-[^]: (autogen_docs_start)
-
+ <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Inputs
 
 | Name | Description | Type | Default | Required |
@@ -15,10 +14,9 @@ This example illustrates how to use the `gke-gitlab` module.
 | Name | Description |
 |------|-------------|
 | gitlab\_url |  |
-| project\_id |  |
 | root\_password\_instructions |  |
 
-[^]: (autogen_docs_end)
+ <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
 To provision this example, run the following from within this directory:
 - `terraform init` to get the plugins
