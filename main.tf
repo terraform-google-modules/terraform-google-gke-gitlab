@@ -356,11 +356,10 @@ data "template_file" "helm_values" {
   }
 }
 
-resource "null_resource" "sleep_for_cluster_fix_helm_6361" {
-  provisioner "local-exec" {
-    command = "sleep 180"
-  }
-  depends_on = [module.gke.endpoint]
+resource "time_sleep" "sleep_for_cluster_fix_helm_6361" {
+  create_duration  = "180s"
+  destroy_duration = "180s"
+  depends_on       = [module.gke.endpoint, google_sql_database.gitlabhq_production]
 }
 
 resource "helm_release" "gitlab" {
@@ -374,9 +373,8 @@ resource "helm_release" "gitlab" {
 
   depends_on = [
     google_redis_instance.gitlab,
-    google_sql_database.gitlabhq_production,
     google_sql_user.gitlab,
     kubernetes_storage_class.pd-ssd,
-    null_resource.sleep_for_cluster_fix_helm_6361,
+    time_sleep.sleep_for_cluster_fix_helm_6361,
   ]
 }
