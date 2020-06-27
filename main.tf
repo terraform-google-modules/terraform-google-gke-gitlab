@@ -22,6 +22,17 @@ provider "google-beta" {
   project = var.project_id
 }
 
+locals {
+  gitlab_db_name = var.gitlab_db_random_prefix ? "${var.gitlab_db_name}-${random_id.suffix[0].hex}" : var.gitlab_db_name
+}
+
+resource "random_id" "suffix" {
+  count = var.gitlab_db_random_prefix ? 1 : 0
+
+  byte_length = 4
+}
+
+
 module "gke_auth" {
   source  = "terraform-google-modules/kubernetes-engine/google//modules/auth"
   version = "~> 9.1"
@@ -137,7 +148,7 @@ resource "google_service_networking_connection" "private_vpc_connection" {
 
 resource "google_sql_database_instance" "gitlab_db" {
   depends_on       = [google_service_networking_connection.private_vpc_connection]
-  name             = var.gitlab_db_name
+  name             = local.gitlab_db_name
   region           = var.region
   database_version = "POSTGRES_9_6"
 
