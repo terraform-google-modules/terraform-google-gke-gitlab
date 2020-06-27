@@ -43,8 +43,8 @@ variable "gitlab_db_name" {
 }
 
 variable "gitlab_db_random_prefix" {
-  description = "Sets random suffix at the end of the Cloud SQL resource name."
-  default     = true
+  description = "Sets random suffix at the end of the Cloud SQL instance name."
+  default     = false
 }
 
 variable "gitlab_db_password" {

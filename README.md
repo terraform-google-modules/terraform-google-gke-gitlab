@@ -38,7 +38,7 @@ Then perform the following commands on the root folder:
 | gitlab\_address\_name | Name of the address to use for GitLab ingress | string | `""` | no |
 | gitlab\_db\_name | Instance name for the GitLab Postgres database. | string | `"gitlab-db"` | no |
 | gitlab\_db\_password | Password for the GitLab Postgres user | string | `""` | no |
-| gitlab\_db\_random\_prefix | Sets random suffix at the end of the Cloud SQL resource name. | string | `"true"` | no |
+| gitlab\_db\_random\_prefix | Sets random suffix at the end of the Cloud SQL instance name. | string | `"false"` | no |
 | gitlab\_nodes\_subnet\_cidr | Cidr range to use for gitlab GKE nodes subnet | string | `"10.0.0.0/16"` | no |
 | gitlab\_pods\_subnet\_cidr | Cidr range to use for gitlab GKE pods subnet | string | `"10.3.0.0/16"` | no |
 | gitlab\_runner\_install | Choose whether to install the gitlab runner in the cluster | string | `"true"` | no |
