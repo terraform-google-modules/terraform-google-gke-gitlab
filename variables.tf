@@ -42,6 +42,11 @@ variable "gitlab_db_name" {
   default     = "gitlab-db"
 }
 
+variable "gitlab_db_random_prefix" {
+  description = "Sets random suffix at the end of the Cloud SQL resource name."
+  default     = true
+}
+
 variable "gitlab_db_password" {
   description = "Password for the GitLab Postgres user"
   default     = ""
