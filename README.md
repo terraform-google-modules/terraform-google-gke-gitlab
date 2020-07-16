@@ -53,9 +53,14 @@ Then perform the following commands on the root folder:
 
 | Name | Description |
 |------|-------------|
+| cluster\_ca\_certificate | CA Certificate for the GKE cluster that GitLab is deployed in. |
+| cluster\_location | Location of the GKE cluster that GitLab is deployed in. |
+| cluster\_name | Name of the GKE cluster that GitLab is deployed in. |
 | gitlab\_address | IP address where you can connect to your GitLab instance |
 | gitlab\_url | URL where you can access your GitLab instance |
+| host | Host for the GKE cluster that GitLab is deployed in. |
 | root\_password\_instructions | Instructions for getting the root user's password for initial setup |
+| token | Token for the GKE cluster that GitLab is deployed in. |
 
  <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 

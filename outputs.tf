@@ -24,6 +24,31 @@ output "gitlab_url" {
   description = "URL where you can access your GitLab instance"
 }
 
+output "cluster_name" {
+  value       = module.gke.name
+  description = "Name of the GKE cluster that GitLab is deployed in."
+}
+
+output "cluster_location" {
+  value       = module.gke.location
+  description = "Location of the GKE cluster that GitLab is deployed in."
+}
+
+output "cluster_ca_certificate" {
+  value       = module.gke_auth.cluster_ca_certificate
+  description = "CA Certificate for the GKE cluster that GitLab is deployed in."
+}
+
+output "host" {
+  value       = module.gke_auth.host
+  description = "Host for the GKE cluster that GitLab is deployed in."
+}
+
+output "token" {
+  value       = module.gke_auth.token
+  description = "Token for the GKE cluster that GitLab is deployed in."
+}
+
 output "root_password_instructions" {
   value = <<EOF
 
