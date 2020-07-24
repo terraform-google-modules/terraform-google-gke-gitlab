@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this
 project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.3.0](https://www.github.com/terraform-google-modules/terraform-google-gke-gitlab/compare/v0.2.0...v0.3.0) (2020-07-16)
+
+
+### Features
+
+* Expose the K8s cluster info as outputs ([#50](https://www.github.com/terraform-google-modules/terraform-google-gke-gitlab/issues/50)) ([1ea4e88](https://www.github.com/terraform-google-modules/terraform-google-gke-gitlab/commit/1ea4e882d13b800ca213b89a27a134efc28d4afe))
+
 ## [0.2.0](https://www.github.com/terraform-google-modules/terraform-google-gke-gitlab/compare/v0.1.1...v0.2.0) (2020-06-27)
 
 
