@@ -105,7 +105,7 @@ gitlab-runner:
     locked: false
     cache:
       cacheType: gcs
-      gcsBucketname: ${PROJECT_ID}-runner-cache
+      gcsBucketName: ${PROJECT_ID}-runner-cache
       secretName: google-application-credentials
       cacheShared: true
 
