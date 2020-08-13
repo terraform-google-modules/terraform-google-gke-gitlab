@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this
 project adheres to [Semantic Versioning](http://semver.org/).
 
+### [0.3.1](https://www.github.com/terraform-google-modules/terraform-google-gke-gitlab/compare/v0.3.0...v0.3.1) (2020-08-13)
+
+
+### Bug Fixes
+
+* Fixed typo in values.yaml.tpl which prevented cache from working on GCS. ([#52](https://www.github.com/terraform-google-modules/terraform-google-gke-gitlab/issues/52)) ([ba4d0df](https://www.github.com/terraform-google-modules/terraform-google-gke-gitlab/commit/ba4d0df929627c75d76d7da1ad33f165b7d1a8a9))
+* Update to enable working with v4.2.4 of GitLab Helm Chart ([#55](https://www.github.com/terraform-google-modules/terraform-google-gke-gitlab/issues/55)) ([8dfded6](https://www.github.com/terraform-google-modules/terraform-google-gke-gitlab/commit/8dfded6d6c9fd507740ce3968614f46fa10e4454))
+
 ## [0.3.0](https://www.github.com/terraform-google-modules/terraform-google-gke-gitlab/compare/v0.2.0...v0.3.0) (2020-07-16)
 
 
