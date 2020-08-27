@@ -267,7 +267,7 @@ module "gke" {
   ]
 
   node_pools_oauth_scopes = {
-    all = var.node_pools_oauth_scopes
+    all = ["https://www.googleapis.com/auth/cloud-platform"]
   }
 }
 
