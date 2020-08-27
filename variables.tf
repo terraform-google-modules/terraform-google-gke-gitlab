@@ -86,3 +86,14 @@ variable "helm_chart_version" {
   default     = "4.2.4"
   description = "Helm chart version to install during deployment"
 }
+
+variable "node_pools_oauth_scopes" {
+  type        = list(string)
+  description = "OAuth Scopes to use on the gitlab gke instance"
+  default = [
+      "https://www.googleapis.com/auth/compute",
+      "https://www.googleapis.com/auth/devstorage.read_only",
+      "https://www.googleapis.com/auth/logging.write",
+      "https://www.googleapis.com/auth/monitoring",
+    ]
+}

@@ -267,12 +267,7 @@ module "gke" {
   ]
 
   node_pools_oauth_scopes = {
-    all = [
-      "https://www.googleapis.com/auth/compute",
-      "https://www.googleapis.com/auth/devstorage.read_only",
-      "https://www.googleapis.com/auth/logging.write",
-      "https://www.googleapis.com/auth/monitoring",
-    ]
+    all = var.node_pools_oauth_scopes
   }
 }
 
