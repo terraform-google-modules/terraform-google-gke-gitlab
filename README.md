@@ -46,6 +46,7 @@ Then perform the following commands on the root folder:
 | gke\_machine\_type | Machine type used for the node-pool | string | `"n1-standard-4"` | no |
 | gke\_version | Version of GKE to use for the GitLab cluster | string | `"1.16"` | no |
 | helm\_chart\_version | Helm chart version to install during deployment | string | `"4.2.4"` | no |
+| node\_pools\_oauth\_scopes | OAuth Scopes to use on the gitlab gke instance | list(string) | `<list>` | no |
 | project\_id | GCP Project to deploy resources | string | n/a | yes |
 | region | GCP region to deploy resources to | string | `"us-central1"` | no |
 
