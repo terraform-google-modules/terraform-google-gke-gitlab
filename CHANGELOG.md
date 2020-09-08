@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this
 project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.4.0](https://www.github.com/terraform-google-modules/terraform-google-gke-gitlab/compare/v0.3.1...v0.4.0) (2020-08-28)
+
+
+### Features
+
+* Broaden oauth scope to cloud-platform ([#56](https://www.github.com/terraform-google-modules/terraform-google-gke-gitlab/issues/56)) ([6eea966](https://www.github.com/terraform-google-modules/terraform-google-gke-gitlab/commit/6eea966f4ea4d5de2b5570f908ec756361ef8bcd))
+
 ### [0.3.1](https://www.github.com/terraform-google-modules/terraform-google-gke-gitlab/compare/v0.3.0...v0.3.1) (2020-08-13)
 
 
