@@ -6,15 +6,15 @@ This example illustrates how to use the `gke-gitlab` module.
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|:----:|:-----:|:-----:|
-| project\_id | The project ID to deploy to | string | n/a | yes |
+|------|-------------|------|---------|:--------:|
+| project\_id | The project ID to deploy to | `any` | n/a | yes |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| gitlab\_url |  |
-| root\_password\_instructions |  |
+| gitlab\_url | n/a |
+| root\_password\_instructions | n/a |
 
  <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 

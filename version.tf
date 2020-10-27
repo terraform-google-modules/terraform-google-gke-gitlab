@@ -21,11 +21,11 @@ terraform {
     # but is required for TF13
     google = {
       # source  = "hashicorp/google"
-      version = "~> 3.26"
+      version = "~> 3.39"
     }
     google-beta = {
       # source  = "terraform-providers/google-beta"
-      version = "~> 3.26"
+      version = "~> 3.39"
     }
     helm = {
       # source  = "hashicorp/helm"
