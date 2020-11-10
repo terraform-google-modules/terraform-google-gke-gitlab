@@ -15,13 +15,18 @@
  */
 
 terraform {
-  required_version = ">= 0.12"
+  required_version = ">= 0.13.0"
+  required_providers {
+    # source is not supported in TF12
+    # but is required for TF13
+    google = {
+      source  = "hashicorp/google"
+      version = "~> 3.39"
+    }
+    google-beta = {
+      source  = "terraform-providers/google-beta"
+      version = "~> 3.39"
+    }
+  }
 }
 
-provider "google" {
-  version = "3.25.0"
-}
-
-provider "google-beta" {
-  version = "3.25.0"
-}
