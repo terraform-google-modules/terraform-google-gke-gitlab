@@ -20,7 +20,7 @@ output "gitlab_address" {
 }
 
 output "gitlab_url" {
-  value       = "https://${local.domain}"
+  value       = "https://gitlab.${local.domain}"
   description = "URL where you can access your GitLab instance"
 }
 
