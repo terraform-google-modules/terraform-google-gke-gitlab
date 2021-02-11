@@ -198,43 +198,51 @@ resource "google_redis_instance" "gitlab" {
 
 // Cloud Storage
 resource "google_storage_bucket" "gitlab-backups" {
-  name     = "${var.project_id}-gitlab-backups"
-  location = var.region
+  name          = "${var.project_id}-gitlab-backups"
+  location      = var.region
+  force_destroy = var.allow_future_deletion
 }
 
 resource "google_storage_bucket" "gitlab-uploads" {
-  name     = "${var.project_id}-gitlab-uploads"
-  location = var.region
+  name          = "${var.project_id}-gitlab-uploads"
+  location      = var.region
+  force_destroy = var.allow_future_deletion
 }
 
 resource "google_storage_bucket" "gitlab-artifacts" {
-  name     = "${var.project_id}-gitlab-artifacts"
-  location = var.region
+  name          = "${var.project_id}-gitlab-artifacts"
+  location      = var.region
+  force_destroy = var.allow_future_deletion
 }
 
 resource "google_storage_bucket" "git-lfs" {
-  name     = "${var.project_id}-git-lfs"
-  location = var.region
+  name          = "${var.project_id}-git-lfs"
+  location      = var.region
+  force_destroy = var.allow_future_deletion
 }
 
 resource "google_storage_bucket" "gitlab-packages" {
-  name     = "${var.project_id}-gitlab-packages"
-  location = var.region
+  name          = "${var.project_id}-gitlab-packages"
+  location      = var.region
+  force_destroy = var.allow_future_deletion
 }
 
 resource "google_storage_bucket" "gitlab-registry" {
-  name     = "${var.project_id}-registry"
-  location = var.region
+  name          = "${var.project_id}-registry"
+  location      = var.region
+  force_destroy = var.allow_future_deletion
 }
 
 resource "google_storage_bucket" "gitlab-pseudo" {
-  name     = "${var.project_id}-pseudo"
-  location = var.region
+  name          = "${var.project_id}-pseudo"
+  location      = var.region
+  force_destroy = var.allow_future_deletion
 }
 
 resource "google_storage_bucket" "gitlab-runner-cache" {
-  name     = "${var.project_id}-runner-cache"
-  location = var.region
+  name          = "${var.project_id}-runner-cache"
+  location      = var.region
+  force_destroy = var.allow_future_deletion
 }
 // GKE Cluster
 module "gke" {
