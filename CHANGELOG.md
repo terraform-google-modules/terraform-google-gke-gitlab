@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this
 project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.5.0](https://www.github.com/terraform-google-modules/terraform-google-gke-gitlab/compare/v0.4.0...v0.5.0) (2021-03-22)
+
+
+### ⚠ BREAKING CHANGES
+
+* add Terraform 0.13 constraint and module attribution (#73)
+
+### Features
+
+* add Terraform 0.13 constraint and module attribution ([#73](https://www.github.com/terraform-google-modules/terraform-google-gke-gitlab/issues/73)) ([14b9e72](https://www.github.com/terraform-google-modules/terraform-google-gke-gitlab/commit/14b9e7212f36a8a96e8c76108343364f0914df56))
+
+
+### Bug Fixes
+
+* Dependency fixes for the Kubernetes resources ([#65](https://www.github.com/terraform-google-modules/terraform-google-gke-gitlab/issues/65)) ([802759d](https://www.github.com/terraform-google-modules/terraform-google-gke-gitlab/commit/802759d8cbac136b62ba027c3542c04991a84851))
+* Update so we don't rebuild the domain used for output.gitlab_url ([#62](https://www.github.com/terraform-google-modules/terraform-google-gke-gitlab/issues/62)) ([5248208](https://www.github.com/terraform-google-modules/terraform-google-gke-gitlab/commit/52482084dc445525d48fbd737764822a9d69b172))
+* Updating the project services and gke module versions. ([#61](https://www.github.com/terraform-google-modules/terraform-google-gke-gitlab/issues/61)) ([5e2f645](https://www.github.com/terraform-google-modules/terraform-google-gke-gitlab/commit/5e2f64573419dd31bf246c9fb90ff7f33d194a8e))
+* Upgrade minimum Google provider version to 3.39.0 ([#64](https://www.github.com/terraform-google-modules/terraform-google-gke-gitlab/issues/64)) ([1ed4fd4](https://www.github.com/terraform-google-modules/terraform-google-gke-gitlab/commit/1ed4fd49075978dbb97683b7e534defcc2200956))
+
 ## [0.4.0](https://www.github.com/terraform-google-modules/terraform-google-gke-gitlab/compare/v0.3.1...v0.4.0) (2020-08-28)
 
 
