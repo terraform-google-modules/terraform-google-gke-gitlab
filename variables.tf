@@ -88,7 +88,7 @@ variable "helm_chart_version" {
   description = "Helm chart version to install during deployment"
 }
 
-variable "allow_future_deletion" {
+variable "allow_force_destroy" {
   type        = bool
   default     = false
   description = "Allows full cleanup of resources by disabling any deletion safe guards"

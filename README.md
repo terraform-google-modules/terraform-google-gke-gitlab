@@ -33,7 +33,7 @@ Then perform the following commands on the root folder:
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| allow\_future\_deletion | Allows full cleanup of resources by disabling any deletion safe guards | `bool` | `false` | no |
+| allow\_force\_destroy | Allows full cleanup of resources by disabling any deletion safe guards | `bool` | `false` | no |
 | certmanager\_email | Email used to retrieve SSL certificates from Let's Encrypt | `any` | n/a | yes |
 | domain | Domain for hosting gitlab functionality (ie mydomain.com would access gitlab at gitlab.mydomain.com) | `string` | `""` | no |
 | gitlab\_address\_name | Name of the address to use for GitLab ingress | `string` | `""` | no |
