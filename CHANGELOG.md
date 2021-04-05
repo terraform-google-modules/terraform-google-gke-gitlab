@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this
 project adheres to [Semantic Versioning](http://semver.org/).
 
+### [0.5.1](https://www.github.com/terraform-google-modules/terraform-google-gke-gitlab/compare/v0.5.0...v0.5.1) (2021-04-05)
+
+
+### Bug Fixes
+
+* Allow cleanup of buckets even if there are objects in them ([#72](https://www.github.com/terraform-google-modules/terraform-google-gke-gitlab/issues/72)) ([cad73dd](https://www.github.com/terraform-google-modules/terraform-google-gke-gitlab/commit/cad73ddda1e69504ac51fa757cd1bc95621c0645))
+
 ## [0.5.0](https://www.github.com/terraform-google-modules/terraform-google-gke-gitlab/compare/v0.4.0...v0.5.0) (2021-03-22)
 
 
