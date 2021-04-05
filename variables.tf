@@ -81,8 +81,15 @@ variable "gitlab_services_subnet_cidr" {
   default     = "10.2.0.0/16"
   description = "Cidr range to use for gitlab GKE services subnet"
 }
+
 variable "helm_chart_version" {
   type        = string
   default     = "4.2.4"
   description = "Helm chart version to install during deployment"
+}
+
+variable "allow_force_destroy" {
+  type        = bool
+  default     = false
+  description = "Allows full cleanup of resources by disabling any deletion safe guards"
 }
