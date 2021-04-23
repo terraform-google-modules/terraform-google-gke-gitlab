@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this
 project adheres to [Semantic Versioning](http://semver.org/).
 
+### [0.5.2](https://www.github.com/terraform-google-modules/terraform-google-gke-gitlab/compare/v0.5.1...v0.5.2) (2021-04-23)
+
+
+### Bug Fixes
+
+* update project services to 10.x ([#79](https://www.github.com/terraform-google-modules/terraform-google-gke-gitlab/issues/79)) ([0900ee8](https://www.github.com/terraform-google-modules/terraform-google-gke-gitlab/commit/0900ee8faf89a5091bcdc59ede2f6774d370001e))
+
 ### [0.5.1](https://www.github.com/terraform-google-modules/terraform-google-gke-gitlab/compare/v0.5.0...v0.5.1) (2021-04-05)
 
 
