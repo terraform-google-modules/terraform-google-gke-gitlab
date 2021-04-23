@@ -35,7 +35,7 @@ resource "random_id" "suffix" {
 
 module "gke_auth" {
   source  = "terraform-google-modules/kubernetes-engine/google//modules/auth"
-  version = "~> 9.1"
+  version = "~> 10.0"
 
   project_id   = module.project_services.project_id
   cluster_name = module.gke.name
