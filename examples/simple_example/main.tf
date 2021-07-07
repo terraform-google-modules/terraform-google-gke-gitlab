@@ -14,16 +14,8 @@
  * limitations under the License.
  */
 
-provider "google" {
-  version = "~> 3.42.0"
-}
-
-provider "google-beta" {
-  version = "~> 3.42.0"
-}
-
 module "gke-gitlab" {
   source            = "../../"
-  project_id        = "${var.project_id}"
+  project_id        = var.project_id
   certmanager_email = "no-reply@${var.project_id}.example.com"
 }

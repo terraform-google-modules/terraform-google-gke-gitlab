@@ -34,8 +34,8 @@ Then perform the following commands on the root folder:
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | allow\_force\_destroy | Allows full cleanup of resources by disabling any deletion safe guards | `bool` | `false` | no |
-| certmanager\_email | Email used to retrieve SSL certificates from Let's Encrypt | `any` | n/a | yes |
-| domain | Domain for hosting gitlab functionality (ie mydomain.com would access gitlab at gitlab.mydomain.com) | `string` | `""` | no |
+| certmanager\_email | Email used to retrieve SSL certificates from [Let's Encrypt](https://letsencrypt.org) | `any` | n/a | yes |
+| domain | Domain for hosting gitlab functionality (ie mydomain.com would access gitlab at `gitlab.mydomain.com` and the registry at `registry.mydomain.com`) | `string` | `""` | no |
 | gitlab\_address\_name | Name of the address to use for GitLab ingress | `string` | `""` | no |
 | gitlab\_db\_name | Instance name for the GitLab Postgres database. | `string` | `"gitlab-db"` | no |
 | gitlab\_db\_password | Password for the GitLab Postgres user | `string` | `""` | no |
@@ -44,9 +44,12 @@ Then perform the following commands on the root folder:
 | gitlab\_pods\_subnet\_cidr | Cidr range to use for gitlab GKE pods subnet | `string` | `"10.3.0.0/16"` | no |
 | gitlab\_runner\_install | Choose whether to install the gitlab runner in the cluster | `bool` | `true` | no |
 | gitlab\_services\_subnet\_cidr | Cidr range to use for gitlab GKE services subnet | `string` | `"10.2.0.0/16"` | no |
-| gke\_machine\_type | Machine type used for the node-pool | `string` | `"n1-standard-4"` | no |
-| gke\_version | Version of GKE to use for the GitLab cluster | `string` | `"1.16"` | no |
-| helm\_chart\_version | Helm chart version to install during deployment | `string` | `"4.2.4"` | no |
+| gke\_machine\_type | [Machine type](https://cloud.google.com/compute/docs/machine-types) used for the node-pool | `string` | `"n1-standard-4"` | no |
+| gke\_max\_node\_count | Maximum GKE nodes per availability zone | `number` | `2` | no |
+| gke\_min\_node\_count | Mininum GKE nodes per availability zone | `number` | `1` | no |
+| gke\_preemptible\_nodes | [Preemptible VMs](https://cloud.google.com/compute/docs/instances/preemptible) are instances that you can create and run at a much lower price than normal instances. However, Compute Engine might stop (preempt) these instances if it requires access to those resources for other tasks. They're suitable for a GKE development deployment. | `bool` | `false` | no |
+| gke\_release\_channel | Kubernetes releases updates often, to deliver security updates, fix known issues, and introduce new features. [Release channels](https://cloud.google.com/kubernetes-engine/docs/concepts/release-channels) offer customers the ability to balance between stability and the feature set of the version deployed in the cluster. | `string` | `"REGULAR"` | no |
+| helm\_chart\_version | Helm chart version to install during deployment ([GitLab version mapping](https://docs.gitlab.com/charts/installation/version_mappings.html)) | `string` | `"5.0.3"` | no |
 | project\_id | GCP Project to deploy resources | `any` | n/a | yes |
 | region | GCP region to deploy resources to | `string` | `"us-central1"` | no |
 
@@ -76,8 +79,11 @@ The [project factory](https://github.com/terraform-google-modules/terraform-goog
 
 ### Software Dependencies
 ### Terraform
-- [Terraform](https://www.terraform.io/downloads.html) 0.13.x
-- [terraform-provider-google](https://github.com/terraform-providers/terraform-provider-google) plugin v1.8.0
+- [Terraform](https://www.terraform.io/downloads.html) 1.0.x
+- [terraform-provider-google](https://github.com/terraform-providers/terraform-provider-google) plugin v3.72.0
+- [terraform-provider-helm](https://github.com/hashicorp/terraform-provider-helm) plugin v2.2.0
+- [terraform-provider-kubernetes](https://github.com/hashicorp/terraform-provider-kubernetes) plugin v2.3.2
+- [terraform-provider-random](https://github.com/hashicorp/terraform-provider-random) plugin v3.1.0
 
 ### Configure a Service Account
 In order to execute this module you must have a Service Account with the
@@ -87,17 +93,17 @@ following project roles:
 ## Install
 
 ### Terraform
-Be sure you have the correct Terraform version (0.13.x), you can choose the binary here:
+Be sure you have the correct Terraform version 1.0.x), you can choose the binary here:
 - https://releases.hashicorp.com/terraform/
 
 ## File structure
 The project has the following folders and files:
 
-- /: root folder
-- /examples: examples for using this module
-- /helpers: Helper scripts
-- /test: Folders with files for testing the module (see Testing section on this file)
-- /main.tf: main file for this module, contains all the resources to create
-- /variables.tf: all the variables for the module
-- /output.tf: the outputs of the module
-- /README.md: this file
+- `/`: root folder
+- `/examples`: examples for using this module
+- `/helpers`: Helper scripts
+- `/test`: Folders with files for testing the module (see Testing section on this file)
+- `/main.tf`: main file for this module, contains all the resources to create
+- `/variables.tf`: all the variables for the module
+- `/output.tf`: the outputs of the module
+- `/README.md`: this file
