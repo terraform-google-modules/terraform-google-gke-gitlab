@@ -25,28 +25,29 @@ output "gitlab_url" {
 }
 
 output "cluster_name" {
-  value       = module.gke.name
+  value       = google_container_cluster.gitlab.name
   description = "Name of the GKE cluster that GitLab is deployed in."
 }
 
 output "cluster_location" {
-  value       = module.gke.location
+  value       = google_container_cluster.gitlab.location
   description = "Location of the GKE cluster that GitLab is deployed in."
 }
 
 output "cluster_ca_certificate" {
-  value       = module.gke_auth.cluster_ca_certificate
+  value       = google_container_cluster.gitlab.master_auth.0.cluster_ca_certificate
   description = "CA Certificate for the GKE cluster that GitLab is deployed in."
 }
 
 output "host" {
-  value       = module.gke_auth.host
+  value       = google_container_cluster.gitlab.endpoint
   description = "Host for the GKE cluster that GitLab is deployed in."
 }
 
 output "token" {
-  value       = module.gke_auth.token
+  value       = data.google_client_config.provider.access_token
   description = "Token for the GKE cluster that GitLab is deployed in."
+  sensitive   = true
 }
 
 output "root_password_instructions" {

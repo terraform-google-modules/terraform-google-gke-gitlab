@@ -15,43 +15,23 @@
  */
 
 terraform {
-  required_version = ">= 0.13.0"
+  required_version = "~> 1.0.0"
   required_providers {
     google = {
       source  = "hashicorp/google"
-      version = "~> 3.42"
-    }
-    google-beta = {
-      source  = "hashicorp/google-beta"
-      version = "~> 3.42"
+      version = "3.72.0"
     }
     helm = {
       source  = "hashicorp/helm"
-      version = "~> 1.2.0"
+      version = "~> 2.2.0"
     }
     kubernetes = {
       source  = "hashicorp/kubernetes"
-      version = "~> 1.11.0"
-    }
-    null = {
-      source  = "hashicorp/null"
-      version = "~> 2.1.2"
+      version = "~> 2.3.2"
     }
     random = {
       source  = "hashicorp/random"
-      version = "~> 2.2.1"
+      version = "~> 3.1.0"
     }
-    template = {
-      source  = "hashicorp/template"
-      version = "~> 2.1.2"
-    }
-  }
-
-  provider_meta "google" {
-    module_name = "blueprints/terraform/terraform-google-gke-gitlab/v0.5.2"
-  }
-
-  provider_meta "google-beta" {
-    module_name = "blueprints/terraform/terraform-google-gke-gitlab/v0.5.2"
   }
 }
