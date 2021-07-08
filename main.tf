@@ -145,7 +145,6 @@ resource "google_compute_global_address" "gitlab_sql" {
   purpose       = "VPC_PEERING"
   address_type  = "INTERNAL"
   network       = google_compute_network.gitlab.self_link
-  address       = "10.1.0.0"
   prefix_length = 16
 }
 
