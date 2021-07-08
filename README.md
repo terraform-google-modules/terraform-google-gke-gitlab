@@ -47,9 +47,9 @@ Then perform the following commands on the root folder:
 | gke\_machine\_type | [Machine type](https://cloud.google.com/compute/docs/machine-types) used for the node-pool | `string` | `"n1-standard-4"` | no |
 | gke\_max\_node\_count | Maximum GKE nodes per availability zone | `number` | `2` | no |
 | gke\_min\_node\_count | Mininum GKE nodes per availability zone | `number` | `1` | no |
-| gke\_preemptible\_nodes | [Preemptible VMs](https://cloud.google.com/compute/docs/instances/preemptible) are instances that you can create and run at a much lower price than normal instances. However, Compute Engine might stop (preempt) these instances if it requires access to those resources for other tasks. They're suitable for a GKE development deployment | `bool` | `false` | no |
-| gke\_release\_channel | Kubernetes releases updates often, to deliver security updates, fix known issues, and introduce new features. [Release channels](https://cloud.google.com/kubernetes-engine/docs/concepts/release-channels) offer customers the ability to balance between stability and the feature set of the version deployed in the cluster. | `string` | `"STABLE"` | no |
-| helm\_chart\_version | Helm chart version to install during deployment ([GitLab version mapping](https://docs.gitlab.com/charts/installation/version_mappings.html))  | `string` | `"4.2.4"` | no |
+| gke\_preemptible\_nodes | [Preemptible VMs](https://cloud.google.com/compute/docs/instances/preemptible) are instances that you can create and run at a much lower price than normal instances. However, Compute Engine might stop (preempt) these instances if it requires access to those resources for other tasks. They're suitable for a GKE development deployment. | `bool` | `false` | no |
+| gke\_release\_channel | Kubernetes releases updates often, to deliver security updates, fix known issues, and introduce new features. [Release channels](https://cloud.google.com/kubernetes-engine/docs/concepts/release-channels) offer customers the ability to balance between stability and the feature set of the version deployed in the cluster. | `string` | `"REGULAR"` | no |
+| helm\_chart\_version | Helm chart version to install during deployment ([GitLab version mapping](https://docs.gitlab.com/charts/installation/version_mappings.html)) | `string` | `"5.0.3"` | no |
 | project\_id | GCP Project to deploy resources | `any` | n/a | yes |
 | region | GCP region to deploy resources to | `string` | `"us-central1"` | no |
 
