@@ -14,10 +14,6 @@
  * limitations under the License.
  */
 
-provider "google" {
-  version = "~> 3.72.0"
-}
-
 module "gke-gitlab" {
   source            = "../../"
   project_id        = var.project_id
