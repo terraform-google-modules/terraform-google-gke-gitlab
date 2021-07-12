@@ -15,23 +15,27 @@
  */
 
 terraform {
-  required_version = "~> 1.0.0"
+  required_version = "~> 1.0"
   required_providers {
     google = {
       source  = "hashicorp/google"
-      version = "3.72.0"
+      version = "3.72"
     }
     helm = {
       source  = "hashicorp/helm"
-      version = "~> 2.2.0"
+      version = "~> 2.2"
     }
     kubernetes = {
       source  = "hashicorp/kubernetes"
-      version = "~> 2.3.2"
+      version = "~> 2.3"
     }
     random = {
       source  = "hashicorp/random"
-      version = "~> 3.1.0"
+      version = "~> 3.1"
     }
+  }
+
+  provider_meta "google" {
+    module_name = "blueprints/terraform/terraform-google-gke-gitlab/v0.5.2"
   }
 }
