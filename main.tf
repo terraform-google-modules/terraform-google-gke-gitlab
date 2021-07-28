@@ -62,7 +62,10 @@ resource "google_project_service" "cloudresourcemanager" {
 resource "google_project_service" "compute" {
   project                    = var.project_id
   service                    = "compute.googleapis.com"
-  disable_dependent_services = true
+  // Avoid issues when running `terraform destroy`
+  // Helm creates a Disk which cause problems when reverting all of the changes
+  disable_dependent_services = false
+  disable_on_destroy         = false
 }
 
 resource "google_project_service" "servicenetworking" {
