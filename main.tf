@@ -64,7 +64,7 @@ provider "kubernetes" {
 // Services
 module "project_services" {
   source  = "terraform-google-modules/project-factory/google//modules/project_services"
-  version = "~> 9.0"
+  version = "~> 11.0"
 
   project_id                  = var.project_id
   disable_services_on_destroy = false
@@ -370,7 +370,7 @@ locals {
 }
 
 data "template_file" "helm_values" {
-  template = "${file("${path.module}/values.yaml.tpl")}"
+  template = file("${path.module}/values.yaml.tpl")
 
   vars = {
     DOMAIN                = local.domain

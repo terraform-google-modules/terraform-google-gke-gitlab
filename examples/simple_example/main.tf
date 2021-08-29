@@ -15,15 +15,15 @@
  */
 
 provider "google" {
-  version = "~> 3.42.0"
+  version = "~> 3.42"
 }
 
 provider "google-beta" {
-  version = "~> 3.42.0"
+  version = "~> 3.42"
 }
 
 module "gke-gitlab" {
   source            = "../../"
-  project_id        = "${var.project_id}"
+  project_id        = var.project_id
   certmanager_email = "no-reply@${var.project_id}.example.com"
 }
