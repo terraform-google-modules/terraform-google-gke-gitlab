@@ -47,6 +47,11 @@ variable "gitlab_db_random_prefix" {
   default     = false
 }
 
+variable "gitlab_deletion_protection" {
+  description = "Must be false to allow Terraform to destroy the Cloud SQL instance."
+  default     = true
+}
+
 variable "gitlab_db_password" {
   description = "Password for the GitLab Postgres user"
   default     = ""

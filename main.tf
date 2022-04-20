@@ -149,10 +149,11 @@ resource "google_service_networking_connection" "private_vpc_connection" {
 }
 
 resource "google_sql_database_instance" "gitlab_db" {
-  depends_on       = [google_service_networking_connection.private_vpc_connection]
-  name             = local.gitlab_db_name
-  region           = var.region
-  database_version = "POSTGRES_11"
+  depends_on          = [google_service_networking_connection.private_vpc_connection]
+  name                = local.gitlab_db_name
+  region              = var.region
+  database_version    = "POSTGRES_11"
+  deletion_protection = var.gitlab_deletion_protection
 
   settings {
     tier            = "db-custom-4-15360"
@@ -366,7 +367,7 @@ data "google_compute_address" "gitlab" {
 
 locals {
   gitlab_address = var.gitlab_address_name == "" ? google_compute_address.gitlab.0.address : data.google_compute_address.gitlab.0.address
-  domain         = var.domain != "" ? var.domain : "${local.gitlab_address}.xip.io"
+  domain         = var.domain != "" ? var.domain : "${local.gitlab_address}.nip.io"
 }
 
 data "template_file" "helm_values" {

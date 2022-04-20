@@ -9,6 +9,10 @@ data:
 
 ![GitLab on GKE architecture diagram](img/arch.png)
 
+## Compatibility
+
+This module is meant for use with Terraform 0.13+ and tested using Terraform 0.14.
+
 ## Usage
 There are examples included in the [examples](./examples/) folder but simple usage is as follows:
 
@@ -40,6 +44,7 @@ Then perform the following commands on the root folder:
 | gitlab\_db\_name | Instance name for the GitLab Postgres database. | `string` | `"gitlab-db"` | no |
 | gitlab\_db\_password | Password for the GitLab Postgres user | `string` | `""` | no |
 | gitlab\_db\_random\_prefix | Sets random suffix at the end of the Cloud SQL instance name. | `bool` | `false` | no |
+| gitlab\_deletion\_protection | Must be false to allow Terraform to destroy the Cloud SQL instance. | `bool` | `true` | no |
 | gitlab\_nodes\_subnet\_cidr | Cidr range to use for gitlab GKE nodes subnet | `string` | `"10.0.0.0/16"` | no |
 | gitlab\_pods\_subnet\_cidr | Cidr range to use for gitlab GKE pods subnet | `string` | `"10.3.0.0/16"` | no |
 | gitlab\_runner\_install | Choose whether to install the gitlab runner in the cluster | `bool` | `true` | no |
@@ -76,8 +81,8 @@ The [project factory](https://github.com/terraform-google-modules/terraform-goog
 
 ### Software Dependencies
 ### Terraform
-- [Terraform](https://www.terraform.io/downloads.html) 0.13.x
-- [terraform-provider-google](https://github.com/terraform-providers/terraform-provider-google) plugin v1.8.0
+- [Terraform](https://www.terraform.io/downloads.html) 0.13+
+- [terraform-provider-google](https://github.com/terraform-providers/terraform-provider-google) ~> 3.44
 
 ### Configure a Service Account
 In order to execute this module you must have a Service Account with the
@@ -87,7 +92,7 @@ following project roles:
 ## Install
 
 ### Terraform
-Be sure you have the correct Terraform version (0.13.x), you can choose the binary here:
+Be sure you have the correct Terraform version, you can choose the binary here:
 - https://releases.hashicorp.com/terraform/
 
 ## File structure
