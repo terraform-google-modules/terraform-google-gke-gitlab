@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this
 project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.0.0](https://github.com/terraform-google-modules/terraform-google-gke-gitlab/compare/v0.5.2...v1.0.0) (2022-04-21)
+
+
+### ⚠ BREAKING CHANGES
+
+* Update min provider to TPG ~> 3.44, CI fixes (#91)
+
+### Features
+
+* update to allow TPG version 4.0 and TF v0.13+ format ([#86](https://github.com/terraform-google-modules/terraform-google-gke-gitlab/issues/86)) ([42550a8](https://github.com/terraform-google-modules/terraform-google-gke-gitlab/commit/42550a804eff1d14f0e51b43312031080e7a9926))
+
+
+### Bug Fixes
+
+* Update min provider to TPG ~> 3.44, CI fixes ([#91](https://github.com/terraform-google-modules/terraform-google-gke-gitlab/issues/91)) ([1971baa](https://github.com/terraform-google-modules/terraform-google-gke-gitlab/commit/1971baaf005070bf971e2b401293ec15f11b466f))
+
 ### [0.5.2](https://www.github.com/terraform-google-modules/terraform-google-gke-gitlab/compare/v0.5.1...v0.5.2) (2021-04-23)
 
 
