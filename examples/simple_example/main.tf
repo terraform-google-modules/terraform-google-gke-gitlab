@@ -23,7 +23,9 @@ provider "google-beta" {
 }
 
 module "gke-gitlab" {
-  source            = "../../"
-  project_id        = var.project_id
-  certmanager_email = "no-reply@${var.project_id}.example.com"
+  source                     = "../../"
+  project_id                 = var.project_id
+  certmanager_email          = "no-reply@${var.project_id}.example.com"
+  gitlab_deletion_protection = false
+  gitlab_db_random_prefix    = true
 }

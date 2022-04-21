@@ -28,6 +28,7 @@ suites:
     driver:
       name: "terraform"
       command_timeout: 3600
+      verify_version: false
       root_module_directory: test/fixtures/simple_example/
     verifier:
       name: terraform
