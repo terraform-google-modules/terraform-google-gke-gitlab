@@ -203,6 +203,12 @@ resource "google_storage_bucket" "gitlab-backups" {
   force_destroy = var.allow_force_destroy
 }
 
+resource "google_storage_bucket" "gitlab-tmp-backups" {
+  name          = "${var.project_id}-gitlab-tmp-backups"
+  location      = var.region
+  force_destroy = var.allow_force_destroy
+}
+
 resource "google_storage_bucket" "gitlab-uploads" {
   name          = "${var.project_id}-gitlab-uploads"
   location      = var.region
@@ -244,6 +250,25 @@ resource "google_storage_bucket" "gitlab-runner-cache" {
   location      = var.region
   force_destroy = var.allow_force_destroy
 }
+
+resource "google_storage_bucket" "gitlab-dependency-proxy" {
+  name          = "${var.project_id}-dependency-proxy"
+  location      = var.region
+  force_destroy = var.allow_force_destroy
+}
+
+resource "google_storage_bucket" "gitlab-terraform-state" {
+  name          = "${var.project_id}-terraform-state"
+  location      = var.region
+  force_destroy = var.allow_force_destroy
+}
+
+resource "google_storage_bucket" "gitlab-gitlab-external-diffs" {
+  name          = "${var.project_id}-gitlab-external-diffs"
+  location      = var.region
+  force_destroy = var.allow_force_destroy
+}
+
 // GKE Cluster
 module "gke" {
   source  = "terraform-google-modules/kubernetes-engine/google"
