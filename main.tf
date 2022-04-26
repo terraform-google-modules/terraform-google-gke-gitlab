@@ -152,10 +152,10 @@ resource "google_sql_database_instance" "gitlab_db" {
   depends_on       = [google_service_networking_connection.private_vpc_connection]
   name             = local.gitlab_db_name
   region           = var.region
-  database_version = "POSTGRES_11"
+  database_version = var.postgresql_version
 
   settings {
-    tier            = "db-custom-4-15360"
+    tier            = "${var.postgresql_tier}"
     disk_autoresize = true
 
     ip_configuration {

@@ -27,6 +27,16 @@ variable "certmanager_email" {
   description = "Email used to retrieve SSL certificates from Let's Encrypt"
 }
 
+variable "postgresql_version" {
+  description = "(Required) The PostgreSQL version to use. Supported values for Gitlab POSTGRES_12, POSTGRES_13. Default: POSTGRES_12"
+  default     = "POSTGRES_12"
+}
+
+variable "postgresql_tier" {
+  description = "(Required) The machine type to use.Postgres supports only shared-core machine types, and custom machine types such as db-custom-2-13312"
+  default     = "db-custom-2-8192"
+}
+
 variable "gke_version" {
   description = "Version of GKE to use for the GitLab cluster"
   default     = "1.20"
