@@ -1,0 +1,185 @@
+# Values for gitlab/gitlab chart on GKE
+global:
+  edition: ce
+  hosts:
+    domain: ${DOMAIN}
+    https: true
+    gitlab: {}
+    externalIP: ${INGRESS_IP}
+    ssh: ~
+
+  ## doc/charts/globals.md#configure-ingress-settings
+  ingress:
+    configureCertmanager: true
+    enabled: true
+    tls:
+      enabled: true
+
+  ## doc/charts/globals.md#configure-postgresql-settings
+  psql:
+    password:
+      secret: gitlab-pg
+      key: password
+    host: ${DB_PRIVATE_IP}
+    port: 5432
+    username: gitlab
+    database: gitlabhq_production
+
+  redis:
+    password:
+      enabled: false
+    host: ${REDIS_PRIVATE_IP}
+
+  ## doc/charts/globals.md#configure-minio-settings
+  minio:
+    enabled: false
+
+   ## https://docs.gitlab.com/charts/charts/globals#configure-grafana-integration
+  grafana:
+    enabled: ${INSTALL_GRAFANA}
+
+  ## doc/charts/globals.md#configure-appconfig-settings
+  ## Rails based portions of this chart share many settings
+  appConfig:
+    ## doc/charts/globals.md#general-application-settings
+    enableUsagePing: false
+
+     ## https://docs.gitlab.com/charts/charts/globals#lfs-artifacts-uploads-packages-external-mr-diffs-and-dependency-proxy
+    object_store:
+      enabled: true
+      proxy_download: false
+      storage_options: {}
+        # server_side_encryption:
+        # server_side_encryption_kms_key_id
+      connection: 
+        secret: gitlab-rails-storage
+        key: connection
+    lfs:
+      enabled: true
+      bucket: ${PROJECT_ID}-git-lfs
+    artifacts:
+      enabled: true
+      bucket: ${PROJECT_ID}-gitlab-artifacts
+    uploads:
+      enabled: true
+      bucket: ${PROJECT_ID}-gitlab-uploads
+    packages:
+      enabled: true
+      bucket: ${PROJECT_ID}-gitlab-packages
+    externalDiffs:
+      enabled: false
+      bucket: ${PROJECT_ID}-gitlab-external-diffs
+    terraformState:
+      enabled: true
+      bucket: ${PROJECT_ID}-gitlab-terraform-state
+    dependencyProxy:
+      enabled: true
+      bucket: ${PROJECT_ID}-gitlab-dependency-proxy
+
+    backups:
+      bucket: ${PROJECT_ID}-gitlab-backups
+      tmpBucket: ${PROJECT_ID}-gitlab-tmp-backups
+
+## https://docs.gitlab.com/charts/charts/gitlab/kas/
+  kas:
+    enabled: true
+  
+  ## https://docs.gitlab.com/charts/charts/globals#configure-registry-settings
+  ## If we do not set the legacy bucket name here, the registry is not included
+  ## in the Gitlab backup archive.
+  registry:
+     bucket: ${PROJECT_ID}-gitlab-backups
+
+## Settings to for the Let's Encrypt ACME Issuer
+certmanager-issuer:
+  email: ${CERT_MANAGER_EMAIL}
+
+## Installation & configuration of jetstack/cert-manager
+## See requirements.yaml for current version
+certmanager:
+  install: ${ENABLE_CERT_MANAGER}
+
+## https://docs.gitlab.com/charts/charts/nginx/
+## https://docs.gitlab.com/charts/architecture/decisions#nginx-ingress
+## Installation & configuration of charts/ingress-nginx:
+nginx-ingress:
+  enabled: ${INSTALL_INGRESS_NGINX}
+
+## Installation & configuration of stable/prometheus
+## See requirements.yaml for current version
+prometheus:
+  install: ${INSTALL_PROMETHEUS}
+
+## Configuration of Redis
+## https://docs.gitlab.com/charts/architecture/decisions#redis
+## https://docs.gitlab.com/charts/installation/deployment.html#redis
+redis:
+  install: false
+
+## Installation & configuration of stable/prostgresql
+## See requirements.yaml for current version
+postgresql:
+  install: false
+
+## Installation & configuration charts/registry
+## https://docs.gitlab.com/charts/architecture/decisions#registry
+## https://docs.gitlab.com/charts/charts/registry/
+registry:
+  enabled: false
+  hpa:
+    minReplicas: ${HPA_MIN_REPLICAS_REGISTRY}
+    maxReplicas: ${HPA_MAX_REPLICAS_REGISTRY}
+  storage:
+    secret: gitlab-registry-storage
+    key: storage
+    extraKey: gcs.json
+
+## Installation & configuration of gitlab/gitlab-runner
+## See requirements.yaml for current version
+
+gitlab-runner:
+  install: ${GITLAB_RUNNER_INSTALL}
+  rbac:
+    create: true
+  runners:
+    locked: false
+    cache:
+      cacheType: gcs
+      gcsBucketName: ${PROJECT_ID}-runner-cache
+      secretName: google-application-credentials
+      cacheShared: true
+
+## Settings for individual sub-charts under GitLab
+## Note: Many of these settings are configurable via globals
+gitlab:
+  gitlab-shell:
+    minReplicas: ${HPA_MIN_REPLICAS_SHELL}
+    maxReplicas: ${HPA_MAX_REPLICAS_SHELL}
+  kas:
+    minReplicas: ${HPA_MIN_REPLICAS_KAS}
+    maxReplicas: ${HPA_MAX_REPLICAS_KAS}
+  webservice: 
+    minReplicas: ${HPA_MIN_REPLICAS_WEBSERVICE}
+    maxReplicas: ${HPA_MAX_REPLICAS_WEBSERVICE}
+  sidekiq:
+    minReplicas: ${HPA_MIN_REPLICAS_SIDEKIQ}
+    maxReplicas: ${HPA_MAX_REPLICAS_SIDEKIQ}
+  ## https://docs.gitlab.com/charts/charts/gitlab/toolbox
+  toolbox:
+    backups:
+      cron:
+        enabled: true
+        failedJobsHistoryLimit: 3
+        successfulJobsHistoryLimit: 7
+        schedule: '0 1 * * *'
+      objectStorage:
+        backend: gcs
+        config:
+          secret: google-application-credentials
+          key: gcs-application-credentials-file
+          gcpProject: ${PROJECT_ID}
+  ## https://docs.gitlab.com/charts/charts/gitlab/gitaly
+  gitaly:
+    persistence:
+      size: 200Gi
+      storageClass: "pd-ssd"

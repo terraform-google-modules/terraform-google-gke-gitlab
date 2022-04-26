@@ -405,6 +405,22 @@ data "template_file" "helm_values" {
     PROJECT_ID            = var.project_id
     CERT_MANAGER_EMAIL    = var.certmanager_email
     GITLAB_RUNNER_INSTALL = var.gitlab_runner_install
+    INSTALL_INGRESS_NGINX = var.gitlab_install_ingress_nginx
+    INSTALL_PROMETHEUS    = var.gitlab_install_prometheus
+    INSTALL_GRAFANA       = var.gitlab_install_grafana
+
+    # HPA settings for cost/performance optimization
+    HPA_MIN_REPLICAS_REGISTRY   = var.gitlab_hpa_min_replicas_registry
+    HPA_MAX_REPLICAS_REGISTRY   = var.gitlab_hpa_max_replicas_registry
+    HPA_MIN_REPLICAS_WEBSERVICE = var.gitlab_hpa_min_replicas_webservice
+    HPA_MAX_REPLICAS_WEBSERVICE = var.gitlab_hpa_max_replicas_webservice
+    HPA_MIN_REPLICAS_SIDEKIQ    = var.gitlab_hpa_min_replicas_sidekiq
+    HPA_MAX_REPLICAS_SIDEKIQ    = var.gitlab_hpa_max_replicas_sidekiq
+    HPA_MIN_REPLICAS_KAS        = var.gitlab_hpa_min_replicas_kas
+    HPA_MAX_REPLICAS_KAS        = var.gitlab_hpa_max_replicas_kas
+    HPA_MIN_REPLICAS_SHELL      = var.gitlab_hpa_min_replicas_shell
+    HPA_MAX_REPLICAS_SHELL      = var.gitlab_hpa_max_replicas_shell
+
   }
 }
 
