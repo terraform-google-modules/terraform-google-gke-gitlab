@@ -263,7 +263,7 @@ resource "google_storage_bucket" "gitlab-terraform-state" {
   force_destroy = var.allow_force_destroy
 }
 
-resource "google_storage_bucket" "gitlab-gitlab-external-diffs" {
+resource "google_storage_bucket" "gitlab-external-diffs" {
   name          = "${var.project_id}-gitlab-external-diffs"
   location      = var.region
   force_destroy = var.allow_force_destroy
