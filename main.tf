@@ -186,8 +186,8 @@ resource "google_sql_user" "gitlab" {
 // Redis
 resource "google_redis_instance" "gitlab" {
   name               = "gitlab"
-  tier               = "STANDARD_HA"
-  memory_size_gb     = 5
+  tier               = var.redis_tier
+  memory_size_gb     = var.redis_size
   region             = var.region
   authorized_network = google_compute_network.gitlab.self_link
 
