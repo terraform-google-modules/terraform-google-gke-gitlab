@@ -152,10 +152,10 @@ resource "google_sql_database_instance" "gitlab_db" {
   depends_on       = [google_service_networking_connection.private_vpc_connection]
   name             = local.gitlab_db_name
   region           = var.region
-  database_version = "POSTGRES_11"
+  database_version = var.postgresql_version
 
   settings {
-    tier            = "db-custom-4-15360"
+    tier            = "${var.postgresql_tier}"
     disk_autoresize = true
 
     ip_configuration {
@@ -203,6 +203,12 @@ resource "google_storage_bucket" "gitlab-backups" {
   force_destroy = var.allow_force_destroy
 }
 
+resource "google_storage_bucket" "gitlab-tmp-backups" {
+  name          = "${var.project_id}-gitlab-tmp-backups"
+  location      = var.region
+  force_destroy = var.allow_force_destroy
+}
+
 resource "google_storage_bucket" "gitlab-uploads" {
   name          = "${var.project_id}-gitlab-uploads"
   location      = var.region
@@ -244,6 +250,25 @@ resource "google_storage_bucket" "gitlab-runner-cache" {
   location      = var.region
   force_destroy = var.allow_force_destroy
 }
+
+resource "google_storage_bucket" "gitlab-dependency-proxy" {
+  name          = "${var.project_id}-dependency-proxy"
+  location      = var.region
+  force_destroy = var.allow_force_destroy
+}
+
+resource "google_storage_bucket" "gitlab-terraform-state" {
+  name          = "${var.project_id}-terraform-state"
+  location      = var.region
+  force_destroy = var.allow_force_destroy
+}
+
+resource "google_storage_bucket" "gitlab-external-diffs" {
+  name          = "${var.project_id}-gitlab-external-diffs"
+  location      = var.region
+  force_destroy = var.allow_force_destroy
+}
+
 // GKE Cluster
 module "gke" {
   source  = "terraform-google-modules/kubernetes-engine/google"
