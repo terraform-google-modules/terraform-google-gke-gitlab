@@ -83,7 +83,7 @@ variable "gitlab_runner_install" {
 }
 
 variable "region" {
-  default     = "us-central1"
+  default     = "europe-west1"
   description = "GCP region to deploy resources to"
 }
 

@@ -234,7 +234,7 @@ resource "google_storage_bucket" "gitlab-packages" {
 }
 
 resource "google_storage_bucket" "gitlab-registry" {
-  name          = "${var.project_id}-registry"
+  name          = "${var.project_id}-gitlab-registry"
   location      = var.region
   force_destroy = var.allow_force_destroy
 }
