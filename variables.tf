@@ -14,18 +14,33 @@
  * limitations under the License.
  */
 
+######################
+#  GENERAL SECTION   #
+######################
+
 variable "project_id" {
   description = "GCP Project to deploy resources"
 }
 
-variable "domain" {
-  description = "Domain for hosting gitlab functionality (ie mydomain.com would access gitlab at gitlab.mydomain.com)"
+variable "region" {
+  default     = "europe-west1"
+  description = "GCP region to deploy resources to"
+}
+
+variable "allow_force_destroy" {
+  type        = bool
+  default     = false
+  description = "Allows full cleanup of resources by disabling any deletion safe guards"
+}
+
+variable "gitlab_address_name" {
+  description = "Name of the address to use for GitLab ingress"
   default     = ""
 }
 
-variable "certmanager_email" {
-  description = "Email used to retrieve SSL certificates from Let's Encrypt"
-}
+##########################
+#  POSTGRES DB SECTION   #
+##########################
 
 variable "postgresql_version" {
   description = "(Required) The PostgreSQL version to use. Supported values for Gitlab POSTGRES_12, POSTGRES_13. Default: POSTGRES_12"
@@ -35,26 +50,6 @@ variable "postgresql_version" {
 variable "postgresql_tier" {
   description = "(Required) The machine type to use.Postgres supports only shared-core machine types, and custom machine types such as db-custom-2-13312"
   default     = "db-custom-2-8192"
-}
-
-variable "gke_version" {
-  description = "Version of GKE to use for the GitLab cluster"
-  default     = "1.20"
-}
-
-variable "gke_machine_type" {
-  description = "Machine type used for the node-pool"
-  default     = "n1-standard-4"
-}
-
-variable "redis_tier" {
-  description = "The service tier of the instance. Must be one of these values BASIC and STANDARD_HA"
-  default     = "BASIC"
-}
-
-variable "redis_size" {
-  description = "Redis memory size in GiB."
-  default     = "1"
 }
 
 variable "gitlab_db_name" {
@@ -67,24 +62,32 @@ variable "gitlab_db_random_prefix" {
   default     = false
 }
 
-variable "gitlab_db_password" {
-  description = "Password for the GitLab Postgres user"
-  default     = ""
+#######################
+#    REDIS SECTION    #
+#######################
+
+variable "redis_tier" {
+  description = "The service tier of the instance. Must be one of these values BASIC and STANDARD_HA"
+  default     = "STANDARD_HA"
 }
 
-variable "gitlab_address_name" {
-  description = "Name of the address to use for GitLab ingress"
-  default     = ""
+variable "redis_size" {
+  description = "Redis memory size in GiB."
+  default     = "1"
 }
 
-variable "gitlab_runner_install" {
-  description = "Choose whether to install the gitlab runner in the cluster"
-  default     = true
+##################
+#  GKE SECTION   #
+##################
+
+variable "gke_version" {
+  description = "Version of GKE to use for the GitLab cluster"
+  default     = "1.20"
 }
 
-variable "region" {
-  default     = "europe-west1"
-  description = "GCP region to deploy resources to"
+variable "gke_machine_type" {
+  description = "Machine type used for the node-pool"
+  default     = "n1-standard-4"
 }
 
 variable "gitlab_nodes_subnet_cidr" {
@@ -102,14 +105,112 @@ variable "gitlab_services_subnet_cidr" {
   description = "Cidr range to use for gitlab GKE services subnet"
 }
 
+##################
+# GITLAB SECTION #
+##################
+
+# Gitlab Version Helm CHart
+
 variable "helm_chart_version" {
   type        = string
-  default     = "4.2.4"
-  description = "Helm chart version to install during deployment"
+  default     = "5.9.3"
+  description = "Helm chart version to install during deployment - Default Gitlab 4.9.3"
 }
 
-variable "allow_force_destroy" {
+variable "domain" {
+  description = "Domain for hosting gitlab functionality (ie mydomain.com would access gitlab at gitlab.mydomain.com)"
+  default     = ""
+}
+
+variable "gitlab_db_password" {
+  description = "Password for the GitLab Postgres user"
+  default     = ""
+}
+
+variable "certmanager_email" {
+  description = "Email used to retrieve SSL certificates from Let's Encrypt"
+}
+
+variable "gitlab_runner_install" {
+  description = "Choose whether to install the gitlab runner in the cluster"
+  default     = true
+}
+
+variable "gitlab_install_prometheus" {
   type        = bool
+  description = "Choose whether to install a Prometheus instance using the Gitlab chart. Default to false."
   default     = false
-  description = "Allows full cleanup of resources by disabling any deletion safe guards"
+}
+
+variable "gitlab_install_grafana" {
+  type        = bool
+  description = "Choose whether to install a Grafana instance using the Gitlab chart. Default to false."
+  default     = false
+}
+
+variable "gitlab_install_ingress_nginx" {
+  type        = bool
+  description = "Choose whether to install the ingress nginx controller in the cluster. Default to true."
+  default     = true
+}
+
+# Peformance optimization. Max and min pod replicas for HPA.
+variable "gitlab_hpa_min_replicas_registry" {
+  type        = number
+  description = "Set the minimum hpa pod replicas for the Gitlab Registry."
+  default     = 2
+}
+
+variable "gitlab_hpa_min_replicas_shell" {
+  type        = number
+  description = "Set the minimum hpa pod replicas for the Gitlab Shell."
+  default     = 2
+}
+
+variable "gitlab_hpa_min_replicas_kas" {
+  type        = number
+  description = "Set the minimum hpa pod replicas for the Gitlab Kas."
+  default     = 2
+}
+
+variable "gitlab_hpa_min_replicas_sidekiq" {
+  type        = number
+  description = "Set the minimum hpa pod replicas for the Gitlab sidekiq."
+  default     = 1
+}
+
+variable "gitlab_hpa_min_replicas_webservice" {
+  type        = number
+  description = "Set the minimum hpa pod replicas for the Gitlab webservice."
+  default     = 2
+}
+
+variable "gitlab_hpa_max_replicas_registry" {
+  type        = number
+  description = "Set the maximum hpa pod replicas for the Gitlab Registry."
+  default     = 10
+}
+
+variable "gitlab_hpa_max_replicas_shell" {
+  type        = number
+  description = "Set the maximum hpa pod replicas for the Gitlab Shell."
+  default     = 10
+}
+
+variable "gitlab_hpa_max_replicas_kas" {
+  type        = number
+  description = "Set the maximum hpa pod replicas for the Gitlab Kas."
+  default     = 10
+}
+
+variable "gitlab_hpa_max_replicas_sidekiq" {
+  type        = number
+  description = "Set the maximum hpa pod replicas for the Gitlab sidekiq."
+  default     = 10
+}
+
+variable "gitlab_hpa_max_replicas_webservice" {
+  type        = number
+  description = "Set the maximum hpa pod replicas for the Gitlab webservice."
+  default     = 10
 }

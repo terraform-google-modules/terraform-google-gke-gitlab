@@ -155,7 +155,7 @@ resource "google_sql_database_instance" "gitlab_db" {
   database_version = var.postgresql_version
 
   settings {
-    tier            = "${var.postgresql_tier}"
+    tier            = var.postgresql_tier
     disk_autoresize = true
 
     ip_configuration {
@@ -395,7 +395,7 @@ locals {
 }
 
 data "template_file" "helm_values" {
-  template = file("${path.module}/values.yaml.tpl")
+  template = file("${path.module}/values.yaml")
 
   vars = {
     DOMAIN                = local.domain
