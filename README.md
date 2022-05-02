@@ -63,7 +63,6 @@ Then perform the following commands on the root folder:
 | gitlab\_pods\_subnet\_cidr | Cidr range to use for gitlab GKE pods subnet | `string` | `"10.3.0.0/16"` | no |
 | gitlab\_schedule\_cron\_backup | Setup Cron Job for Gitlab Scheduled Backup using unix-cron string format. | `string` | `"0 1 * * *"` | no |
 | gitlab\_services\_subnet\_cidr | Cidr range to use for gitlab GKE services subnet | `string` | `"10.2.0.0/16"` | no |
-| gke\_autoscaling\_profile | Defines possible options for autoscalingProfile. Possible values: BALANCED, OPTIMIZE_UTILIZATION | `string` | `"BALANCED"` | no |
 | gke\_disk\_replication | Setup replication type for disk persistent volune. Possible values none or regional-pd | `string` | `"none"` | no |
 | gke\_enable\_cloudrun | Enable Google Cloudrun on GKE Cluster. | `bool` | `"false"` | no |
 | gke\_machine\_type | Machine type used for the node-pool | `string` | `"n1-standard-4"` | no |

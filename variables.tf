@@ -62,11 +62,9 @@ variable "gitlab_db_random_prefix" {
   default     = false
 }
 
-
 ####################
 #  REDIS SECTION   #
 ####################
-
 
 variable "redis_tier" {
   description = "The service tier of the instance. Must be one of these values BASIC and STANDARD_HA"
@@ -81,12 +79,6 @@ variable "redis_size" {
 ##################
 #  GKE SECTION   #
 ##################
-
-variable "gke_autoscaling_profile" {
-  type        = string
-  description = "Defines possible options for autoscalingProfile. Possible values: BALANCE, OPTIMIZE_UTILIZATION"
-  default     = "BALANCED"
-}
 
 variable "gke_min_node_count" {
   type        = number

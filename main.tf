@@ -46,7 +46,6 @@ module "gke_auth" {
 
 provider "helm" {
   kubernetes {
-    load_config_file       = false
     cluster_ca_certificate = module.gke_auth.cluster_ca_certificate
     host                   = module.gke_auth.host
     token                  = module.gke_auth.token
@@ -54,7 +53,6 @@ provider "helm" {
 }
 
 provider "kubernetes" {
-  
   cluster_ca_certificate = module.gke_auth.cluster_ca_certificate
   host                   = module.gke_auth.host
   token                  = module.gke_auth.token
@@ -63,7 +61,7 @@ provider "kubernetes" {
 // Services
 module "project_services" {
   source  = "terraform-google-modules/project-factory/google//modules/project_services"
-  version = "~> 11.0"
+  version = "~> 13.0"
 
   project_id                  = var.project_id
   disable_services_on_destroy = false
@@ -307,12 +305,7 @@ module "gke" {
   dns_cache                     = true
 
   remove_default_node_pool      = true
-  cluster_autoscaling = {
-      enabled                   = true
-      autoscaling_profile       = var.gke_autoscaling_profile
-  }
 
-  
   node_pools = [
     {
       name                      = "gitlab"
