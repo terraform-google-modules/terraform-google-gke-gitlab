@@ -426,7 +426,7 @@ data "template_file" "helm_values" {
     ENABLE_CRON_BACKUP    = var.gitlab_enable_cron_backup
     SCHEDULE_CRON_BACKUP  = var.gitlab_schedule_cron_backup
     GITALY_PV_SIZE        = var.gitlab_gitaly_disk_size
-    GITALY_STORAGE_CLASS  = var.gke_storage_class 
+    PV_STORAGE_CLASS      = var.gke_storage_class 
 
     # HPA settings for cost/performance optimization
     HPA_MIN_REPLICAS_REGISTRY   = var.gitlab_hpa_min_replicas_registry

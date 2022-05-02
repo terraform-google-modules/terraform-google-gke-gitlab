@@ -182,4 +182,4 @@ gitlab:
   gitaly:
     persistence:
       size: "${GITALY_PV_SIZE}Gi"
-      storageClass: "${GITALY_STORAGE_CLASS}"
+      storageClass: "${PV_STORAGE_CLASS}"
