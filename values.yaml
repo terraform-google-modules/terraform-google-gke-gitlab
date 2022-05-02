@@ -138,7 +138,7 @@ registry:
 ## See requirements.yaml for current version
 
 gitlab-runner:
-  install: ${GITLAB_RUNNER_INSTALL}
+  install: ${INSTALL_RUNNER}
   rbac:
     create: true
   runners:
