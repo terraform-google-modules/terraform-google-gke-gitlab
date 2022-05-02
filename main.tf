@@ -146,13 +146,17 @@ resource "google_service_networking_connection" "private_vpc_connection" {
 }
 
 resource "google_sql_database_instance" "gitlab_db" {
-  depends_on       = [google_service_networking_connection.private_vpc_connection]
-  name             = local.gitlab_db_name
-  region           = var.region
-  database_version = var.postgresql_version
+  depends_on          = [google_service_networking_connection.private_vpc_connection]
+  name                = local.gitlab_db_name
+  region              = var.region
+  database_version    = var.postgresql_version
+  deletion_protection = var.postgresql_del_protection
 
   settings {
-    tier            = var.postgresql_tier
+    tier              = var.postgresql_tier
+    availabilty_type  = var.availability_type
+    disk_size         = var.postgresql_disk_size
+    disk_type         = var.postgresql_disk_type
     disk_autoresize = true
 
     ip_configuration {
