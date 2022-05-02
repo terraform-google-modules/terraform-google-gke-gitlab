@@ -49,7 +49,9 @@ Then perform the following commands on the root folder:
 | gitlab\_runner\_install | Choose whether to install the gitlab runner in the cluster | `bool` | `true` | no |
 | gitlab\_services\_subnet\_cidr | Cidr range to use for gitlab GKE services subnet | `string` | `"10.2.0.0/16"` | no |
 | gke\_machine\_type | Machine type used for the node-pool | `string` | `"n1-standard-4"` | no |
-| gke\_version | Version of GKE to use for the GitLab cluster | `string` | `"1.20"` | no |
+| gke\_version | Version of GKE to use for the GitLab cluster | `string` | `"1.21.10-gke.2000"` | no |
+| gke\_storage\_class | Default storage class for GKE Cluster. Possible values: pd-standard,pd-balanced,pd-ssd,pd-extreme | `string` | `"pd-ssd"` | no |
+| gke\_disk\_replication | Setup replication type for disk persistent volune. Possible values none or regional-pd | `string` | `"none"` | no |
 | helm\_chart\_version | Helm chart version to install during deployment | `string` | `"5.9.3"` | no |
 | project\_id | GCP Project to deploy resources | `any` | n/a | yes |
 | region | GCP region to deploy resources to | `string` | `"europe-west1"` | no |
@@ -67,6 +69,11 @@ Then perform the following commands on the root folder:
 | gitlab\_install\_prometheus | Choose whether to install a Prometheus instance using the Gitlab chart. | `bool` | `"false"` | no |
 | gitlab\_install\_grafana | Choose whether to install a Grafana instance using the Gitlab chart. | `bool` | `"false"` | no |
 | gitlab\_install\_ingress\_nginx | Choose whether to install the ingress nginx controller in the cluster. | `bool` | `"true"` | no |
+| gitlab\_install\_kas | Choose whether to install the Gitlab agent server in the cluster. | `bool` | `"false"` | no |
+| gitlab\_enable\_registry | Choose whether to enable Gitlab Container registry. | `bool` | `"false"` | no |
+| gitlab\_enable\_cron\_backup | Choose whether to enable Gitlab Scheduled Backups. | `bool` | `"true"` | no |
+| gitlab\_schedule\_cron\_backup | Setup Cron Job for Gitlab Scheduled Backup using unix-cron string format. | `string` | `"0 1 * * *"` | no |
+| gitlab\_gitaly\_disk\_size | Setup persistent disk size for gitaly data in GB | `number` | `"200"` | no |
 
 
 ## Outputs

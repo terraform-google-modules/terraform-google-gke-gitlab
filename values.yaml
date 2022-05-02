@@ -82,7 +82,7 @@ global:
 
 ## https://docs.gitlab.com/charts/charts/gitlab/kas/
   kas:
-    enabled: true
+    enabled: ${INSTALL_KAS}
   
   ## https://docs.gitlab.com/charts/charts/globals#configure-registry-settings
   ## If we do not set the legacy bucket name here, the registry is not included
@@ -125,7 +125,7 @@ postgresql:
 ## https://docs.gitlab.com/charts/architecture/decisions#registry
 ## https://docs.gitlab.com/charts/charts/registry/
 registry:
-  enabled: false
+  enabled: ${ENABLE_REGISTRY}
   hpa:
     minReplicas: ${HPA_MIN_REPLICAS_REGISTRY}
     maxReplicas: ${HPA_MAX_REPLICAS_REGISTRY}
@@ -168,10 +168,10 @@ gitlab:
   toolbox:
     backups:
       cron:
-        enabled: true
-        failedJobsHistoryLimit: 3
-        successfulJobsHistoryLimit: 7
-        schedule: '0 1 * * *'
+        enabled: ${ENABLE_CRON_BACKUP}
+        failedJobsHistoryLimit: 7
+        successfulJobsHistoryLimit: 3
+        schedule: '${SCHEDULE_CRON_BACKUP}'
       objectStorage:
         backend: gcs
         config:
@@ -181,5 +181,5 @@ gitlab:
   ## https://docs.gitlab.com/charts/charts/gitlab/gitaly
   gitaly:
     persistence:
-      size: 200Gi
-      storageClass: "pd-ssd"
+      size: "${GITALY_PV_SIZE}Gi"
+      storageClass: "${GITALY_STORAGE_CLASS}"

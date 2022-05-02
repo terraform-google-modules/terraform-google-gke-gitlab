@@ -306,15 +306,16 @@ module "gke" {
   }
 }
 
-resource "kubernetes_storage_class" "pd-ssd" {
+resource "kubernetes_storage_class" "storage_class" {
   metadata {
-    name = "pd-ssd"
+    name = var.gke_storage_class
   }
 
   storage_provisioner = "kubernetes.io/gce-pd"
 
   parameters = {
-    type = "pd-ssd"
+    type = var.gke_storage_class
+    replication-type = var.gke_disk_replication
   }
 
   depends_on = [time_sleep.sleep_for_cluster_fix_helm_6361]
@@ -408,6 +409,12 @@ data "template_file" "helm_values" {
     INSTALL_INGRESS_NGINX = var.gitlab_install_ingress_nginx
     INSTALL_PROMETHEUS    = var.gitlab_install_prometheus
     INSTALL_GRAFANA       = var.gitlab_install_grafana
+    INSTALL_KAS           = var.gitlab_install_kas
+    ENABLE_REGISTRY       = var.gitlab_enable_registry
+    ENABLE_CRON_BACKUP    = var.gitlab_enable_cron_backup
+    SCHEDULE_CRON_BACKUP  = var.gitlab_schedule_cron_backup
+    GITALY_PV_SIZE        = var.gitlab_gitaly_disk_size
+    GITALY_STORAGE_CLASS  = var.gke_storage_class 
 
     # HPA settings for cost/performance optimization
     HPA_MIN_REPLICAS_REGISTRY   = var.gitlab_hpa_min_replicas_registry
@@ -442,7 +449,7 @@ resource "helm_release" "gitlab" {
   depends_on = [
     google_redis_instance.gitlab,
     google_sql_user.gitlab,
-    kubernetes_storage_class.pd-ssd,
+    kubernetes_storage_class.storage_class,
     kubernetes_secret.gitlab_pg,
     kubernetes_secret.gitlab_rails_storage,
     kubernetes_secret.gitlab_registry_storage,
