@@ -155,7 +155,7 @@ resource "google_sql_database_instance" "gitlab_db" {
   database_version = var.postgresql_version
 
   settings {
-    tier            = "${var.postgresql_tier}"
+    tier            = var.postgresql_tier
     disk_autoresize = true
 
     ip_configuration {
@@ -200,72 +200,84 @@ resource "google_redis_instance" "gitlab" {
 resource "google_storage_bucket" "gitlab-backups" {
   name          = "${var.project_id}-gitlab-backups"
   location      = var.region
+  storage_class = var.bucket_storage_class
   force_destroy = var.allow_force_destroy
 }
 
 resource "google_storage_bucket" "gitlab-tmp-backups" {
   name          = "${var.project_id}-gitlab-tmp-backups"
   location      = var.region
+  storage_class = var.bucket_storage_class
   force_destroy = var.allow_force_destroy
 }
 
 resource "google_storage_bucket" "gitlab-uploads" {
   name          = "${var.project_id}-gitlab-uploads"
   location      = var.region
+  storage_class = var.bucket_storage_class
   force_destroy = var.allow_force_destroy
 }
 
 resource "google_storage_bucket" "gitlab-artifacts" {
   name          = "${var.project_id}-gitlab-artifacts"
   location      = var.region
+  storage_class = var.bucket_storage_class
   force_destroy = var.allow_force_destroy
 }
 
 resource "google_storage_bucket" "git-lfs" {
   name          = "${var.project_id}-git-lfs"
   location      = var.region
+  storage_class = var.bucket_storage_class
   force_destroy = var.allow_force_destroy
 }
 
 resource "google_storage_bucket" "gitlab-packages" {
   name          = "${var.project_id}-gitlab-packages"
   location      = var.region
+  storage_class = var.bucket_storage_class
   force_destroy = var.allow_force_destroy
 }
 
 resource "google_storage_bucket" "gitlab-registry" {
-  name          = "${var.project_id}-registry"
+  name          = "${var.project_id}-gitlab-registry"
   location      = var.region
+  storage_class = var.bucket_storage_class
   force_destroy = var.allow_force_destroy
 }
 
 resource "google_storage_bucket" "gitlab-pseudo" {
   name          = "${var.project_id}-pseudo"
   location      = var.region
+  storage_class = var.bucket_storage_class
   force_destroy = var.allow_force_destroy
 }
 
 resource "google_storage_bucket" "gitlab-runner-cache" {
   name          = "${var.project_id}-runner-cache"
   location      = var.region
+  storage_class = var.bucket_storage_class
   force_destroy = var.allow_force_destroy
 }
 
 resource "google_storage_bucket" "gitlab-dependency-proxy" {
   name          = "${var.project_id}-dependency-proxy"
   location      = var.region
+  storage_class = var.bucket_storage_class
   force_destroy = var.allow_force_destroy
 }
 
 resource "google_storage_bucket" "gitlab-terraform-state" {
   name          = "${var.project_id}-terraform-state"
   location      = var.region
+  storage_class = var.bucket_storage_class
   force_destroy = var.allow_force_destroy
 }
 
 resource "google_storage_bucket" "gitlab-external-diffs" {
   name          = "${var.project_id}-gitlab-external-diffs"
   location      = var.region
+  storage_class = var.bucket_storage_class
   force_destroy = var.allow_force_destroy
 }
 
@@ -306,15 +318,16 @@ module "gke" {
   }
 }
 
-resource "kubernetes_storage_class" "pd-ssd" {
+resource "kubernetes_storage_class" "storage_class" {
   metadata {
-    name = "pd-ssd"
+    name = var.gke_storage_class
   }
 
   storage_provisioner = "kubernetes.io/gce-pd"
 
   parameters = {
-    type = "pd-ssd"
+    type = var.gke_storage_class
+    replication-type = var.gke_disk_replication
   }
 
   depends_on = [time_sleep.sleep_for_cluster_fix_helm_6361]
@@ -395,7 +408,7 @@ locals {
 }
 
 data "template_file" "helm_values" {
-  template = file("${path.module}/values.yaml.tpl")
+  template = file("${path.module}/values.yaml")
 
   vars = {
     DOMAIN                = local.domain
@@ -405,6 +418,28 @@ data "template_file" "helm_values" {
     PROJECT_ID            = var.project_id
     CERT_MANAGER_EMAIL    = var.certmanager_email
     GITLAB_RUNNER_INSTALL = var.gitlab_runner_install
+    INSTALL_INGRESS_NGINX = var.gitlab_install_ingress_nginx
+    INSTALL_PROMETHEUS    = var.gitlab_install_prometheus
+    INSTALL_GRAFANA       = var.gitlab_install_grafana
+    INSTALL_KAS           = var.gitlab_install_kas
+    ENABLE_REGISTRY       = var.gitlab_enable_registry
+    ENABLE_CRON_BACKUP    = var.gitlab_enable_cron_backup
+    SCHEDULE_CRON_BACKUP  = var.gitlab_schedule_cron_backup
+    GITALY_PV_SIZE        = var.gitlab_gitaly_disk_size
+    PV_STORAGE_CLASS      = var.gke_storage_class 
+
+    # HPA settings for cost/performance optimization
+    HPA_MIN_REPLICAS_REGISTRY   = var.gitlab_hpa_min_replicas_registry
+    HPA_MAX_REPLICAS_REGISTRY   = var.gitlab_hpa_max_replicas_registry
+    HPA_MIN_REPLICAS_WEBSERVICE = var.gitlab_hpa_min_replicas_webservice
+    HPA_MAX_REPLICAS_WEBSERVICE = var.gitlab_hpa_max_replicas_webservice
+    HPA_MIN_REPLICAS_SIDEKIQ    = var.gitlab_hpa_min_replicas_sidekiq
+    HPA_MAX_REPLICAS_SIDEKIQ    = var.gitlab_hpa_max_replicas_sidekiq
+    HPA_MIN_REPLICAS_KAS        = var.gitlab_hpa_min_replicas_kas
+    HPA_MAX_REPLICAS_KAS        = var.gitlab_hpa_max_replicas_kas
+    HPA_MIN_REPLICAS_SHELL      = var.gitlab_hpa_min_replicas_shell
+    HPA_MAX_REPLICAS_SHELL      = var.gitlab_hpa_max_replicas_shell
+
   }
 }
 
@@ -426,7 +461,7 @@ resource "helm_release" "gitlab" {
   depends_on = [
     google_redis_instance.gitlab,
     google_sql_user.gitlab,
-    kubernetes_storage_class.pd-ssd,
+    kubernetes_storage_class.storage_class,
     kubernetes_secret.gitlab_pg,
     kubernetes_secret.gitlab_rails_storage,
     kubernetes_secret.gitlab_registry_storage,
