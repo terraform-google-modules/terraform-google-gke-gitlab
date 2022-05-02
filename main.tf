@@ -306,6 +306,7 @@ module "gke" {
 
   remove_default_node_pool      = true
 
+  
   node_pools = [
     {
       name                      = "gitlab"
