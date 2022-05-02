@@ -19,11 +19,11 @@ terraform {
   required_providers {
     google = {
       source  = "hashicorp/google"
-      version = "~> 3.42"
+      version = "~> 4.10"
     }
     google-beta = {
       source  = "hashicorp/google-beta"
-      version = "~> 3.42"
+      version = "~> 4.10"
     }
     helm = {
       source  = "hashicorp/helm"
@@ -31,7 +31,7 @@ terraform {
     }
     kubernetes = {
       source  = "hashicorp/kubernetes"
-      version = "~> 1.11.0"
+      version = "~> 2.0"
     }
     null = {
       source  = "hashicorp/null"
