@@ -54,8 +54,7 @@ provider "helm" {
 }
 
 provider "kubernetes" {
-  load_config_file = false
-
+  
   cluster_ca_certificate = module.gke_auth.cluster_ca_certificate
   host                   = module.gke_auth.host
   token                  = module.gke_auth.token
@@ -155,7 +154,7 @@ resource "google_sql_database_instance" "gitlab_db" {
   database_version = var.postgresql_version
 
   settings {
-    tier            = "${var.postgresql_tier}"
+    tier            = var.postgresql_tier
     disk_autoresize = true
 
     ip_configuration {
@@ -271,33 +270,59 @@ resource "google_storage_bucket" "gitlab-external-diffs" {
 
 // GKE Cluster
 module "gke" {
-  source  = "terraform-google-modules/kubernetes-engine/google"
-  version = "~> 12.0"
+  source  = "terraform-google-modules/kubernetes-engine/google//modules/beta-private-cluster"
+  version = "~> 20.0"
 
   # Create an implicit dependency on service activation
   project_id = module.project_services.project_id
 
-  name               = "gitlab"
-  region             = var.region
-  regional           = true
-  kubernetes_version = var.gke_version
+  name                     = "gitlab"
+  region                   = var.region
+  regional                 = true
+  kubernetes_version       = var.gke_version
+
+  network                  = google_compute_network.gitlab.name
+  subnetwork               = google_compute_subnetwork.subnetwork.name
+  ip_range_pods            = "gitlab-cluster-pod-cidr"
+  ip_range_services        = "gitlab-cluster-service-cidr"
+
+  enable_private_endpoint  = false
+  enable_private_nodes     = true
+  release_channel          = "STABLE"
+  maintenance_start_time   = "03:00"
+  network_policy           = false
+  enable_shielded_nodes    = true
+  dns_cache                = true
 
   remove_default_node_pool = true
-  initial_node_count       = 1
+  cluster_autoscaling = {
+      enabled                  = true
+      autoscaling_profile      = "BALANCED"
+      gpu_resources            = []
+      max_cpu_cores            = 0
+      max_memory_gb            =  0
+      min_cpu_cores            =  0
+      min_memory_gb            =  0
+  }
 
-  network           = google_compute_network.gitlab.name
-  subnetwork        = google_compute_subnetwork.subnetwork.name
-  ip_range_pods     = "gitlab-cluster-pod-cidr"
-  ip_range_services = "gitlab-cluster-service-cidr"
-
-  issue_client_certificate = true
-
+  
   node_pools = [
     {
-      name         = "gitlab"
-      autoscaling  = false
-      machine_type = var.gke_machine_type
-      node_count   = 1
+      name                      = "gitlab"
+      description               = "Gitlab Cluster"
+      machine_type              = var.gke_machine_type
+      node_count                = 1
+      min_count                 = 1
+      max_count                 = 5
+      disk_size_gb              = 100
+      disk_type                 = "pd-standard"
+      image_type                = "COS_CONTAINERD"
+      auto_repair               = true
+      auto_upgrade              = true
+      cloudrun                  = false
+      enable_pod_security_policy= false
+      preemptible               = false
+      autoscaling              = true 
     },
   ]
 
