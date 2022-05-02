@@ -117,6 +117,12 @@ variable "gke_disk_replication" {
   default     = "none"
 }
 
+variable "bucket_storage_class" {
+  type        = string
+  description = "Bucket storage class. Supported values include: STANDARD, MULTI_REGIONAL, REGIONAL, NEARLINE, COLDLINE, ARCHIVE "
+  default     = "STANDARD"
+}
+
 ##################
 # GITLAB SECTION #
 ##################

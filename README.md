@@ -74,7 +74,7 @@ Then perform the following commands on the root folder:
 | gitlab\_enable\_cron\_backup | Choose whether to enable Gitlab Scheduled Backups. | `bool` | `"true"` | no |
 | gitlab\_schedule\_cron\_backup | Setup Cron Job for Gitlab Scheduled Backup using unix-cron string format. | `string` | `"0 1 * * *"` | no |
 | gitlab\_gitaly\_disk\_size | Setup persistent disk size for gitaly data in GB | `number` | `"200"` | no |
-
+| bucket\_storage\_class | Bucket storage class. Supported values include: STANDARD, MULTI_REGIONAL, REGIONAL, NEARLINE, COLDLINE, ARCHIVE | `string` | `"STANDARD"` | no |
 
 ## Outputs
 

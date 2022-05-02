@@ -200,72 +200,84 @@ resource "google_redis_instance" "gitlab" {
 resource "google_storage_bucket" "gitlab-backups" {
   name          = "${var.project_id}-gitlab-backups"
   location      = var.region
+  storage_class = var.bucket_storage_class
   force_destroy = var.allow_force_destroy
 }
 
 resource "google_storage_bucket" "gitlab-tmp-backups" {
   name          = "${var.project_id}-gitlab-tmp-backups"
   location      = var.region
+  storage_class = var.bucket_storage_class
   force_destroy = var.allow_force_destroy
 }
 
 resource "google_storage_bucket" "gitlab-uploads" {
   name          = "${var.project_id}-gitlab-uploads"
   location      = var.region
+  storage_class = var.bucket_storage_class
   force_destroy = var.allow_force_destroy
 }
 
 resource "google_storage_bucket" "gitlab-artifacts" {
   name          = "${var.project_id}-gitlab-artifacts"
   location      = var.region
+  storage_class = var.bucket_storage_class
   force_destroy = var.allow_force_destroy
 }
 
 resource "google_storage_bucket" "git-lfs" {
   name          = "${var.project_id}-git-lfs"
   location      = var.region
+  storage_class = var.bucket_storage_class
   force_destroy = var.allow_force_destroy
 }
 
 resource "google_storage_bucket" "gitlab-packages" {
   name          = "${var.project_id}-gitlab-packages"
   location      = var.region
+  storage_class = var.bucket_storage_class
   force_destroy = var.allow_force_destroy
 }
 
 resource "google_storage_bucket" "gitlab-registry" {
   name          = "${var.project_id}-gitlab-registry"
   location      = var.region
+  storage_class = var.bucket_storage_class
   force_destroy = var.allow_force_destroy
 }
 
 resource "google_storage_bucket" "gitlab-pseudo" {
   name          = "${var.project_id}-pseudo"
   location      = var.region
+  storage_class = var.bucket_storage_class
   force_destroy = var.allow_force_destroy
 }
 
 resource "google_storage_bucket" "gitlab-runner-cache" {
   name          = "${var.project_id}-runner-cache"
   location      = var.region
+  storage_class = var.bucket_storage_class
   force_destroy = var.allow_force_destroy
 }
 
 resource "google_storage_bucket" "gitlab-dependency-proxy" {
   name          = "${var.project_id}-dependency-proxy"
   location      = var.region
+  storage_class = var.bucket_storage_class
   force_destroy = var.allow_force_destroy
 }
 
 resource "google_storage_bucket" "gitlab-terraform-state" {
   name          = "${var.project_id}-terraform-state"
   location      = var.region
+  storage_class = var.bucket_storage_class
   force_destroy = var.allow_force_destroy
 }
 
 resource "google_storage_bucket" "gitlab-external-diffs" {
   name          = "${var.project_id}-gitlab-external-diffs"
   location      = var.region
+  storage_class = var.bucket_storage_class
   force_destroy = var.allow_force_destroy
 }
 
