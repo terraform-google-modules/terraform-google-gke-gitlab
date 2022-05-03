@@ -52,6 +52,36 @@ variable "postgresql_tier" {
   default     = "db-custom-2-8192"
 }
 
+variable "postgresql_disk_size" {
+  type        = number
+  description = "he size of data disk, in GB. Size of a running instance cannot be reduced but can be increased. Default to 100 GB"
+  default     = "100"
+}
+
+variable "postgresql_disk_type" {
+  type        = string
+  description = "The type of postgresql data disk: PD_SSD or PD_HDD. "
+  default     = "PD_SSD"
+}
+
+variable "postgresql_availability_type" {
+  type        = string
+  description = "The availability type of the Cloud SQL instance, high availability (REGIONAL) or single zone (ZONAL)."
+  default     = "ZONAL"
+}
+
+variable "postgresql_location" {
+  type        = string
+  description = "The preferred compute engine zone."
+  default     = "europe-west1-b"
+}
+
+variable "postgresql_del_protection" {
+  type        = bool
+  description = "Whether or not to allow Terraform to destroy the instance. Unless this field is set to false in Terraform state, a terraform destroy or terraform apply command that deletes the instance will fail."
+  default     = "true"
+}
+
 variable "gitlab_db_name" {
   description = "Instance name for the GitLab Postgres database."
   default     = "gitlab-db"

@@ -154,7 +154,7 @@ resource "google_sql_database_instance" "gitlab_db" {
 
   settings {
     tier              = var.postgresql_tier
-    availabilty_type  = var.availability_type
+    availability_type  = var.postgresql_availability_type
     disk_size         = var.postgresql_disk_size
     disk_type         = var.postgresql_disk_type
     disk_autoresize = true
@@ -162,6 +162,29 @@ resource "google_sql_database_instance" "gitlab_db" {
     ip_configuration {
       ipv4_enabled    = "false"
       private_network = google_compute_network.gitlab.self_link
+    }
+
+    location_preference {
+      zone = var.postgresql_location
+    }
+
+    backup_configuration {
+      enabled                        = true
+      start_time                     = "02:00"
+      point_in_time_recovery_enabled = true
+    }
+
+    insights_config {
+      query_insights_enabled  = true
+      query_string_length     = 1024
+      record_application_tags = false
+      record_client_address   = true
+    }
+
+    maintenance_window {
+      day          = 7
+      hour         = 2
+      update_track = "stable"
     }
   }
 }
