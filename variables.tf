@@ -62,9 +62,9 @@ variable "gitlab_db_random_prefix" {
   default     = false
 }
 
-#######################
-#    REDIS SECTION    #
-#######################
+####################
+#  REDIS SECTION   #
+####################
 
 variable "redis_tier" {
   description = "The service tier of the instance. Must be one of these values BASIC and STANDARD_HA"
@@ -79,6 +79,24 @@ variable "redis_size" {
 ##################
 #  GKE SECTION   #
 ##################
+
+variable "gke_min_node_count" {
+  type        = number
+  description = "Define the minimum number of nodes of the autoscaling cluster. Default 1"
+  default     = 1
+}
+
+variable "gke_max_node_count" {
+  type        = number
+  description = "Define the maximum number of nodes of the autoscaling cluster. Default 5"
+  default     = 5
+}
+
+variable "gke_enable_cloudrun" {
+  type        = bool
+  description = "Enable Google Cloudrun on GKE Cluster. Default false"
+  default     = false
+}
 
 variable "gke_version" {
   description = "Version of GKE to use for the GitLab cluster"
@@ -149,7 +167,7 @@ variable "certmanager_email" {
   description = "Email used to retrieve SSL certificates from Let's Encrypt"
 }
 
-variable "gitlab_runner_install" {
+variable "gitlab_install_runner" {
   description = "Choose whether to install the gitlab runner in the cluster"
   default     = true
 }
@@ -199,7 +217,7 @@ variable "gitlab_schedule_cron_backup" {
 variable "gitlab_gitaly_disk_size" {
   type        = number
   description = "Setup persistent disk size for gitaly data in GB. Default 200 GB"
-  default     = 200
+  default     = 100
 }
 
 # Peformance optimization. Max and min pod replicas for HPA.
@@ -260,5 +278,6 @@ variable "gitlab_hpa_max_replicas_sidekiq" {
 variable "gitlab_hpa_max_replicas_webservice" {
   type        = number
   description = "Set the maximum hpa pod replicas for the Gitlab webservice."
-  default     = 200
+  default     = 10
 }
+ 
