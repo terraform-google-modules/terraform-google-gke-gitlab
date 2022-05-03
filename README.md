@@ -71,8 +71,13 @@ Then perform the following commands on the root folder:
 | gke\_storage\_class | Default storage class for GKE Cluster. Possible values: pd-standard,pd-balanced,pd-ssd,pd-extreme | `string` | `"pd-ssd"` | no |
 | gke\_version | Version of GKE to use for the GitLab cluster | `string` | `"1.21.10-gke.2000"` | no |
 | helm\_chart\_version | Helm chart version to install during deployment | `string` | `"5.9.3"` | no |
-| postgresql\_version | Sets The PostgreSQL version to use. | `string` | `POSTGRES_12` | no |
+| postgresql\_availability\_type | The availability type of the Cloud SQL instance, high availability (REGIONAL) or single zone (ZONAL) | `string` | `"ZONAL"` | no |
+| postgresql\_del\_protection | SWhether or not to allow Terraform to destroy the instance. Unless this field is set to false in Terraform state, a terraform destroy or terraform apply command that deletes the instance will fail. | `bool` | `"true"` | no |
+| postgresql\_disk\_type | The type of data disk: PD_SSD or PD_HDD. | `string` | `"PD_SSD"` | no |
+| postgresql\_disk\_size | The size of data disk, in GB. | `number` | `"100"` | no |
+| postgresql\_location | The preferred compute engine zone. | `string` | `"europe-west1-b"` | no |
 | postgresql\_tier | Sets the machine type to use for Postgres | `string` | `"db-custom-2-8192"` | no |
+| postgresql\_version | Sets The PostgreSQL version to use. | `string` | `POSTGRES_12` | no |
 | project\_id | GCP Project to deploy resources | `any` | n/a | yes |
 | redis\_tier | The service tier of the instance. BASIC or STANDARD_HA | `string` | `STANDARD_HA` | no |
 | redis\_size | Redis memory size in GiB. | `string` | `"1"` | no |
