@@ -75,7 +75,6 @@ Then perform the following commands on the root folder:
 | postgresql\_del\_protection | SWhether or not to allow Terraform to destroy the instance. Unless this field is set to false in Terraform state, a terraform destroy or terraform apply command that deletes the instance will fail. | `bool` | `"true"` | no |
 | postgresql\_disk\_type | The type of data disk: PD_SSD or PD_HDD. | `string` | `"PD_SSD"` | no |
 | postgresql\_disk\_size | The size of data disk, in GB. | `number` | `"100"` | no |
-| postgresql\_location | The preferred compute engine zone. | `string` | `"europe-west1-b"` | no |
 | postgresql\_tier | Sets the machine type to use for Postgres | `string` | `"db-custom-2-8192"` | no |
 | postgresql\_version | Sets The PostgreSQL version to use. | `string` | `POSTGRES_12` | no |
 | project\_id | GCP Project to deploy resources | `any` | n/a | yes |

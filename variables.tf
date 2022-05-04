@@ -72,7 +72,7 @@ variable "postgresql_disk_type" {
 variable "postgresql_availability_type" {
   type        = string
   description = "The availability type of the Cloud SQL instance, high availability (REGIONAL) or single zone (ZONAL)."
-  default     = "ZONAL"
+  default     = "REGIONAL"
 }
 
 variable "postgresql_del_protection" {
