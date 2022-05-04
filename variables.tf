@@ -75,12 +75,6 @@ variable "postgresql_availability_type" {
   default     = "ZONAL"
 }
 
-variable "postgresql_location" {
-  type        = string
-  description = "The preferred compute engine zone."
-  default     = "europe-west1-b"
-}
-
 variable "postgresql_del_protection" {
   type        = bool
   description = "Whether or not to allow Terraform to destroy the instance. Unless this field is set to false in Terraform state, a terraform destroy or terraform apply command that deletes the instance will fail."

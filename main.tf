@@ -164,10 +164,6 @@ resource "google_sql_database_instance" "gitlab_db" {
       private_network = google_compute_network.gitlab.self_link
     }
 
-    location_preference {
-      zone = var.postgresql_location
-    }
-
     backup_configuration {
       enabled                        = true
       start_time                     = "02:00"
