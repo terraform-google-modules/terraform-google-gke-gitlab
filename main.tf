@@ -170,13 +170,6 @@ resource "google_sql_database_instance" "gitlab_db" {
       point_in_time_recovery_enabled = true
     }
 
-    insights_config {
-      query_insights_enabled  = true
-      query_string_length     = 1024
-      record_application_tags = false
-      record_client_address   = true
-    }
-
     maintenance_window {
       day          = 7
       hour         = 2
