@@ -19,12 +19,14 @@
 ######################
 
 variable "project_id" {
+  type        = string
   description = "GCP Project to deploy resources"
 }
 
 variable "region" {
-  default     = "europe-west1"
+  type        = string
   description = "GCP region to deploy resources to"
+  default     = "europe-west1"
 }
 
 variable "allow_force_destroy" {
@@ -34,6 +36,7 @@ variable "allow_force_destroy" {
 }
 
 variable "gitlab_address_name" {
+  type        = string
   description = "Name of the address to use for GitLab ingress"
   default     = ""
 }
@@ -43,21 +46,49 @@ variable "gitlab_address_name" {
 ##########################
 
 variable "postgresql_version" {
+  type        = string
   description = "(Required) The PostgreSQL version to use. Supported values for Gitlab POSTGRES_12, POSTGRES_13. Default: POSTGRES_12"
   default     = "POSTGRES_12"
 }
 
 variable "postgresql_tier" {
+  type        = string
   description = "(Required) The machine type to use.Postgres supports only shared-core machine types, and custom machine types such as db-custom-2-13312"
   default     = "db-custom-2-8192"
 }
 
+variable "postgresql_disk_size" {
+  type        = number
+  description = "he size of data disk, in GB. Size of a running instance cannot be reduced but can be increased. Default to 100 GB"
+  default     = "100"
+}
+
+variable "postgresql_disk_type" {
+  type        = string
+  description = "The type of postgresql data disk: PD_SSD or PD_HDD. "
+  default     = "PD_SSD"
+}
+
+variable "postgresql_availability_type" {
+  type        = string
+  description = "The availability type of the Cloud SQL instance, high availability (REGIONAL) or single zone (ZONAL)."
+  default     = "REGIONAL"
+}
+
+variable "postgresql_del_protection" {
+  type        = bool
+  description = "Whether or not to allow Terraform to destroy the instance. Unless this field is set to false in Terraform state, a terraform destroy or terraform apply command that deletes the instance will fail."
+  default     = "true"
+}
+
 variable "gitlab_db_name" {
+  type        = string
   description = "Instance name for the GitLab Postgres database."
   default     = "gitlab-db"
 }
 
 variable "gitlab_db_random_prefix" {
+  type        = string
   description = "Sets random suffix at the end of the Cloud SQL instance name."
   default     = false
 }
@@ -67,11 +98,13 @@ variable "gitlab_db_random_prefix" {
 ####################
 
 variable "redis_tier" {
+  type        = string
   description = "The service tier of the instance. Must be one of these values BASIC and STANDARD_HA"
   default     = "STANDARD_HA"
 }
 
 variable "redis_size" {
+  type        = number
   description = "Redis memory size in GiB."
   default     = "1"
 }
@@ -99,26 +132,31 @@ variable "gke_enable_cloudrun" {
 }
 
 variable "gke_version" {
+  type        = string
   description = "Version of GKE to use for the GitLab cluster"
   default     = "1.21.10-gke.2000"
 }
 
 variable "gke_machine_type" {
+  type        = string
   description = "Machine type used for the node-pool"
   default     = "n1-standard-4"
 }
 
 variable "gitlab_nodes_subnet_cidr" {
+  type        = string
   default     = "10.0.0.0/16"
   description = "Cidr range to use for gitlab GKE nodes subnet"
 }
 
 variable "gitlab_pods_subnet_cidr" {
+  type        = string
   default     = "10.3.0.0/16"
   description = "Cidr range to use for gitlab GKE pods subnet"
 }
 
 variable "gitlab_services_subnet_cidr" {
+  type        = string
   default     = "10.2.0.0/16"
   description = "Cidr range to use for gitlab GKE services subnet"
 }
@@ -154,20 +192,24 @@ variable "helm_chart_version" {
 }
 
 variable "domain" {
+  type        = string
   description = "Domain for hosting gitlab functionality (ie mydomain.com would access gitlab at gitlab.mydomain.com)"
   default     = ""
 }
 
 variable "gitlab_db_password" {
+  type        = string
   description = "Password for the GitLab Postgres user"
   default     = ""
 }
 
 variable "certmanager_email" {
+  type        = string
   description = "Email used to retrieve SSL certificates from Let's Encrypt"
 }
 
 variable "gitlab_install_runner" {
+  type        = string
   description = "Choose whether to install the gitlab runner in the cluster"
   default     = true
 }
