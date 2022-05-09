@@ -145,19 +145,19 @@ variable "gke_machine_type" {
 
 variable "gitlab_nodes_subnet_cidr" {
   type        = string
-  default     = "10.0.0.0/16"
+  default     = "10.10.0.0/16"
   description = "Cidr range to use for gitlab GKE nodes subnet"
 }
 
 variable "gitlab_pods_subnet_cidr" {
   type        = string
-  default     = "10.3.0.0/16"
+  default     = "10.30.0.0/16"
   description = "Cidr range to use for gitlab GKE pods subnet"
 }
 
 variable "gitlab_services_subnet_cidr" {
   type        = string
-  default     = "10.2.0.0/16"
+  default     = "10.20.0.0/16"
   description = "Cidr range to use for gitlab GKE services subnet"
 }
 
@@ -236,6 +236,30 @@ variable "gitlab_install_kas" {
   type        = bool
   description = "Choose whether to install the Gitlab agent server in the cluster. Default to false."
   default     = false
+}
+
+variable "gitlab_enable_certmanager" {
+  type        = bool
+  description = "Choose whether to Install certmanager through Gitlab Helm Chart. Default to true."
+  default     = true
+}
+
+variable "gitlab_enable_smtp" {
+  type        = string
+  description = "Setup Gitlab email address to send email."
+  default     = false
+}
+
+variable "gitlab_smtp_user" {
+  type        = string
+  description = "Choose whether to enable Gitlab smtp server to send emails."
+  default     = ""
+}
+
+variable "gitlab_backup_extra_args" {
+  type        = string
+  description = "Add a string of extra arguments for the gitlab backup-utility."
+  default     = "" 
 }
 
 variable "gitlab_enable_registry" {

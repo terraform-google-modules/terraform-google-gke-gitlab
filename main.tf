@@ -27,35 +27,26 @@ locals {
 }
 
 resource "random_id" "suffix" {
-  count = var.gitlab_db_random_prefix ? 1 : 0
+  count = var.gitlab_db_random_prefix ? 2 : 1
 
   byte_length = 4
 }
 
-
-module "gke_auth" {
-  source  = "terraform-google-modules/kubernetes-engine/google//modules/auth"
-  version = "~> 20.0"
-
-  project_id   = module.project_services.project_id
-  cluster_name = module.gke.name
-  location     = module.gke.location
-
-  depends_on = [time_sleep.sleep_for_cluster_fix_helm_6361]
-}
+# google_client_config and kubernetes provider must be explicitly specified like the following.
+data "google_client_config" "default" {}
 
 provider "helm" {
   kubernetes {
-    cluster_ca_certificate = module.gke_auth.cluster_ca_certificate
-    host                   = module.gke_auth.host
-    token                  = module.gke_auth.token
+    host                   = "https://${module.gke.endpoint}"
+    token                  = data.google_client_config.default.access_token
+    cluster_ca_certificate = base64decode(module.gke.ca_certificate)
   }
 }
 
 provider "kubernetes" {
-  cluster_ca_certificate = module.gke_auth.cluster_ca_certificate
-  host                   = module.gke_auth.host
-  token                  = module.gke_auth.token
+  host                   = "https://${module.gke.endpoint}"
+  token                  = data.google_client_config.default.access_token
+  cluster_ca_certificate = base64decode(module.gke.ca_certificate)
 }
 
 # Services
@@ -71,7 +62,7 @@ module "project_services" {
     "container.googleapis.com",
     "servicenetworking.googleapis.com",
     "cloudresourcemanager.googleapis.com",
-    "redis.googleapis.com"
+    "redis.googleapis.com",
   ]
 }
 
@@ -125,6 +116,22 @@ resource "google_compute_address" "gitlab" {
   count        = var.gitlab_address_name == "" ? 1 : 0
 }
 
+module "cloud_nat" {
+  source      = "terraform-google-modules/cloud-nat/google"
+  version     = "~> 2.2.0"
+  project_id  = var.project_id
+  region      = var.region
+  router      = format("%s-router", var.project_id)
+  name        = "${var.project_id}-cloud-nat-${random_id.suffix[1].hex}"
+  network     = google_compute_network.gitlab.self_link
+  nat_ips     = [var.gitlab_address_name == "" ? google_compute_address.gitlab[0].self_link : data.google_compute_address.gitlab[0].self_link]
+  create_router     = true
+  min_ports_per_vm  = "2048"
+  depends_on = [
+    google_compute_address.gitlab,
+  ]
+}
+
 # Database
 resource "google_compute_global_address" "gitlab_sql" {
   provider      = google-beta
@@ -162,6 +169,7 @@ resource "google_sql_database_instance" "gitlab_db" {
     ip_configuration {
       ipv4_enabled    = "false"
       private_network = google_compute_network.gitlab.self_link
+      require_ssl     = "true"
     }
 
     backup_configuration {
@@ -176,6 +184,12 @@ resource "google_sql_database_instance" "gitlab_db" {
       update_track = "stable"
     }
   }
+}
+
+resource "google_sql_ssl_cert" "postgres_client_cert" {
+  common_name = "gitlab.${var.domain}"
+  instance    = google_sql_database_instance.gitlab_db.name
+  project     = var.project_id
 }
 
 resource "google_sql_database" "gitlabhq_production" {
@@ -325,21 +339,21 @@ module "gke" {
   
   node_pools = [
     {
-      name                      = "gitlab"
-      description               = "Gitlab Cluster"
-      machine_type              = var.gke_machine_type
-      node_count                = 1
-      min_count                 = var.gke_min_node_count
-      max_count                 = var.gke_max_node_count
-      disk_size_gb              = 100
-      disk_type                 = "pd-standard"
-      image_type                = "COS_CONTAINERD"
-      auto_repair               = true
-      auto_upgrade              = true
-      cloudrun                  = var.gke_enable_cloudrun
-      enable_pod_security_policy= false
-      preemptible               = false
-      autoscaling              = true 
+      name                       = "gitlab"
+      description                = "Gitlab Cluster"
+      machine_type               = var.gke_machine_type
+      node_count                 = 1
+      min_count                  = var.gke_min_node_count
+      max_count                  = var.gke_max_node_count
+      disk_size_gb               = 100
+      disk_type                  = "pd-standard"
+      image_type                 = "COS_CONTAINERD"
+      auto_repair                = true
+      auto_upgrade               = true
+      cloudrun                   = var.gke_enable_cloudrun
+      enable_pod_security_policy = false
+      preemptible                = false
+      autoscaling                = true 
     },
   ]
 
@@ -424,6 +438,21 @@ resource "kubernetes_secret" "gitlab_gcs_credentials" {
   depends_on = [time_sleep.sleep_for_cluster_fix_helm_6361]
 }
 
+
+resource "kubernetes_secret" "postgresql_mtls_secret" {
+  metadata {
+    name = "gitlab-postgres-mtls"
+  }
+
+  data = {
+    cert              = google_sql_ssl_cert.postgres_client_cert.cert
+    private_key       = google_sql_ssl_cert.postgres_client_cert.private_key
+    server_ca_cert    = google_sql_ssl_cert.postgres_client_cert.server_ca_cert
+  }
+
+  depends_on = [time_sleep.sleep_for_cluster_fix_helm_6361]
+}
+
 data "google_compute_address" "gitlab" {
   name   = var.gitlab_address_name
   region = var.region
@@ -433,8 +462,9 @@ data "google_compute_address" "gitlab" {
 }
 
 locals {
-  gitlab_address = var.gitlab_address_name == "" ? google_compute_address.gitlab[0].address : data.google_compute_address.gitlab[0].address
-  domain         = var.domain != "" ? var.domain : "${local.gitlab_address}.xip.io"
+  gitlab_address     = var.gitlab_address_name == "" ? google_compute_address.gitlab[0].address : data.google_compute_address.gitlab[0].address
+  domain             = var.domain != "" ? var.domain : "${local.gitlab_address}.xip.io"
+  gitlab_smtp_user   = var.gitlab_enable_smtp != false ? var.gitlab_smtp_user : ""
 }
 
 data "template_file" "helm_values" {
@@ -446,6 +476,7 @@ data "template_file" "helm_values" {
     DB_PRIVATE_IP         = google_sql_database_instance.gitlab_db.private_ip_address
     REDIS_PRIVATE_IP      = google_redis_instance.gitlab.host
     PROJECT_ID            = var.project_id
+    ENABLE_CERT_MANAGER   = var.gitlab_enable_certmanager
     CERT_MANAGER_EMAIL    = var.certmanager_email
     INSTALL_RUNNER        = var.gitlab_install_runner
     INSTALL_INGRESS_NGINX = var.gitlab_install_ingress_nginx
@@ -457,6 +488,9 @@ data "template_file" "helm_values" {
     SCHEDULE_CRON_BACKUP  = var.gitlab_schedule_cron_backup
     GITALY_PV_SIZE        = var.gitlab_gitaly_disk_size
     PV_STORAGE_CLASS      = var.gke_storage_class 
+    ENABLE_SMTP           = var.gitlab_enable_smtp
+    SMTP_USER             = local.gitlab_smtp_user 
+    BACKUP_EXTRA          = var.gitlab_backup_extra_args
 
     # HPA settings for cost/performance optimization
     HPA_MIN_REPLICAS_REGISTRY   = var.gitlab_hpa_min_replicas_registry
@@ -497,5 +531,6 @@ resource "helm_release" "gitlab" {
     kubernetes_secret.gitlab_registry_storage,
     kubernetes_secret.gitlab_gcs_credentials,
     time_sleep.sleep_for_cluster_fix_helm_6361,
+    module.cloud_nat,
   ]
 }
