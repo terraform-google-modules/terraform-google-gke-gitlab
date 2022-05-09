@@ -76,6 +76,9 @@ Then perform the following commands on the root folder:
 | gke\_version | Version of GKE to use for the GitLab cluster | `string` | `"1.21.10-gke.2000"` | no |
 | helm\_chart\_version | Helm chart version to install during deployment | `string` | `"5.9.3"` | no |
 | postgresql\_availability\_type | The availability type of the Cloud SQL instance, high availability (REGIONAL) or single zone (ZONAL) | `string` | `"ZONAL"` | no |
+| postgresql\_enable\_backup | Setup if postgres backup configuration is enabled. | `bool` | `"true"` | no |
+| postgresql\_backup\_start\_time | HH:MM format time indicating when postgres backup configuration starts. | `string` | `"02:00"` | no |
+| postgresql\_backup\_retained\_count | Numeber of postgres backup to be retained | `number` | `"30"` | no |
 | postgresql\_del\_protection | SWhether or not to allow Terraform to destroy the instance. Unless this field is set to false in Terraform state, a terraform destroy or terraform apply command that deletes the instance will fail. | `bool` | `"true"` | no |
 | postgresql\_disk\_type | The type of data disk: PD_SSD or PD_HDD. | `string` | `"PD_SSD"` | no |
 | postgresql\_disk\_size | The size of data disk, in GB. | `number` | `"100"` | no |

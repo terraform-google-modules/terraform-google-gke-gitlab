@@ -173,9 +173,12 @@ resource "google_sql_database_instance" "gitlab_db" {
     }
 
     backup_configuration {
-      enabled                        = true
-      start_time                     = "02:00"
+      enabled                        = var.postgresql_enable_backup
+      start_time                     = var.postgresql_backup_start_time
       point_in_time_recovery_enabled = true
+        backup_retention_settings {
+          retained_backups           = var. postgresql_backup_retained_count
+        }
     }
 
     maintenance_window {

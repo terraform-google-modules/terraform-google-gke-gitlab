@@ -81,6 +81,24 @@ variable "postgresql_del_protection" {
   default     = "true"
 }
 
+variable "postgresql_enable_backup" {
+  type        = bool
+  description = "Setup if postgres backup configuration is enabled.Default true"
+  default     = "true"
+}
+
+variable "postgresql_backup_start_time" {
+  type        = string
+  description = "HH:MM format time indicating when postgres backup configuration starts."
+  default     = "02:00"
+}
+
+variable "postgresql_backup_retained_count" {
+  type        = number
+  description = "Numeber of postgres backup to be retained. Default 30."
+  default     = "30"
+}
+
 variable "gitlab_db_name" {
   type        = string
   description = "Instance name for the GitLab Postgres database."
