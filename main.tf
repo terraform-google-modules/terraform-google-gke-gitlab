@@ -177,7 +177,7 @@ resource "google_sql_database_instance" "gitlab_db" {
       start_time                     = var.postgresql_backup_start_time
       point_in_time_recovery_enabled = true
         backup_retention_settings {
-          retained_backups           = var. postgresql_backup_retained_count
+          retained_backups = var. postgresql_backup_retained_count
         }
     }
 
@@ -349,7 +349,7 @@ module "gke" {
       min_count                  = var.gke_min_node_count
       max_count                  = var.gke_max_node_count
       disk_size_gb               = 100
-      disk_type                  = "pd-standard"
+      disk_type                  = "pd-balanced"
       image_type                 = "COS_CONTAINERD"
       auto_repair                = true
       auto_upgrade               = true
@@ -363,6 +363,13 @@ module "gke" {
   node_pools_oauth_scopes = {
     all = ["https://www.googleapis.com/auth/cloud-platform"]
   }
+}
+
+resource "kubernetes_namespace" "gitlab_namespace" {
+  metadata {
+    name = var.gitlab_namespace
+  }
+  depends_on = [time_sleep.sleep_for_cluster_fix_helm_6361]
 }
 
 resource "kubernetes_storage_class" "storage_class" {
@@ -382,7 +389,8 @@ resource "kubernetes_storage_class" "storage_class" {
 
 resource "kubernetes_secret" "gitlab_pg" {
   metadata {
-    name = "gitlab-pg"
+    name      = "gitlab-pg"
+    namespace = var.gitlab_namespace
   }
 
   data = {
@@ -394,7 +402,8 @@ resource "kubernetes_secret" "gitlab_pg" {
 
 resource "kubernetes_secret" "gitlab_rails_storage" {
   metadata {
-    name = "gitlab-rails-storage"
+    name      = "gitlab-rails-storage"
+    namespace = var.gitlab_namespace
   }
 
   data = {
@@ -411,7 +420,8 @@ EOT
 
 resource "kubernetes_secret" "gitlab_registry_storage" {
   metadata {
-    name = "gitlab-registry-storage"
+    name      = "gitlab-registry-storage"
+    namespace = var.gitlab_namespace
   }
 
   data = {
@@ -431,7 +441,8 @@ EOT
 
 resource "kubernetes_secret" "gitlab_gcs_credentials" {
   metadata {
-    name = "google-application-credentials"
+    name      = "google-application-credentials"
+    namespace = var.gitlab_namespace
   }
 
   data = {
@@ -444,7 +455,8 @@ resource "kubernetes_secret" "gitlab_gcs_credentials" {
 
 resource "kubernetes_secret" "postgresql_mtls_secret" {
   metadata {
-    name = "gitlab-postgres-mtls"
+    name      = "gitlab-postgres-mtls"
+    namespace = var.gitlab_namespace
   }
 
   data = {
@@ -452,7 +464,6 @@ resource "kubernetes_secret" "postgresql_mtls_secret" {
     private_key       = google_sql_ssl_cert.postgres_client_cert.private_key
     server_ca_cert    = google_sql_ssl_cert.postgres_client_cert.server_ca_cert
   }
-
   depends_on = [time_sleep.sleep_for_cluster_fix_helm_6361]
 }
 
@@ -494,6 +505,8 @@ data "template_file" "helm_values" {
     ENABLE_SMTP           = var.gitlab_enable_smtp
     SMTP_USER             = local.gitlab_smtp_user 
     BACKUP_EXTRA          = var.gitlab_backup_extra_args
+    TIMEZONE              = var.gitlab_time_zone
+    SMTP_SECRET_NAME      = var.gitlab_smtp_secret
 
     # HPA settings for cost/performance optimization
     HPA_MIN_REPLICAS_REGISTRY   = var.gitlab_hpa_min_replicas_registry
@@ -518,6 +531,7 @@ resource "time_sleep" "sleep_for_cluster_fix_helm_6361" {
 
 resource "helm_release" "gitlab" {
   name       = "gitlab"
+  namespace  = var.gitlab_namespace
   repository = "https://charts.gitlab.io"
   chart      = "gitlab"
   version    = var.helm_chart_version

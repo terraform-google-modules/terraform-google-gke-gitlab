@@ -206,7 +206,7 @@ variable "bucket_storage_class" {
 variable "helm_chart_version" {
   type        = string
   default     = "5.9.3"
-  description = "Helm chart version to install during deployment - Default Gitlab 4.9.3"
+  description = "Helm chart version to install during deployment - Default Gitlab 14.9.3"
 }
 
 variable "domain" {
@@ -270,8 +270,26 @@ variable "gitlab_enable_smtp" {
 
 variable "gitlab_smtp_user" {
   type        = string
-  description = "Choose whether to enable Gitlab smtp server to send emails."
-  default     = ""
+  description = "Setup email sender address for Gitlab smtp server to send emails."
+  default     = "user@example.com"
+}
+
+variable "gitlab_time_zone" {
+  type        = string
+  description = "Setup timezone for gitlab containers"
+  default     = "Europe/Rome"
+}
+
+variable "gitlab_smtp_secret" {
+  type        = string
+  description = "Setup the Kubernetes Secret Name for SMTP Server password. Secret key is password."
+  default     = "gitlab-smtp"
+}
+
+variable "gitlab_namespace" {
+  type        = string
+  description = "Setup  the Kubernetes Namespace where to install gitlab"
+  default     = "gitlab"
 }
 
 variable "gitlab_backup_extra_args" {

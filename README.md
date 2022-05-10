@@ -51,7 +51,10 @@ Then perform the following commands on the root folder:
 | gitlab\_install\_ingress\_nginx | Choose whether to install the ingress nginx controller in the cluster. | `bool` | `"true"` | no |
 | gitlab\_install\_prometheus | Choose whether to install a Prometheus instance using the Gitlab chart. | `bool` | `"false"` | no |
 | gitlab\_install\_runner | Choose whether to install the gitlab runner in the cluster | `bool` | `true` | no |
-| gitlab\_smtp\_user | Choose whether to enable Gitlab smtp server to send emails | `string` | `""` | no |
+| gitlab\_namespace | Setup  the Kubernetes Namespace where to install gitlab | `string` | `"gitlab"` | no |
+| gitlab\_smtp\_user | Choose whether to enable Gitlab smtp server to send emails | `string` | `"user@example.com"` | no |
+| gitlab\_smtp\_secret | Setup the Kubernetes Secret Name for SMTP Server password. key must be "password". | `string` | `"gitlab-smtp"` | no |
+| gitlab\_time\_zone | Setup timezone for gitlab containers | `string` | `"Europe/Rome"` | no |
 | gitlab\_gitaly\_disk\_size | Setup persistent disk size for gitaly data in GB | `number` | `100"` | no |
 | gitlab\_hpa\_max\_replicas\_kas | Set the maximum hpa pod replicas for the Gitlab Kas. | `number` | `"10"` | no |
 | gitlab\_hpa\_max\_replicas\_registry | Set the maximum hpa pod truereplicas for the Gitlab Registry. | `number` | `"10"` | no |
