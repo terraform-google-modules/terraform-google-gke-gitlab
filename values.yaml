@@ -104,12 +104,12 @@ global:
     enabled: "${$ENABLE_SMTP}"
     user_name: "${SMTP_USER}"
     password: 
-      secret: {$SMTP_SECRET_NAME}
+      secret: ${SMTP_SECRET_NAME}
       key: password
     starttls_auto: true
 
   ## Timezone for containers.
-  time_zone: {$TIMEZONE}
+  time_zone: ${TIMEZONE}
 
   ## https://docs.gitlab.com/charts/charts/globals
   extraEnv:
