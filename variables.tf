@@ -263,7 +263,7 @@ variable "gitlab_enable_certmanager" {
 }
 
 variable "gitlab_enable_smtp" {
-  type        = string
+  type        = bool
   description = "Setup Gitlab email address to send email."
   default     = false
 }

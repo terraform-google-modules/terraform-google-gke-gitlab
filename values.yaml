@@ -101,8 +101,8 @@ global:
   ## https://docs.gitlab.com/charts/installation/deployment#outgoing-email
   ## Outgoing email server settings
   smtp:
-    enabled: "${$ENABLE_SMTP}"
-    user_name: "${SMTP_USER}"
+    enabled: ${ENABLE_SMTP}
+    user_name: ${SMTP_USER}
     password: 
       secret: ${SMTP_SECRET_NAME}
       key: password
@@ -210,4 +210,4 @@ gitlab:
   gitaly:
     persistence:
       size: "${GITALY_PV_SIZE}Gi"
-      storageClass: "${PV_STORAGE_CLASS}"
+      storageClass: ${PV_STORAGE_CLASS}
