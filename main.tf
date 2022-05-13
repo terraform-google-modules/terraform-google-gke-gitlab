@@ -128,7 +128,7 @@ module "cloud_nat" {
   min_ports_per_vm  = "2048"
 }
 
-resource "google_compute_firewall" "admission-webhook" {
+resource "google_compute_firewall" "admission_webhook" {
   name    = "gitlab-ingress-nginx-admission-webhook"
   network = google_compute_network.gitlab.self_link
 
