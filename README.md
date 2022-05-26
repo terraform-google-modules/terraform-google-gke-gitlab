@@ -38,16 +38,23 @@ Then perform the following commands on the root folder:
 | certmanager\_email | Email used to retrieve SSL certificates from Let's Encrypt | `any` | n/a | yes |
 | domain | Domain for hosting gitlab functionality (ie mydomain.com would access gitlab at gitlab.mydomain.com) | `string` | `""` | no |
 | gitlab\_address\_name | Name of the address to use for GitLab ingress | `string` | `""` | no |
+| gitlab\_backup\_extra\_args | Add a string of extra arguments for the gitlab backup-utility. | `string` | `""` | no |
 | gitlab\_db\_name | Instance name for the GitLab Postgres database. | `string` | `"gitlab-db"` | no |
 | gitlab\_db\_password | Password for the GitLab Postgres user | `string` | `""` | no |
 | gitlab\_db\_random\_prefix | Sets random suffix at the end of the Cloud SQL instance name. | `bool` | `false` | no |
+| gitlab\_enable\_certmanager | Choose whether to Install certmanager through Gitlab Helm Chart. | `bool` | `"true"` | no |
 | gitlab\_enable\_cron\_backup | Choose whether to enable Gitlab Scheduled Backups. | `bool` | `"true"` | no |
+| gitlab\_enable\_smtp | Setup Gitlab email address to send email. | `bool` | `false` | no |
 | gitlab\_enable\_registry | Choose whether to enable Gitlab Container registry. | `bool` | `"false"` | no |
 | gitlab\_install\_kas | Choose whether to install the Gitlab agent server in the cluster. | `bool` | `"false"` | no |
 | gitlab\_install\_grafana | Choose whether to install a Grafana instance using the Gitlab chart. | `bool` | `"false"` | no |
 | gitlab\_install\_ingress\_nginx | Choose whether to install the ingress nginx controller in the cluster. | `bool` | `"true"` | no |
 | gitlab\_install\_prometheus | Choose whether to install a Prometheus instance using the Gitlab chart. | `bool` | `"false"` | no |
 | gitlab\_install\_runner | Choose whether to install the gitlab runner in the cluster | `bool` | `true` | no |
+| gitlab\_namespace | Setup  the Kubernetes Namespace where to install gitlab | `string` | `"gitlab"` | no |
+| gitlab\_smtp\_user | Choose whether to enable Gitlab smtp server to send emails | `string` | `"user@example.com"` | no |
+| gitlab\_smtp\_secret | Setup the Kubernetes Secret Name for SMTP Server password. key must be "password". | `string` | `"gitlab-smtp"` | no |
+| gitlab\_time\_zone | Setup timezone for gitlab containers | `string` | `"Europe/Rome"` | no |
 | gitlab\_gitaly\_disk\_size | Setup persistent disk size for gitaly data in GB | `number` | `100"` | no |
 | gitlab\_hpa\_max\_replicas\_kas | Set the maximum hpa pod replicas for the Gitlab Kas. | `number` | `"10"` | no |
 | gitlab\_hpa\_max\_replicas\_registry | Set the maximum hpa pod truereplicas for the Gitlab Registry. | `number` | `"10"` | no |
@@ -72,6 +79,9 @@ Then perform the following commands on the root folder:
 | gke\_version | Version of GKE to use for the GitLab cluster | `string` | `"1.21.10-gke.2000"` | no |
 | helm\_chart\_version | Helm chart version to install during deployment | `string` | `"5.9.3"` | no |
 | postgresql\_availability\_type | The availability type of the Cloud SQL instance, high availability (REGIONAL) or single zone (ZONAL) | `string` | `"ZONAL"` | no |
+| postgresql\_enable\_backup | Setup if postgres backup configuration is enabled. | `bool` | `"true"` | no |
+| postgresql\_backup\_start\_time | HH:MM format time indicating when postgres backup configuration starts. | `string` | `"02:00"` | no |
+| postgresql\_backup\_retained\_count | Numeber of postgres backup to be retained | `number` | `"30"` | no |
 | postgresql\_del\_protection | SWhether or not to allow Terraform to destroy the instance. Unless this field is set to false in Terraform state, a terraform destroy or terraform apply command that deletes the instance will fail. | `bool` | `"true"` | no |
 | postgresql\_disk\_type | The type of data disk: PD_SSD or PD_HDD. | `string` | `"PD_SSD"` | no |
 | postgresql\_disk\_size | The size of data disk, in GB. | `number` | `"100"` | no |

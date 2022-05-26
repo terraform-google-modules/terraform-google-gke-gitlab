@@ -81,6 +81,24 @@ variable "postgresql_del_protection" {
   default     = "true"
 }
 
+variable "postgresql_enable_backup" {
+  type        = bool
+  description = "Setup if postgres backup configuration is enabled.Default true"
+  default     = "true"
+}
+
+variable "postgresql_backup_start_time" {
+  type        = string
+  description = "HH:MM format time indicating when postgres backup configuration starts."
+  default     = "02:00"
+}
+
+variable "postgresql_backup_retained_count" {
+  type        = number
+  description = "Numeber of postgres backup to be retained. Default 30."
+  default     = "30"
+}
+
 variable "gitlab_db_name" {
   type        = string
   description = "Instance name for the GitLab Postgres database."
@@ -145,19 +163,19 @@ variable "gke_machine_type" {
 
 variable "gitlab_nodes_subnet_cidr" {
   type        = string
-  default     = "10.0.0.0/16"
+  default     = "10.10.0.0/16"
   description = "Cidr range to use for gitlab GKE nodes subnet"
 }
 
 variable "gitlab_pods_subnet_cidr" {
   type        = string
-  default     = "10.3.0.0/16"
+  default     = "10.30.0.0/16"
   description = "Cidr range to use for gitlab GKE pods subnet"
 }
 
 variable "gitlab_services_subnet_cidr" {
   type        = string
-  default     = "10.2.0.0/16"
+  default     = "10.20.0.0/16"
   description = "Cidr range to use for gitlab GKE services subnet"
 }
 
@@ -188,7 +206,7 @@ variable "bucket_storage_class" {
 variable "helm_chart_version" {
   type        = string
   default     = "5.9.3"
-  description = "Helm chart version to install during deployment - Default Gitlab 4.9.3"
+  description = "Helm chart version to install during deployment - Default Gitlab 14.9.3"
 }
 
 variable "domain" {
@@ -236,6 +254,48 @@ variable "gitlab_install_kas" {
   type        = bool
   description = "Choose whether to install the Gitlab agent server in the cluster. Default to false."
   default     = false
+}
+
+variable "gitlab_enable_certmanager" {
+  type        = bool
+  description = "Choose whether to Install certmanager through Gitlab Helm Chart. Default to true."
+  default     = true
+}
+
+variable "gitlab_enable_smtp" {
+  type        = bool
+  description = "Setup Gitlab email address to send email."
+  default     = false
+}
+
+variable "gitlab_smtp_user" {
+  type        = string
+  description = "Setup email sender address for Gitlab smtp server to send emails."
+  default     = "user@example.com"
+}
+
+variable "gitlab_time_zone" {
+  type        = string
+  description = "Setup timezone for gitlab containers"
+  default     = "Europe/Rome"
+}
+
+variable "gitlab_smtp_secret" {
+  type        = string
+  description = "Setup the Kubernetes Secret Name for SMTP Server password. Secret key is password."
+  default     = "gitlab-smtp"
+}
+
+variable "gitlab_namespace" {
+  type        = string
+  description = "Setup  the Kubernetes Namespace where to install gitlab"
+  default     = "gitlab"
+}
+
+variable "gitlab_backup_extra_args" {
+  type        = string
+  description = "Add a string of extra arguments for the gitlab backup-utility."
+  default     = "" 
 }
 
 variable "gitlab_enable_registry" {

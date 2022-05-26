@@ -24,6 +24,11 @@ global:
     port: 5432
     username: gitlab
     database: gitlabhq_production
+    ssl: 
+      secret: gitlab-postgres-mtls
+      clientCertificate: cert
+      clientKey: private_key
+      serverCA: server_ca_cert
 
   redis:
     password:
@@ -44,7 +49,10 @@ global:
     ## doc/charts/globals.md#general-application-settings
     enableUsagePing: false
 
-     ## https://docs.gitlab.com/charts/charts/globals#lfs-artifacts-uploads-packages-external-mr-diffs-and-dependency-proxy
+    ## https://docs.gitlab.com/charts/charts/globals#cron-jobs-related-settings
+    cron_jobs: {}
+
+    ## https://docs.gitlab.com/charts/charts/globals#lfs-artifacts-uploads-packages-external-mr-diffs-and-dependency-proxy
     object_store:
       enabled: true
       proxy_download: false
@@ -89,6 +97,25 @@ global:
   ## in the Gitlab backup archive.
   registry:
      bucket: ${PROJECT_ID}-gitlab-registry
+
+  ## https://docs.gitlab.com/charts/installation/deployment#outgoing-email
+  ## Outgoing email server settings
+  smtp:
+    enabled: ${ENABLE_SMTP}
+    user_name: ${SMTP_USER}
+    password: 
+      secret: ${SMTP_SECRET_NAME}
+      key: password
+    starttls_auto: true
+
+  ## Timezone for containers.
+  time_zone: ${TIMEZONE}
+
+  ## https://docs.gitlab.com/charts/charts/globals
+  extraEnv:
+    PGSSLCERT: '/etc/gitlab/postgres/ssl/client-certificate.pem'
+    PGSSLKEY: '/etc/gitlab/postgres/ssl/client-key.pem'
+    PGSSLROOTCERT: '/etc/gitlab/postgres/ssl/server-ca.pem'
 
 ## Settings to for the Let's Encrypt ACME Issuer
 certmanager-issuer:
@@ -172,6 +199,7 @@ gitlab:
         failedJobsHistoryLimit: 7
         successfulJobsHistoryLimit: 3
         schedule: '${SCHEDULE_CRON_BACKUP}'
+        extraArgs: ${BACKUP_EXTRA}
       objectStorage:
         backend: gcs
         config:
@@ -182,4 +210,4 @@ gitlab:
   gitaly:
     persistence:
       size: "${GITALY_PV_SIZE}Gi"
-      storageClass: "${PV_STORAGE_CLASS}"
+      storageClass: ${PV_STORAGE_CLASS}
