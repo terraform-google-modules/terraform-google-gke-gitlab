@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this
 project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.0.0](https://github.com/terraform-google-modules/terraform-google-gke-gitlab/compare/v1.0.0...v2.0.0) (2022-07-01)
+
+
+### ⚠ BREAKING CHANGES
+
+* update tf providers and modules (#101)
+
+### Features
+
+* update tf providers and modules ([#101](https://github.com/terraform-google-modules/terraform-google-gke-gitlab/issues/101)) ([a92318f](https://github.com/terraform-google-modules/terraform-google-gke-gitlab/commit/a92318ffdb2cbab815d394a4ea598ad96b2ae24c))
+
 ## [1.0.0](https://github.com/terraform-google-modules/terraform-google-gke-gitlab/compare/v0.5.2...v1.0.0) (2022-04-21)
 
 
