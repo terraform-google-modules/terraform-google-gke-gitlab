@@ -32,10 +32,9 @@ resource "random_id" "suffix" {
   byte_length = 4
 }
 
-
 module "gke_auth" {
   source  = "terraform-google-modules/kubernetes-engine/google//modules/auth"
-  version = "~> 10.0"
+  version = "~> 21.0"
 
   project_id   = module.project_services.project_id
   cluster_name = module.gke.name
@@ -46,7 +45,6 @@ module "gke_auth" {
 
 provider "helm" {
   kubernetes {
-    load_config_file       = false
     cluster_ca_certificate = module.gke_auth.cluster_ca_certificate
     host                   = module.gke_auth.host
     token                  = module.gke_auth.token
@@ -54,8 +52,6 @@ provider "helm" {
 }
 
 provider "kubernetes" {
-  load_config_file = false
-
   cluster_ca_certificate = module.gke_auth.cluster_ca_certificate
   host                   = module.gke_auth.host
   token                  = module.gke_auth.token
@@ -64,7 +60,7 @@ provider "kubernetes" {
 // Services
 module "project_services" {
   source  = "terraform-google-modules/project-factory/google//modules/project_services"
-  version = "~> 11.0"
+  version = "~> 13.0"
 
   project_id                  = var.project_id
   disable_services_on_destroy = false
@@ -248,7 +244,7 @@ resource "google_storage_bucket" "gitlab-runner-cache" {
 // GKE Cluster
 module "gke" {
   source  = "terraform-google-modules/kubernetes-engine/google"
-  version = "~> 12.0"
+  version = "~> 21.0"
 
   # Create an implicit dependency on service activation
   project_id = module.project_services.project_id
