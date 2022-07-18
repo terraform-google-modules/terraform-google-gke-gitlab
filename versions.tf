@@ -48,10 +48,10 @@ terraform {
   }
 
   provider_meta "google" {
-    module_name = "blueprints/terraform/terraform-google-gke-gitlab/v1.0.0"
+    module_name = "blueprints/terraform/terraform-google-gke-gitlab/v2.0.0"
   }
 
   provider_meta "google-beta" {
-    module_name = "blueprints/terraform/terraform-google-gke-gitlab/v1.0.0"
+    module_name = "blueprints/terraform/terraform-google-gke-gitlab/v2.0.0"
   }
 }
