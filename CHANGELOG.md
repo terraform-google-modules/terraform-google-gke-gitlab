@@ -10,7 +10,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### ⚠ BREAKING CHANGES
 
-* update tf providers and modules (#101)
+* Helm and Kubernetes providers minimum version increased to 2.0 (#101)
 
 ### Features
 
