@@ -111,6 +111,12 @@ variable "gitlab_db_random_prefix" {
   default     = false
 }
 
+variable "gitlab_bucket_random_suffix" {
+  type        = string
+  description = "Sets random suffix at the end of the bucket name."
+  default     = false
+}
+
 ####################
 #  REDIS SECTION   #
 ####################
