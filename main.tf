@@ -453,7 +453,7 @@ ${base64decode(google_service_account_key.gitlab_gcs.private_key)}
 EOT
     storage    = <<EOT
 gcs:
-  bucket: ${var.project_id}-registry
+  bucket: ${local.gitlab_registry_bucket_name}
   keyfile: /etc/docker/registry/storage/gcs.json
 EOT
   }
@@ -531,6 +531,19 @@ data "template_file" "helm_values" {
     BACKUP_EXTRA          = var.gitlab_backup_extra_args
     TIMEZONE              = var.gitlab_time_zone
     SMTP_SECRET_NAME      = local.gitlab_smtp_secret
+
+    #Bucket Names
+    LFS_BCKT              = local.git_lfs_bucket_name
+    ARTIFACTS_BCKT        = local.gitlab_artifacts_bucket_name
+    UPLOADS_BCKT          = local.gitlab_uploads_bucket_name
+    PACKAGES_BCKT         = local.gitlab_packages_bucket_name
+    EXT_DIFF_BCKT         = local.gitlab_external_diffs_bucket_name
+    TERRAFORM_BCKT        = local.gitlab_terraform_state_bucket_name
+    DEP_PROXY_BCKT        = local.gitlab_dependency_proxy_bucket_name
+    BACKUP_BCKT           = local.gitlab_backups_bucket_name
+    BACKUP_TMP_BCKT       = local.gitlab_tmp_backups_bucket_name
+    REGISTRY_BCKT         = local.gitlab_registry_bucket_name
+    RUNNER_CACHE_BCKT     = local.gitlab_runner_cache_bucket_name
 
     # HPA settings for cost/performance optimization
     HPA_MIN_REPLICAS_REGISTRY   = var.gitlab_hpa_min_replicas_registry
