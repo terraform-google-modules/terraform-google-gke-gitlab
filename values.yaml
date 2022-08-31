@@ -64,29 +64,29 @@ global:
         key: connection
     lfs:
       enabled: true
-      bucket: ${PROJECT_ID}-git-lfs
+      bucket: ${LFS_BCKT}
     artifacts:
       enabled: true
-      bucket: ${PROJECT_ID}-gitlab-artifacts
+      bucket: ${ARTIFACTS_BCKT}
     uploads:
       enabled: true
-      bucket: ${PROJECT_ID}-gitlab-uploads
+      bucket: ${UPLOADS_BCKT}
     packages:
       enabled: true
-      bucket: ${PROJECT_ID}-gitlab-packages
+      bucket: ${PACKAGES_BCKT}
     externalDiffs:
       enabled: false
-      bucket: ${PROJECT_ID}-gitlab-external-diffs
+      bucket: ${EXT_DIFF_BCKT}
     terraformState:
       enabled: true
-      bucket: ${PROJECT_ID}-gitlab-terraform-state
+      bucket: ${TERRAFORM_BCKT}
     dependencyProxy:
       enabled: true
-      bucket: ${PROJECT_ID}-gitlab-dependency-proxy
+      bucket: ${DEP_PROXY_BCKT}
 
     backups:
-      bucket: ${PROJECT_ID}-gitlab-backups
-      tmpBucket: ${PROJECT_ID}-gitlab-tmp-backups
+      bucket: ${BACKUP_BCKT}
+      tmpBucket: ${BACKUP_TMP_BCKT}
 
 ## https://docs.gitlab.com/charts/charts/gitlab/kas/
   kas:
@@ -96,7 +96,7 @@ global:
   ## If we do not set the legacy bucket name here, the registry is not included
   ## in the Gitlab backup archive.
   registry:
-     bucket: ${PROJECT_ID}-gitlab-registry
+     bucket: ${REGISTRY_BCKT}
 
   ## https://docs.gitlab.com/charts/installation/deployment#outgoing-email
   ## Outgoing email server settings
@@ -172,7 +172,7 @@ gitlab-runner:
     locked: false
     cache:
       cacheType: gcs
-      gcsBucketName: ${PROJECT_ID}-runner-cache
+      gcsBucketName: ${RUNNER_CACHE_BCKT}
       secretName: google-application-credentials
       cacheShared: true
 
