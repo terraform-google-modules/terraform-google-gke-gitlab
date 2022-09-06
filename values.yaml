@@ -53,7 +53,7 @@ global:
     cron_jobs: {}
 
     ## https://docs.gitlab.com/charts/charts/globals#lfs-artifacts-uploads-packages-external-mr-diffs-and-dependency-proxy
-     object_store:
+    object_store:
       enabled: true
       proxy_download: false
       storage_options: {}
