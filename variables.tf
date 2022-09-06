@@ -84,7 +84,7 @@ variable "postgresql_del_protection" {
 variable "postgresql_enable_backup" {
   type        = bool
   description = "Setup if postgres backup configuration is enabled.Default true"
-  default     = "true"
+  default     = true
 }
 
 variable "postgresql_backup_start_time" {
@@ -130,7 +130,7 @@ variable "redis_tier" {
 variable "redis_size" {
   type        = number
   description = "Redis memory size in GiB."
-  default     = "1"
+  default     = 1
 }
 
 ##################
@@ -221,9 +221,9 @@ variable "domain" {
   default     = ""
 }
 
-variable "gitlab_db_password" {
+variable "gitlab_dbpassword_secret_name" {
   type        = string
-  description = "Password for the GitLab Postgres user"
+  description = "Setup the GCP secret manager name where to retrieve the password value that will be used for postgres DB. In case nan empty string is passed a random value will be filled in a default gcp secret named gitlab-db-password"
   default     = ""
 }
 
