@@ -79,6 +79,7 @@ module "project_services" {
     "servicenetworking.googleapis.com",
     "cloudresourcemanager.googleapis.com",
     "redis.googleapis.com",
+    "secretmanager.googleapis.com",
   ]
 }
 
@@ -435,7 +436,7 @@ resource "kubernetes_storage_class" "storage_class" {
 
 resource "kubernetes_secret" "gitlab_pg" {
   metadata {
-    name      = "gitlab-pg-secret"
+    name      = "gitlab-pg"
     namespace = var.gitlab_namespace
   }
 
