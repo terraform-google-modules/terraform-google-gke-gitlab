@@ -221,9 +221,9 @@ variable "domain" {
   default     = ""
 }
 
-variable "gitlab_dbpassword_secret_name" {
+variable "gcp_existing_db_secret_name" {
   type        = string
-  description = "Setup the GCP secret manager name where to retrieve the password value that will be used for postgres DB. In case nan empty string is passed a random value will be filled in a default gcp secret named gitlab-db-password"
+  description = "Setup the GCP secret name where to retrieve the password value that will be used for postgres DB. In case an empty string is passed,a random value will be filled in a default gcp secret named gitlab-db-password"
   default     = ""
 }
 
