@@ -328,6 +328,18 @@ variable "gitlab_gitaly_disk_size" {
   default     = 100
 }
 
+variable "gitlab_enable_omniauth" {
+  type        = bool
+  description = "Choose whether to enable Gitlab Omniauth integration. Default to false."
+  default     = false
+}
+
+variable "gitlab_omniauth_secret" {
+  type        = string
+  description = "Setup the secret name for Omniauth provider configuration. Default key is provider. Default secret name gitlab-omniauth-secret"
+  default     = "gitlab-omniauth-secret"
+}
+
 # Peformance optimization. Max and min pod replicas for HPA.
 variable "gitlab_hpa_min_replicas_registry" {
   type        = number

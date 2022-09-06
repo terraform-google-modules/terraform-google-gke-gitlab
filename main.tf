@@ -531,6 +531,9 @@ data "template_file" "helm_values" {
     BACKUP_EXTRA          = var.gitlab_backup_extra_args
     TIMEZONE              = var.gitlab_time_zone
     SMTP_SECRET_NAME      = local.gitlab_smtp_secret
+    ENABLE_OMNIAUTH       = var.gitlab_enable_omniauth
+    OMNIAUTH_SECRET_NAME  = var.gitlab_omniauth_secret
+
 
     #Bucket Names
     LFS_BCKT              = local.git_lfs_bucket_name

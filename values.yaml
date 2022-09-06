@@ -87,6 +87,15 @@ global:
     backups:
       bucket: ${BACKUP_BCKT}
       tmpBucket: ${BACKUP_TMP_BCKT}
+    
+    ## https://docs.gitlab.com/charts/charts/globals#omniauth
+    omniauth:
+      enabled: ${ENABLE_OMNIAUTH}
+      allowSingleSignOn: [""]
+      allowBypassTwoFactor: null
+      providers:
+        - secret: ${OMNIAUTH_SECRET_NAME}
+          key: provider
 
 ## https://docs.gitlab.com/charts/charts/gitlab/kas/
   kas:
