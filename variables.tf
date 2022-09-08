@@ -227,6 +227,19 @@ variable "gcp_existing_db_secret_name" {
   default     = ""
 }
 
+
+variable "gcp_existing_smtp_secret_name" {
+  type        = string
+  description = "Only if STMP is enabled. Setup the GCP secret name where to retrieve the password value that will be used for Smtp Account."
+  default     = ""
+}
+
+variable "gcp_existing_omniauth_secret_name" {
+  type        = string
+  description = "Only if Omniauth is enabled. Setup the GCP secret name where to retrieve the configuration that will be used for Omniauth Configuration."
+  default     = ""
+}
+
 variable "certmanager_email" {
   type        = string
   description = "Email used to retrieve SSL certificates from Let's Encrypt"
@@ -286,12 +299,6 @@ variable "gitlab_time_zone" {
   default     = "Europe/Rome"
 }
 
-variable "gitlab_smtp_secret" {
-  type        = string
-  description = "Setup the Kubernetes Secret Name for SMTP Server password. Secret key is password."
-  default     = "gitlab-smtp"
-}
-
 variable "gitlab_namespace" {
   type        = string
   description = "Setup  the Kubernetes Namespace where to install gitlab"
@@ -332,12 +339,6 @@ variable "gitlab_enable_omniauth" {
   type        = bool
   description = "Choose whether to enable Gitlab Omniauth integration. Default to false."
   default     = false
-}
-
-variable "gitlab_omniauth_secret" {
-  type        = string
-  description = "Setup the secret name for Omniauth provider configuration. Default key is provider. Default secret name gitlab-omniauth-secret"
-  default     = "gitlab-omniauth-secret"
 }
 
 # Peformance optimization. Max and min pod replicas for HPA.

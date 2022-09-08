@@ -18,7 +18,7 @@ global:
   ## doc/charts/globals.md#configure-postgresql-settings
   psql:
     password:
-      secret: gitlab-pg
+      secret: gitlab-postgres-secret
       key: password
     host: ${DB_PRIVATE_IP}
     port: 5432
@@ -113,7 +113,7 @@ global:
     enabled: ${ENABLE_SMTP}
     user_name: ${SMTP_USER}
     password: 
-      secret: ${SMTP_SECRET_NAME}
+      secret: gitlab-smtp-secret
       key: password
     starttls_auto: true
 
