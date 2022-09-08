@@ -250,7 +250,6 @@ module "gcp_secret_db" {
 resource "google_sql_user" "gitlab" {
   name     = "gitlab"
   instance = google_sql_database_instance.gitlab_db.name
-
   password = var.gcp_existing_db_secret_name != "" ? data.google_secret_manager_secret_version.secret_managed_postgres_predefined_pass[0].secret_data : module.gcp_secret_db[0].secret_payload
 }
 
@@ -516,6 +515,8 @@ data "google_secret_manager_secret_version" "secret_managed_smtp_predefined_pass
   secret    = var.gcp_existing_smtp_secret_name
   project   = var.project_id
   count     = var.gitlab_enable_smtp ? 1 : 0
+
+  depends_on = [kubernetes_namespace.gitlab_namespace]
 }
 
 # Secret for Smtp account 
@@ -538,6 +539,21 @@ data "google_secret_manager_secret_version" "secret_managed_omniauth_predefined_
   secret    = var.gcp_existing_omniauth_secret_name
   project   = var.project_id
   count     = var.gitlab_enable_omniauth ? 1 : 0
+}
+
+# Secret for Omniauth configuration 
+resource "kubernetes_secret" "gitlab_omniauth_secret" {
+  metadata {
+    name      = "gitlab-omniauth-secret"
+    namespace = var.gitlab_namespace
+  }
+
+  data  = {
+    provider = data.google_secret_manager_secret_version.secret_managed_omniauth_predefined_conf[0].secret_data
+  }
+
+  count     = var.gitlab_enable_omniauth ? 1 : 0
+  depends_on = [kubernetes_namespace.gitlab_namespace]
 }
 
 data "google_compute_address" "gitlab" {

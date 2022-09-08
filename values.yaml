@@ -94,7 +94,7 @@ global:
       allowSingleSignOn: [""]
       allowBypassTwoFactor: null
       providers:
-        - secret: ${OMNIAUTH_SECRET_NAME}
+        - secret: gitlab-omniauth-secret
           key: provider
 
 ## https://docs.gitlab.com/charts/charts/gitlab/kas/
