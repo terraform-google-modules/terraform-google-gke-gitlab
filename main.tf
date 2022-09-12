@@ -557,6 +557,11 @@ data "template_file" "helm_values" {
     BACKUP_EXTRA          = var.gitlab_backup_extra_args
     TIMEZONE              = var.gitlab_time_zone
     ENABLE_OMNIAUTH       = var.gitlab_enable_omniauth
+    ENABLE_BACKUP_PV      = var.gitlab_enable_backup_pv
+    BACKUP_PV_SIZE        = var.gitlab_backup_pv_size
+    ENABLE_RESTORE_PV     = var.gitlab_enable_restore_pv
+    RESTORE_PV_SIZE       = var.gitlab_restore_pv_size
+
 
     #Bucket Names
     LFS_BCKT              = local.git_lfs_bucket_name

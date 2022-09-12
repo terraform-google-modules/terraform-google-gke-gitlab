@@ -116,6 +116,8 @@ global:
       secret: gitlab-smtp-secret
       key: password
     starttls_auto: true
+    email:
+      from: ${SMTP_USER}
 
   ## Timezone for containers.
   time_zone: ${TIMEZONE}
@@ -209,12 +211,18 @@ gitlab:
         successfulJobsHistoryLimit: 3
         schedule: '${SCHEDULE_CRON_BACKUP}'
         extraArgs: ${BACKUP_EXTRA}
+        persistence:
+          enabled: ${ENABLE_BACKUP_PV}
+          size: "${BACKUP_PV_SIZE}Gi"
       objectStorage:
         backend: gcs
         config:
           secret: google-application-credentials
           key: gcs-application-credentials-file
           gcpProject: ${PROJECT_ID}
+     persistence:
+      enabled: ${ENABLE_RESTORE_PV}
+      size: "${RESTORE_PV_SIZE}Gi"
   ## https://docs.gitlab.com/charts/charts/gitlab/gitaly
   gitaly:
     persistence:

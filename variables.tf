@@ -363,6 +363,30 @@ variable "gitlab_enable_omniauth" {
   default     = false
 }
 
+variable "gitlab_enable_backup_pv" {
+  type        = bool
+  description = "Enable additional storage for TAR backup creation of any appreciable size"
+  default     = false
+}
+
+variable "gitlab_backup_pv_size" {
+  type        = number
+  description = "Set the size of the additional storage for Backup TAR Creation"
+  default     = 100
+}
+
+variable "gitlab_enable_restore_pv" {
+  type        = bool
+  description = "Enable additional storage for TAR Restoration creation of any appreciable size"
+  default     = false
+}
+
+variable "gitlab_restore_pv_size" {
+  type        = number
+  description = "Set the size of the additional storage for Backup TAR Restoration Process"
+  default     = 100
+}
+
 # Peformance optimization. Max and min pod replicas for HPA.
 variable "gitlab_hpa_min_replicas_registry" {
   type        = number
