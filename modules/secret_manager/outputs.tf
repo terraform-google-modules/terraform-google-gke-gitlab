@@ -28,7 +28,7 @@ output "secret_id" {
 
 output "secret_payload" {
   description = "Secret Payload"
-  value       = var.secret_data
+  value       = local.secret_value
   sensitive   = true
 
   depends_on = [

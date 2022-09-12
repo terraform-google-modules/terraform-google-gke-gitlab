@@ -23,28 +23,30 @@ provider "google-beta" {
 }
 
 locals {
-  gitlab_db_name                      = var.gitlab_db_random_prefix ? "${var.gitlab_db_name}-${random_id.suffix[0].hex}" : var.gitlab_db_name
-  gitlab_backups_bucket_name          = var.gitlab_bucket_random_suffix ? "${var.project_id}-gitlab-backups-${random_id.bucket_suffix[0].hex}" : "${var.project_id}-gitlab-backups"
-  gitlab_tmp_backups_bucket_name      = var.gitlab_bucket_random_suffix ? "${var.project_id}-gitlab-tmp-backups-${random_id.bucket_suffix[0].hex}" : "${var.project_id}-gitlab-tmp-backups"
-  gitlab_uploads_bucket_name          = var.gitlab_bucket_random_suffix ? "${var.project_id}-gitlab-uploads-${random_id.bucket_suffix[0].hex}" : "${var.project_id}-gitlab-uploads"
-  gitlab_artifacts_bucket_name        = var.gitlab_bucket_random_suffix ? "${var.project_id}-gitlab-artifacts-${random_id.bucket_suffix[0].hex}" : "${var.project_id}-gitlab-artifacts"
-  git_lfs_bucket_name                 = var.gitlab_bucket_random_suffix ? "${var.project_id}-git-lfs-${random_id.bucket_suffix[0].hex}" : "${var.project_id}-git-lfs"
-  gitlab_packages_bucket_name         = var.gitlab_bucket_random_suffix ? "${var.project_id}-gitlab-packages-${random_id.bucket_suffix[0].hex}" : "${var.project_id}-gitlab-packages"
-  gitlab_registry_bucket_name         = var.gitlab_bucket_random_suffix ? "${var.project_id}-gitlab-registry-${random_id.bucket_suffix[0].hex}" : "${var.project_id}-gitlab-registry"
-  gitlab_pseudo_bucket_name           = var.gitlab_bucket_random_suffix ? "${var.project_id}-pseudo-${random_id.bucket_suffix[0].hex}" : "${var.project_id}-pseudo"
-  gitlab_runner_cache_bucket_name     = var.gitlab_bucket_random_suffix ? "${var.project_id}-runner-cache-${random_id.bucket_suffix[0].hex}" : "${var.project_id}-runner-cache"
-  gitlab_dependency_proxy_bucket_name = var.gitlab_bucket_random_suffix ? "${var.project_id}-dependency-proxy-${random_id.bucket_suffix[0].hex}" : "${var.project_id}-dependency-proxy"
-  gitlab_terraform_state_bucket_name  = var.gitlab_bucket_random_suffix ? "${var.project_id}-terraform-state-${random_id.bucket_suffix[0].hex}" : "${var.project_id}-terraform-state"
-  gitlab_external_diffs_bucket_name   = var.gitlab_bucket_random_suffix ? "${var.project_id}-gitlab-external-diffs-${random_id.bucket_suffix[0].hex}" : "${var.project_id}-gitlab-external-diffs"
+  # Postgres DB Name
+  gitlab_db_name                      = var.postgresql_db_random_suffix ? "${var.gitlab_db_name}-${random_id.suffix[0].hex}" : var.gitlab_db_name
+  # Gitlab Bucket Names
+  gitlab_backups_bucket_name          = var.gcs_bucket_random_suffix ? "${var.project_id}-gitlab-backups-${random_id.bucket_suffix[0].hex}" : "${var.project_id}-gitlab-backups"
+  gitlab_tmp_backups_bucket_name      = var.gcs_bucket_random_suffix ? "${var.project_id}-gitlab-tmp-backups-${random_id.bucket_suffix[0].hex}" : "${var.project_id}-gitlab-tmp-backups"
+  gitlab_uploads_bucket_name          = var.gcs_bucket_random_suffix ? "${var.project_id}-gitlab-uploads-${random_id.bucket_suffix[0].hex}" : "${var.project_id}-gitlab-uploads"
+  gitlab_artifacts_bucket_name        = var.gcs_bucket_random_suffix ? "${var.project_id}-gitlab-artifacts-${random_id.bucket_suffix[0].hex}" : "${var.project_id}-gitlab-artifacts"
+  git_lfs_bucket_name                 = var.gcs_bucket_random_suffix ? "${var.project_id}-git-lfs-${random_id.bucket_suffix[0].hex}" : "${var.project_id}-git-lfs"
+  gitlab_packages_bucket_name         = var.gcs_bucket_random_suffix ? "${var.project_id}-gitlab-packages-${random_id.bucket_suffix[0].hex}" : "${var.project_id}-gitlab-packages"
+  gitlab_registry_bucket_name         = var.gcs_bucket_random_suffix ? "${var.project_id}-gitlab-registry-${random_id.bucket_suffix[0].hex}" : "${var.project_id}-gitlab-registry"
+  gitlab_pseudo_bucket_name           = var.gcs_bucket_random_suffix ? "${var.project_id}-pseudo-${random_id.bucket_suffix[0].hex}" : "${var.project_id}-pseudo"
+  gitlab_runner_cache_bucket_name     = var.gcs_bucket_random_suffix ? "${var.project_id}-runner-cache-${random_id.bucket_suffix[0].hex}" : "${var.project_id}-runner-cache"
+  gitlab_dependency_proxy_bucket_name = var.gcs_bucket_random_suffix ? "${var.project_id}-dependency-proxy-${random_id.bucket_suffix[0].hex}" : "${var.project_id}-dependency-proxy"
+  gitlab_terraform_state_bucket_name  = var.gcs_bucket_random_suffix ? "${var.project_id}-terraform-state-${random_id.bucket_suffix[0].hex}" : "${var.project_id}-terraform-state"
+  gitlab_external_diffs_bucket_name   = var.gcs_bucket_random_suffix ? "${var.project_id}-gitlab-external-diffs-${random_id.bucket_suffix[0].hex}" : "${var.project_id}-gitlab-external-diffs"
 }
 
 resource "random_id" "suffix" {
-  count = var.gitlab_db_random_prefix ? 2 : 1
+  count = var.postgresql_db_random_suffix ? 2 : 1
   byte_length = 4
 }
 
 resource "random_id" "bucket_suffix" {
-  count = var.gitlab_bucket_random_suffix ? 1 : 0
+  count = var.gcs_bucket_random_suffix ? 1 : 0
   byte_length = 4
 }
 
@@ -80,6 +82,7 @@ module "project_services" {
     "cloudresourcemanager.googleapis.com",
     "redis.googleapis.com",
     "secretmanager.googleapis.com",
+    "containerfilesystem.googleapis.com"
   ]
 }
 
@@ -109,18 +112,18 @@ resource "google_compute_network" "gitlab" {
 
 resource "google_compute_subnetwork" "subnetwork" {
   name          = "gitlab"
-  ip_cidr_range = var.gitlab_nodes_subnet_cidr
+  ip_cidr_range = var.gke_nodes_subnet_cidr
   region        = var.region
   network       = google_compute_network.gitlab.self_link
 
   secondary_ip_range {
     range_name    = "gitlab-cluster-pod-cidr"
-    ip_cidr_range = var.gitlab_pods_subnet_cidr
+    ip_cidr_range = var.gke_pods_subnet_cidr
   }
 
   secondary_ip_range {
     range_name    = "gitlab-cluster-service-cidr"
-    ip_cidr_range = var.gitlab_services_subnet_cidr
+    ip_cidr_range = var.gke_services_subnet_cidr
   }
 }
 
@@ -219,38 +222,16 @@ resource "google_sql_ssl_cert" "postgres_client_cert" {
   project     = var.project_id
 }
 
+resource "google_sql_user" "gitlab" {
+  name     = "gitlab"
+  instance = google_sql_database_instance.gitlab_db.name
+  password = module.gitlab_db_pass.secret_payload
+}
+
 resource "google_sql_database" "gitlabhq_production" {
   name       = "gitlabhq_production"
   instance   = google_sql_database_instance.gitlab_db.name
   depends_on = [google_sql_user.gitlab]
-}
-
-resource "random_string" "autogenerated_gitlab_db_password" {
-  length  = 16
-  special = false
-}
-
-# Recover the DB password from the GCP secret Manager
-data "google_secret_manager_secret_version" "secret_managed_postgres_predefined_pass" {
-  secret    = var.gcp_existing_db_secret_name
-  project   = var.project_id
-  count     = var.gcp_existing_db_secret_name != "" ? 1 : 0
-}
-
-# Create GCP secret on the run for DB Password
-module "gcp_secret_db" {
-  source  = "./modules/secret_manager"
-  project     = var.project_id
-  region      = var.region
-  secret_id   = "gitlab-db-password"
-  secret_data = random_string.autogenerated_gitlab_db_password.result
-  count       = var.gcp_existing_db_secret_name != "" ? 0 : 1
-}
-
-resource "google_sql_user" "gitlab" {
-  name     = "gitlab"
-  instance = google_sql_database_instance.gitlab_db.name
-  password = var.gcp_existing_db_secret_name != "" ? data.google_secret_manager_secret_version.secret_managed_postgres_predefined_pass[0].secret_data : module.gcp_secret_db[0].secret_payload
 }
 
 # Redis
@@ -270,91 +251,91 @@ resource "google_redis_instance" "gitlab" {
 resource "google_storage_bucket" "gitlab_backups" {
   name          = local.gitlab_backups_bucket_name
   location      = var.region
-  storage_class = var.bucket_storage_class
+  storage_class = var.gcs_bucket_storage_class
   force_destroy = var.allow_force_destroy
 }
 
 resource "google_storage_bucket" "gitlab_tmp_backups" {
   name          = local.gitlab_tmp_backups_bucket_name
   location      = var.region
-  storage_class = var.bucket_storage_class
+  storage_class = var.gcs_bucket_storage_class
   force_destroy = var.allow_force_destroy
 }
 
 resource "google_storage_bucket" "gitlab_uploads" {
   name          = local.gitlab_uploads_bucket_name
   location      = var.region
-  storage_class = var.bucket_storage_class
+  storage_class = var.gcs_bucket_storage_class
   force_destroy = var.allow_force_destroy
 }
 
 resource "google_storage_bucket" "gitlab_artifacts" {
   name          = local.gitlab_artifacts_bucket_name
   location      = var.region
-  storage_class = var.bucket_storage_class
+  storage_class = var.gcs_bucket_storage_class
   force_destroy = var.allow_force_destroy
 }
 
 resource "google_storage_bucket" "git_lfs" {
   name          = local.git_lfs_bucket_name
   location      = var.region
-  storage_class = var.bucket_storage_class
+  storage_class = var.gcs_bucket_storage_class
   force_destroy = var.allow_force_destroy
 }
 
 resource "google_storage_bucket" "gitlab_packages" {
   name          = local.gitlab_packages_bucket_name
   location      = var.region
-  storage_class = var.bucket_storage_class
+  storage_class = var.gcs_bucket_storage_class
   force_destroy = var.allow_force_destroy
 }
 
 resource "google_storage_bucket" "gitlab_registry" {
   name          = local.gitlab_registry_bucket_name
   location      = var.region
-  storage_class = var.bucket_storage_class
+  storage_class = var.gcs_bucket_storage_class
   force_destroy = var.allow_force_destroy
 }
 
 resource "google_storage_bucket" "gitlab_pseudo" {
   name          = local.gitlab_pseudo_bucket_name
   location      = var.region
-  storage_class = var.bucket_storage_class
+  storage_class = var.gcs_bucket_storage_class
   force_destroy = var.allow_force_destroy
 }
 
 resource "google_storage_bucket" "gitlab_runner_cache" {
   name          = local.gitlab_runner_cache_bucket_name
   location      = var.region
-  storage_class = var.bucket_storage_class
+  storage_class = var.gcs_bucket_storage_class
   force_destroy = var.allow_force_destroy
 }
 
 resource "google_storage_bucket" "gitlab_dependency_proxy" {
   name          = local.gitlab_dependency_proxy_bucket_name
   location      = var.region
-  storage_class = var.bucket_storage_class
+  storage_class = var.gcs_bucket_storage_class
   force_destroy = var.allow_force_destroy
 }
 
 resource "google_storage_bucket" "gitlab_terraform_state" {
   name          = local.gitlab_terraform_state_bucket_name
   location      = var.region
-  storage_class = var.bucket_storage_class
+  storage_class = var.gcs_bucket_storage_class
   force_destroy = var.allow_force_destroy
 }
 
 resource "google_storage_bucket" "gitlab_external_diffs" {
   name          = local.gitlab_external_diffs_bucket_name
   location      = var.region
-  storage_class = var.bucket_storage_class
+  storage_class = var.gcs_bucket_storage_class
   force_destroy = var.allow_force_destroy
 }
 
 # GKE Cluster
 module "gke" {
   source  = "terraform-google-modules/kubernetes-engine/google//modules/beta-private-cluster"
-  version = "~> 20.0"
+  version = "~> 23.0"
 
   # Create an implicit dependency on service activation
   project_id = module.project_services.project_id
@@ -378,8 +359,12 @@ module "gke" {
   dns_cache                     = true
 
   remove_default_node_pool      = true
-
   
+  # Kube-proxy - eBPF setting 
+  datapath_provider             = var.gke_datapath
+  # Google Group for RBAC
+  authenticator_security_group  = var.gke_google_group_rbac_mail
+
   node_pools = [
     {
       name                       = "gitlab"
@@ -397,6 +382,9 @@ module "gke" {
       enable_pod_security_policy = false
       preemptible                = false
       autoscaling                = true 
+      
+      #Image Streaming
+      enable_gcfs                = var.gke_enable_image_stream
     },
   ]
 
@@ -416,29 +404,23 @@ resource "kubernetes_storage_class" "storage_class" {
   metadata {
     name = var.gke_storage_class
   }
-
   storage_provisioner = "kubernetes.io/gce-pd"
-
   parameters = {
     type = var.gke_storage_class
     replication-type = var.gke_disk_replication
   }
-
   depends_on = [time_sleep.sleep_for_cluster_fix_helm_6361]
 }
 
-#Secret for Postgres DB Pass
-resource "kubernetes_secret" "gitlab_pg" {
-  metadata {
-    name      = "gitlab-postgres-secret"
-    namespace = var.gitlab_namespace
-  }
-
-  data = {
-    password = var.gcp_existing_db_secret_name != "" ? data.google_secret_manager_secret_version.secret_managed_postgres_predefined_pass[0].secret_data : module.gcp_secret_db[0].secret_payload
-  }
-
-  depends_on = [kubernetes_namespace.gitlab_namespace]
+# Secret for Postgres DB Pass
+module "gitlab_db_pass" {
+  source           = "./modules/secret_manager"
+  project          = var.project_id
+  region           = var.region
+  secret_id        = var.gcp_existing_db_secret_name == "" ? "gitlab-postgres-secret" : var.gcp_existing_db_secret_name
+  k8s_namespace    = kubernetes_namespace.gitlab_namespace
+  k8s_secret_name  = "gitlab-postgres-secret"
+  k8s_secret_key   = "password"
 }
 
 # Secret for External Object Storage (LFS, Artifacts, Uploads, etc..)
@@ -491,7 +473,6 @@ resource "kubernetes_secret" "gitlab_gcs_credentials" {
   data = {
     gcs-application-credentials-file = base64decode(google_service_account_key.gitlab_gcs.private_key)
   }
-
   depends_on = [kubernetes_namespace.gitlab_namespace]
 }
 
@@ -510,50 +491,30 @@ resource "kubernetes_secret" "postgresql_mtls_secret" {
   depends_on = [kubernetes_namespace.gitlab_namespace]
 }
 
-# Recover the SMTP password from the GCP secret Manager
-data "google_secret_manager_secret_version" "secret_managed_smtp_predefined_pass" {
-  secret    = var.gcp_existing_smtp_secret_name
-  project   = var.project_id
-  count     = var.gitlab_enable_smtp ? 1 : 0
+#Secret for SMTP Pass
+module "gitlab_smtp_pass" {
+  source           = "./modules/secret_manager"
+  project          = var.project_id
+  region           = var.region
+  secret_id        = var.gcp_existing_smtp_secret_name == "" ? "gitlab-smtp-secret" : var.gcp_existing_smtp_secret_name
+  k8s_namespace    = kubernetes_namespace.gitlab_namespace
+  k8s_secret_name  = "gitlab-smtp-secret"
+  k8s_secret_key   = "password"
 
-  depends_on = [kubernetes_namespace.gitlab_namespace]
+  count            = var.gitlab_enable_smtp ? 1 : 0
 }
 
-# Secret for Smtp account 
-resource "kubernetes_secret" "gitlab_smtp_secret" {
-  metadata {
-    name      = "gitlab-smtp-secret"
-    namespace = var.gitlab_namespace
-  }
+#Secret for Omniauth Pass
+module "gitlab_omniauth_pass" {
+  source           = "./modules/secret_manager"
+  project          = var.project_id
+  region           = var.region
+  secret_id        = var.gcp_existing_omniauth_secret_name == "" ? "gitlab-omniauth-secret" : var.gcp_existing_omniauth_secret_name
+  k8s_namespace    = kubernetes_namespace.gitlab_namespace
+  k8s_secret_name  = "gitlab-omniauth-secret"
+  k8s_secret_key   = "provider"
 
-  data  = {
-    password = data.google_secret_manager_secret_version.secret_managed_smtp_predefined_pass[0].secret_data
-  }
-
-  count      = var.gitlab_enable_smtp ? 1 : 0
-  depends_on = [kubernetes_namespace.gitlab_namespace]
-}
-
-# Recover the Omniauth configuration from the GCP secret Manager
-data "google_secret_manager_secret_version" "secret_managed_omniauth_predefined_conf" {
-  secret    = var.gcp_existing_omniauth_secret_name
-  project   = var.project_id
-  count     = var.gitlab_enable_omniauth ? 1 : 0
-}
-
-# Secret for Omniauth configuration 
-resource "kubernetes_secret" "gitlab_omniauth_secret" {
-  metadata {
-    name      = "gitlab-omniauth-secret"
-    namespace = var.gitlab_namespace
-  }
-
-  data  = {
-    provider = data.google_secret_manager_secret_version.secret_managed_omniauth_predefined_conf[0].secret_data
-  }
-
-  count     = var.gitlab_enable_omniauth ? 1 : 0
-  depends_on = [kubernetes_namespace.gitlab_namespace]
+  count            = var.gitlab_enable_omniauth ? 1 : 0
 }
 
 data "google_compute_address" "gitlab" {
@@ -646,7 +607,6 @@ resource "helm_release" "gitlab" {
     google_sql_user.gitlab,
     kubernetes_namespace.gitlab_namespace,
     kubernetes_storage_class.storage_class,
-    kubernetes_secret.gitlab_pg,
     kubernetes_secret.gitlab_rails_storage,
     kubernetes_secret.gitlab_registry_storage,
     kubernetes_secret.gitlab_gcs_credentials,

@@ -78,7 +78,7 @@ variable "postgresql_availability_type" {
 variable "postgresql_del_protection" {
   type        = bool
   description = "Whether or not to allow Terraform to destroy the instance. Unless this field is set to false in Terraform state, a terraform destroy or terraform apply command that deletes the instance will fail."
-  default     = "true"
+  default     = true
 }
 
 variable "postgresql_enable_backup" {
@@ -99,21 +99,9 @@ variable "postgresql_backup_retained_count" {
   default     = "30"
 }
 
-variable "gitlab_db_name" {
-  type        = string
-  description = "Instance name for the GitLab Postgres database."
-  default     = "gitlab-db"
-}
-
-variable "gitlab_db_random_prefix" {
-  type        = string
+variable "postgresql_db_random_suffix" {
+  type        = bool
   description = "Sets random suffix at the end of the Cloud SQL instance name."
-  default     = false
-}
-
-variable "gitlab_bucket_random_suffix" {
-  type        = string
-  description = "Sets random suffix at the end of the bucket name."
   default     = false
 }
 
@@ -134,6 +122,22 @@ variable "redis_size" {
 }
 
 ##################
+#  GCS SECTION   #
+##################
+
+variable "gcs_bucket_random_suffix" {
+  type        = bool
+  description = "Sets random suffix at the end of the bucket name."
+  default     = false
+}
+
+variable "gcs_bucket_storage_class" {
+  type        = string
+  description = "Bucket storage class. Supported values include: STANDARD, MULTI_REGIONAL, REGIONAL, NEARLINE, COLDLINE, ARCHIVE "
+  default     = "STANDARD"
+}
+
+##################
 #  GKE SECTION   #
 ##################
 
@@ -149,40 +153,10 @@ variable "gke_max_node_count" {
   default     = 5
 }
 
-variable "gke_enable_cloudrun" {
-  type        = bool
-  description = "Enable Google Cloudrun on GKE Cluster. Default false"
-  default     = false
-}
-
-variable "gke_version" {
-  type        = string
-  description = "Version of GKE to use for the GitLab cluster"
-  default     = "1.21.10-gke.2000"
-}
-
 variable "gke_machine_type" {
   type        = string
   description = "Machine type used for the node-pool"
   default     = "n1-standard-4"
-}
-
-variable "gitlab_nodes_subnet_cidr" {
-  type        = string
-  default     = "10.10.0.0/16"
-  description = "Cidr range to use for gitlab GKE nodes subnet"
-}
-
-variable "gitlab_pods_subnet_cidr" {
-  type        = string
-  default     = "10.30.0.0/16"
-  description = "Cidr range to use for gitlab GKE pods subnet"
-}
-
-variable "gitlab_services_subnet_cidr" {
-  type        = string
-  default     = "10.20.0.0/16"
-  description = "Cidr range to use for gitlab GKE services subnet"
 }
 
 variable "gke_storage_class" {
@@ -197,10 +171,52 @@ variable "gke_disk_replication" {
   default     = "none"
 }
 
-variable "bucket_storage_class" {
+variable "gke_version" {
   type        = string
-  description = "Bucket storage class. Supported values include: STANDARD, MULTI_REGIONAL, REGIONAL, NEARLINE, COLDLINE, ARCHIVE "
-  default     = "STANDARD"
+  description = "Version of GKE to use for the GitLab cluster"
+  default     = "1.21.10-gke.2000"
+}
+
+variable "gke_nodes_subnet_cidr" {
+  type        = string
+  default     = "10.10.0.0/16"
+  description = "Cidr range to use for gitlab GKE nodes subnet"
+}
+
+variable "gke_pods_subnet_cidr" {
+  type        = string
+  default     = "10.30.0.0/16"
+  description = "Cidr range to use for gitlab GKE pods subnet"
+}
+
+variable "gke_services_subnet_cidr" {
+  type        = string
+  default     = "10.20.0.0/16"
+  description = "Cidr range to use for gitlab GKE services subnet"
+}
+
+variable "gke_enable_cloudrun" {
+  type        = bool
+  description = "Enable Google Cloudrun on GKE Cluster. Default false"
+  default     = false
+}
+
+variable "gke_datapath" {
+  type        = string
+  description = "The desired datapath provider for this cluster. By default, DATAPATH_PROVIDER_UNSPECIFIED enables the IPTables-based kube-proxy implementation. ADVANCED_DATAPATH enables Dataplane-V2 feature."
+  default     = "DATAPATH_PROVIDER_UNSPECIFIED"
+}
+
+variable "gke_google_group_rbac_mail" {
+  type        = string
+  description = "The name of the RBAC security group for use with Google security groups in Kubernetes RBAC. Group name must be in format gke-security-groups@yourdomain.com"
+  default     = "null"
+}
+
+variable "gke_enable_image_stream" {
+  type        = bool
+  description = "Google Container File System (gcfs) has to be enabled for image streaming to be active. Needs image_type to be set to COS_CONTAINERD."
+  default     = false
 }
 
 ##################
@@ -219,6 +235,12 @@ variable "domain" {
   type        = string
   description = "Domain for hosting gitlab functionality (ie mydomain.com would access gitlab at gitlab.mydomain.com)"
   default     = ""
+}
+
+variable "gitlab_db_name" {
+  type        = string
+  description = "Instance name for the GitLab Postgres database."
+  default     = "gitlab-db"
 }
 
 variable "gcp_existing_db_secret_name" {
