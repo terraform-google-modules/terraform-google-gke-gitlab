@@ -426,6 +426,8 @@ module "gitlab_db_pass" {
   k8s_namespace    = var.gitlab_namespace
   k8s_secret_name  = "gitlab-postgres-secret"
   k8s_secret_key   = "password"
+
+  depends_on = [kubernetes_namespace.gitlab_namespace]
 }
 
 # Secret for External Object Storage (LFS, Artifacts, Uploads, etc..)
@@ -507,6 +509,7 @@ module "gitlab_smtp_pass" {
   k8s_secret_key   = "password"
 
   count            = var.gitlab_enable_smtp ? 1 : 0
+  depends_on = [kubernetes_namespace.gitlab_namespace]
 }
 
 #Secret for Omniauth Pass
@@ -520,6 +523,7 @@ module "gitlab_omniauth_pass" {
   k8s_secret_key   = "provider"
 
   count            = var.gitlab_enable_omniauth ? 1 : 0
+  depends_on = [kubernetes_namespace.gitlab_namespace]
 }
 
 data "google_compute_address" "gitlab" {
@@ -622,5 +626,6 @@ resource "helm_release" "gitlab" {
     kubernetes_secret.postgresql_mtls_secret,
     time_sleep.sleep_for_cluster_fix_helm_6361,
     module.cloud_nat,
+    module.gitlab_db_pass,
   ]
 }
