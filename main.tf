@@ -418,7 +418,7 @@ module "gitlab_db_pass" {
   project          = var.project_id
   region           = var.region
   secret_id        = var.gcp_existing_db_secret_name
-  k8s_namespace    = kubernetes_namespace.gitlab_namespace
+  k8s_namespace    = var.gitlab_namespace
   k8s_secret_name  = "gitlab-postgres-secret"
   k8s_secret_key   = "password"
 }
@@ -497,7 +497,7 @@ module "gitlab_smtp_pass" {
   project          = var.project_id
   region           = var.region
   secret_id        = var.gcp_existing_smtp_secret_name
-  k8s_namespace    = kubernetes_namespace.gitlab_namespace
+  k8s_namespace    = var.gitlab_namespace
   k8s_secret_name  = "gitlab-smtp-secret"
   k8s_secret_key   = "password"
 
@@ -510,7 +510,7 @@ module "gitlab_omniauth_pass" {
   project          = var.project_id
   region           = var.region
   secret_id        = var.gcp_existing_omniauth_secret_name
-  k8s_namespace    = kubernetes_namespace.gitlab_namespace
+  k8s_namespace    = var.gitlab_namespace
   k8s_secret_name  = "gitlab-omniauth-secret"
   k8s_secret_key   = "provider"
 
