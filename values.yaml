@@ -220,7 +220,7 @@ gitlab:
           secret: google-application-credentials
           key: gcs-application-credentials-file
           gcpProject: ${PROJECT_ID}
-     persistence:
+    persistence:
       enabled: ${ENABLE_RESTORE_PV}
       size: "${RESTORE_PV_SIZE}Gi"
   ## https://docs.gitlab.com/charts/charts/gitlab/gitaly
