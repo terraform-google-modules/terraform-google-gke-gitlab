@@ -364,6 +364,11 @@ module "gke" {
   datapath_provider             = var.gke_datapath
   # Google Group for RBAC
   authenticator_security_group  = var.gke_google_group_rbac_mail
+  # Backup for GKE 
+  gke_backup_agent_config       = var.gke_enable_backup_agent
+  # Istio 
+  istio                         = var.gke_enable_istio_addon
+  istio_auth                    = var.gke_istio_auth
 
   node_pools = [
     {

@@ -1,15 +1,19 @@
 resource "random_password" "random_pass" {
   length  = 16
   special = false
+
+  count = var.secret_id == "" ? 1 : 0
 }
 
 resource "random_id" "gcp_secret_suffix" {
   byte_length = 4
+
+  count = var.secret_id == "" ? 1 : 0
 }
 
 locals {
-   secret_id    = var.secret_id == "" ? "${var.project}-gitlab-secret-${random_id.gcp_secret_suffix.hex}" : var.secret_id
-   secret_value = var.secret_id == "" ? random_password.random_pass.result : data.google_secret_manager_secret_version.gcp_predefined_pass[0].secret_data
+   secret_id    = var.secret_id == "" ? "${var.project}-gitlab-secret-${random_id.gcp_secret_suffix[0].hex}" : var.secret_id
+   secret_value = var.secret_id == "" ? random_password.random_pass[0].result : data.google_secret_manager_secret_version.gcp_predefined_pass[0].secret_data
 }
 
 # Recover the GCP secret payload when GCP secret name is provided
