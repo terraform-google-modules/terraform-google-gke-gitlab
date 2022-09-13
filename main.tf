@@ -225,7 +225,7 @@ resource "google_sql_ssl_cert" "postgres_client_cert" {
 resource "google_sql_user" "gitlab" {
   name     = "gitlab"
   instance = google_sql_database_instance.gitlab_db.name
-  password = module.gitlab_db_pass.secret_payload
+  password = module.gitlab_db_pass.secret_value
 }
 
 resource "google_sql_database" "gitlabhq_production" {
@@ -417,7 +417,7 @@ module "gitlab_db_pass" {
   source           = "./modules/secret_manager"
   project          = var.project_id
   region           = var.region
-  secret_id        = var.gcp_existing_db_secret_name == "" ? "gitlab-postgres-secret" : var.gcp_existing_db_secret_name
+  secret_id        = var.gcp_existing_db_secret_name
   k8s_namespace    = kubernetes_namespace.gitlab_namespace
   k8s_secret_name  = "gitlab-postgres-secret"
   k8s_secret_key   = "password"
@@ -496,7 +496,7 @@ module "gitlab_smtp_pass" {
   source           = "./modules/secret_manager"
   project          = var.project_id
   region           = var.region
-  secret_id        = var.gcp_existing_smtp_secret_name == "" ? "gitlab-smtp-secret" : var.gcp_existing_smtp_secret_name
+  secret_id        = var.gcp_existing_smtp_secret_name
   k8s_namespace    = kubernetes_namespace.gitlab_namespace
   k8s_secret_name  = "gitlab-smtp-secret"
   k8s_secret_key   = "password"
@@ -509,7 +509,7 @@ module "gitlab_omniauth_pass" {
   source           = "./modules/secret_manager"
   project          = var.project_id
   region           = var.region
-  secret_id        = var.gcp_existing_omniauth_secret_name == "" ? "gitlab-omniauth-secret" : var.gcp_existing_omniauth_secret_name
+  secret_id        = var.gcp_existing_omniauth_secret_name
   k8s_namespace    = kubernetes_namespace.gitlab_namespace
   k8s_secret_name  = "gitlab-omniauth-secret"
   k8s_secret_key   = "provider"
@@ -561,8 +561,7 @@ data "template_file" "helm_values" {
     BACKUP_PV_SIZE        = var.gitlab_backup_pv_size
     ENABLE_RESTORE_PV     = var.gitlab_enable_restore_pv
     RESTORE_PV_SIZE       = var.gitlab_restore_pv_size
-
-
+    
     #Bucket Names
     LFS_BCKT              = local.git_lfs_bucket_name
     ARTIFACTS_BCKT        = local.gitlab_artifacts_bucket_name

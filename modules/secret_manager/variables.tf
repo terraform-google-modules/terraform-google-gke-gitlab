@@ -12,12 +12,6 @@ variable "secret_id" {
   type        = string
 }
 
-variable "secret_value" {
-  description = "Payload for Secret"
-  type        = string
-  default     = ""
-}
-
 variable "secret_labels" {
   description = "(Optional) The labels assigned to this Secret. Label keys must be between 1 and 63 characters long, have a UTF-8 encoding of maximum 128 bytes"
   type        = map(string)
@@ -50,4 +44,3 @@ variable "k8s_create_secret" {
   type        = bool
   default     = true
 }
-

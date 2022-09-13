@@ -1,4 +1,4 @@
-# terraform-google-gke-gitlab
+# terraform-sparkfabrik-gke-gitlab
 
 This module creates a reslient and fault tolerant GitLab installation using Google
 Kubernetes Engine (GKE) as the computing environment and the following services for storing
@@ -16,7 +16,7 @@ There are examples included in the [examples](./examples/) folder but simple usa
 module "gke-gitlab" {
   source                     = "terraform-google-modules/gke-gitlab/google"
   project_id                 = "<PROJECT ID>"
-  certmanager_email          = "test@example.com"
+  certmanager_email          = "test@example.com
 }
 ```
 
@@ -34,76 +34,83 @@ Then perform the following commands on the root folder:
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | allow\_force\_destroy | Allows full cleanup of resources by disabling any deletion safe guards | `bool` | `false` | no |
-| bucket\_storage\_class | Bucket storage class. Supported values include: STANDARD, MULTI_REGIONAL, REGIONAL, NEARLINE, COLDLINE, ARCHIVE | `string` | `"STANDARD"` | no |
-| certmanager\_email | Email used to retrieve SSL certificates from Let's Encrypt | `any` | n/a | yes |
+| certmanager\_email | Email used to retrieve SSL certificates from Let's Encrypt | `string` | n/a | yes |
 | domain | Domain for hosting gitlab functionality (ie mydomain.com would access gitlab at gitlab.mydomain.com) | `string` | `""` | no |
+| gcp\_existing\_db\_secret\_name | Setup the GCP secret name where to retrieve the password value that will be used for postgres DB. In case an empty string is passed,a random value will be filled in a default gcp secret named gitlab-db-password | `string` | `""` | no |
+| gcp\_existing\_omniauth\_secret\_name | Only if Omniauth is enabled. Setup the GCP secret name where to retrieve the configuration that will be used for Omniauth Configuration. | `string` | `""` | no |
+| gcp\_existing\_smtp\_secret\_name | Only if STMP is enabled. Setup the GCP secret name where to retrieve the password value that will be used for Smtp Account. | `string` | `""` | no |
+| gcs\_bucket\_random\_suffix | Sets random suffix at the end of the bucket name. | `bool` | `false` | no |
+| gcs\_bucket\_storage\_class | Bucket storage class. Supported values include: STANDARD, MULTI\_REGIONAL, REGIONAL, NEARLINE, COLDLINE, ARCHIVE | `string` | `"STANDARD"` | no |
 | gitlab\_address\_name | Name of the address to use for GitLab ingress | `string` | `""` | no |
 | gitlab\_backup\_extra\_args | Add a string of extra arguments for the gitlab backup-utility. | `string` | `""` | no |
+| gitlab\_backup\_pv\_size | Set the size of the additional storage for Backup TAR Creation | `number` | `100` | no |
 | gitlab\_db\_name | Instance name for the GitLab Postgres database. | `string` | `"gitlab-db"` | no |
-| gitlab\_db\_password | Password for the GitLab Postgres user | `string` | `""` | no |
-| gitlab\_db\_random\_prefix | Sets random suffix at the end of the Cloud SQL instance name. | `bool` | `false` | no |
-| gitlab\_enable\_certmanager | Choose whether to Install certmanager through Gitlab Helm Chart. | `bool` | `"true"` | no |
-| gitlab\_enable\_cron\_backup | Choose whether to enable Gitlab Scheduled Backups. | `bool` | `"true"` | no |
+| gitlab\_enable\_backup\_pv | Enable additional storage for TAR backup creation of any appreciable size | `bool` | `false` | no |
+| gitlab\_enable\_certmanager | Choose whether to Install certmanager through Gitlab Helm Chart. Default to true. | `bool` | `true` | no |
+| gitlab\_enable\_cron\_backup | Choose whether to enable Gitlab Scheduled Backups. Default to true. | `bool` | `true` | no |
+| gitlab\_enable\_omniauth | Choose whether to enable Gitlab Omniauth integration. Default to false. | `bool` | `false` | no |
+| gitlab\_enable\_registry | Choose whether to enable Gitlab Container registry. Default to false. | `bool` | `false` | no |
+| gitlab\_enable\_restore\_pv | Enable additional storage for TAR Restoration creation of any appreciable size | `bool` | `false` | no |
 | gitlab\_enable\_smtp | Setup Gitlab email address to send email. | `bool` | `false` | no |
-| gitlab\_enable\_registry | Choose whether to enable Gitlab Container registry. | `bool` | `"false"` | no |
-| gitlab\_install\_kas | Choose whether to install the Gitlab agent server in the cluster. | `bool` | `"false"` | no |
-| gitlab\_install\_grafana | Choose whether to install a Grafana instance using the Gitlab chart. | `bool` | `"false"` | no |
-| gitlab\_install\_ingress\_nginx | Choose whether to install the ingress nginx controller in the cluster. | `bool` | `"true"` | no |
-| gitlab\_install\_prometheus | Choose whether to install a Prometheus instance using the Gitlab chart. | `bool` | `"false"` | no |
-| gitlab\_install\_runner | Choose whether to install the gitlab runner in the cluster | `bool` | `true` | no |
+| gitlab\_gitaly\_disk\_size | Setup persistent disk size for gitaly data in GB. Default 200 GB | `number` | `100` | no |
+| gitlab\_hpa\_max\_replicas\_kas | Set the maximum hpa pod replicas for the Gitlab Kas. | `number` | `10` | no |
+| gitlab\_hpa\_max\_replicas\_registry | Set the maximum hpa pod replicas for the Gitlab Registry. | `number` | `10` | no |
+| gitlab\_hpa\_max\_replicas\_shell | Set the maximum hpa pod replicas for the Gitlab Shell. | `number` | `10` | no |
+| gitlab\_hpa\_max\_replicas\_sidekiq | Set the maximum hpa pod replicas for the Gitlab sidekiq. | `number` | `10` | no |
+| gitlab\_hpa\_max\_replicas\_webservice | Set the maximum hpa pod replicas for the Gitlab webservice. | `number` | `10` | no |
+| gitlab\_hpa\_min\_replicas\_kas | Set the minimum hpa pod replicas for the Gitlab Kas. | `number` | `2` | no |
+| gitlab\_hpa\_min\_replicas\_registry | Set the minimum hpa pod replicas for the Gitlab Registry. | `number` | `2` | no |
+| gitlab\_hpa\_min\_replicas\_shell | Set the minimum hpa pod replicas for the Gitlab Shell. | `number` | `2` | no |
+| gitlab\_hpa\_min\_replicas\_sidekiq | Set the minimum hpa pod replicas for the Gitlab sidekiq. | `number` | `1` | no |
+| gitlab\_hpa\_min\_replicas\_webservice | Set the minimum hpa pod replicas for the Gitlab webservice. | `number` | `2` | no |
+| gitlab\_install\_grafana | Choose whether to install a Grafana instance using the Gitlab chart. Default to false. | `bool` | `false` | no |
+| gitlab\_install\_ingress\_nginx | Choose whether to install the ingress nginx controller in the cluster. Default to true. | `bool` | `true` | no |
+| gitlab\_install\_kas | Choose whether to install the Gitlab agent server in the cluster. Default to false. | `bool` | `false` | no |
+| gitlab\_install\_prometheus | Choose whether to install a Prometheus instance using the Gitlab chart. Default to false. | `bool` | `false` | no |
+| gitlab\_install\_runner | Choose whether to install the gitlab runner in the cluster | `string` | `true` | no |
 | gitlab\_namespace | Setup  the Kubernetes Namespace where to install gitlab | `string` | `"gitlab"` | no |
-| gitlab\_smtp\_user | Choose whether to enable Gitlab smtp server to send emails | `string` | `"user@example.com"` | no |
-| gitlab\_smtp\_secret | Setup the Kubernetes Secret Name for SMTP Server password. key must be "password". | `string` | `"gitlab-smtp"` | no |
+| gitlab\_restore\_pv\_size | Set the size of the additional storage for Backup TAR Restoration Process | `number` | `100` | no |
+| gitlab\_schedule\_cron\_backup | Setup Cron Job for Gitlab Scheduled Backup using unix-cron string format. Default to '0 1 \* \* \*' (Everyday at 1 AM). | `string` | `"0 1 * * *"` | no |
+| gitlab\_smtp\_user | Setup email sender address for Gitlab smtp server to send emails. | `string` | `"user@example.com"` | no |
 | gitlab\_time\_zone | Setup timezone for gitlab containers | `string` | `"Europe/Rome"` | no |
-| gitlab\_gitaly\_disk\_size | Setup persistent disk size for gitaly data in GB | `number` | `100"` | no |
-| gitlab\_hpa\_max\_replicas\_kas | Set the maximum hpa pod replicas for the Gitlab Kas. | `number` | `"10"` | no |
-| gitlab\_hpa\_max\_replicas\_registry | Set the maximum hpa pod truereplicas for the Gitlab Registry. | `number` | `"10"` | no |
-| gitlab\_hpa\_max\_replicas\_shell | Set the maximum hpa pod replicas for the Gitlab Shell. | `number` | `"10"` | no |
-| gitlab\_hpa\_max\_replicas\_sidekiq | Set the maximum hpa pod replicas for the Gitlab sidekiq. | `number` | `"10"` | no |
-| gitlab\_hpa\_max\_replicas\_webservice | Set the maximum hpa pod replicas for the Gitlab webservice. | `number` | `"10"` | no |
-| gitlab\_hpa\_min\_replicas\_kas | Set the minimum hpa pod replicas for the Gitlab Kas. | `number` | `"2"` | no |
-| gitlab\_hpa\_min\_replicas\_registry | Set the minimum hpa pod replicas for the Gitlab Registry. | `number` | `"2"` | no |
-| gitlab\_hpa\_min\_replicas\_shell | Set the minimum hpa pod replicas for the Gitlab Shell. | `number` | `"2"` | no |
-| gitlab\_hpa\_min\_replicas\_sidekiq |Set the minimum hpa pod replicas for the Gitlab sidekiq. | `number` | `"1"` | no |
-| gitlab\_hpa\_min\_replicas\_webservice |Set the minimum hpa pod replicas for the Gitlab webservice. | `number` | `"2"` | no |
-| gitlab\_nodes\_subnet\_cidr | Cidr range to use for gitlab GKE nodes subnet | `string` | `"10.0.0.0/16"` | no |
-| gitlab\_pods\_subnet\_cidr | Cidr range to use for gitlab GKE pods subnet | `string` | `"10.3.0.0/16"` | no |
-| gitlab\_schedule\_cron\_backup | Setup Cron Job for Gitlab Scheduled Backup using unix-cron string format. | `string` | `"0 1 * * *"` | no |
-| gitlab\_services\_subnet\_cidr | Cidr range to use for gitlab GKE services subnet | `string` | `"10.2.0.0/16"` | no |
-| gke\_disk\_replication | Setup replication type for disk persistent volune. Possible values none or regional-pd | `string` | `"none"` | no |
-| gke\_enable\_cloudrun | Enable Google Cloudrun on GKE Cluster. | `bool` | `"false"` | no |
+| gke\_datapath | The desired datapath provider for this cluster. By default, DATAPATH\_PROVIDER\_UNSPECIFIED enables the IPTables-based kube-proxy implementation. ADVANCED\_DATAPATH enables Dataplane-V2 feature. | `string` | `"DATAPATH_PROVIDER_UNSPECIFIED"` | no |
+| gke\_disk\_replication | Setup replication type for disk persistent volune. Possible values none or regional-pd. Default to none. | `string` | `"none"` | no |
+| gke\_enable\_cloudrun | Enable Google Cloudrun on GKE Cluster. Default false | `bool` | `false` | no |
+| gke\_enable\_image\_stream | Google Container File System (gcfs) has to be enabled for image streaming to be active. Needs image\_type to be set to COS\_CONTAINERD. | `bool` | `false` | no |
+| gke\_google\_group\_rbac\_mail | The name of the RBAC security group for use with Google security groups in Kubernetes RBAC. Group name must be in format gke-security-groups@yourdomain.com | `string` | `"null"` | no |
 | gke\_machine\_type | Machine type used for the node-pool | `string` | `"n1-standard-4"` | no |
-| gke\_max\_node\_count | Define the maxmimum number of nodes of the autoscaling cluster. | `number` | `"5"` | no |
-| gke\_min\_node\_count | Define the minimum number of nodes of the autoscaling cluster. | `number` | `"1"` | no |
-| gke\_storage\_class | Default storage class for GKE Cluster. Possible values: pd-standard,pd-balanced,pd-ssd,pd-extreme | `string` | `"pd-ssd"` | no |
+| gke\_max\_node\_count | Define the maximum number of nodes of the autoscaling cluster. Default 5 | `number` | `5` | no |
+| gke\_min\_node\_count | Define the minimum number of nodes of the autoscaling cluster. Default 1 | `number` | `1` | no |
+| gke\_nodes\_subnet\_cidr | Cidr range to use for gitlab GKE nodes subnet | `string` | `"10.10.0.0/16"` | no |
+| gke\_pods\_subnet\_cidr | Cidr range to use for gitlab GKE pods subnet | `string` | `"10.30.0.0/16"` | no |
+| gke\_services\_subnet\_cidr | Cidr range to use for gitlab GKE services subnet | `string` | `"10.20.0.0/16"` | no |
+| gke\_storage\_class | Default storage class for GKE Cluster. Default pd-sdd. | `string` | `"pd-ssd"` | no |
 | gke\_version | Version of GKE to use for the GitLab cluster | `string` | `"1.21.10-gke.2000"` | no |
-| helm\_chart\_version | Helm chart version to install during deployment | `string` | `"5.9.3"` | no |
-| postgresql\_availability\_type | The availability type of the Cloud SQL instance, high availability (REGIONAL) or single zone (ZONAL) | `string` | `"ZONAL"` | no |
-| postgresql\_enable\_backup | Setup if postgres backup configuration is enabled. | `bool` | `"true"` | no |
+| helm\_chart\_version | Helm chart version to install during deployment - Default Gitlab 14.9.3 | `string` | `"5.9.3"` | no |
+| postgresql\_availability\_type | The availability type of the Cloud SQL instance, high availability (REGIONAL) or single zone (ZONAL). | `string` | `"REGIONAL"` | no |
+| postgresql\_backup\_retained\_count | Numeber of postgres backup to be retained. Default 30. | `number` | `"30"` | no |
 | postgresql\_backup\_start\_time | HH:MM format time indicating when postgres backup configuration starts. | `string` | `"02:00"` | no |
-| postgresql\_backup\_retained\_count | Numeber of postgres backup to be retained | `number` | `"30"` | no |
-| postgresql\_del\_protection | SWhether or not to allow Terraform to destroy the instance. Unless this field is set to false in Terraform state, a terraform destroy or terraform apply command that deletes the instance will fail. | `bool` | `"true"` | no |
-| postgresql\_disk\_type | The type of data disk: PD_SSD or PD_HDD. | `string` | `"PD_SSD"` | no |
-| postgresql\_disk\_size | The size of data disk, in GB. | `number` | `"100"` | no |
-| postgresql\_tier | Sets the machine type to use for Postgres | `string` | `"db-custom-2-8192"` | no |
-| postgresql\_version | Sets The PostgreSQL version to use. | `string` | `POSTGRES_12` | no |
-| project\_id | GCP Project to deploy resources | `any` | n/a | yes |
-| redis\_tier | The service tier of the instance. BASIC or STANDARD_HA | `string` | `STANDARD_HA` | no |
-| redis\_size | Redis memory size in GiB. | `string` | `"1"` | no |
+| postgresql\_db\_random\_suffix | Sets random suffix at the end of the Cloud SQL instance name. | `bool` | `false` | no |
+| postgresql\_del\_protection | Whether or not to allow Terraform to destroy the instance. Unless this field is set to false in Terraform state, a terraform destroy or terraform apply command that deletes the instance will fail. | `bool` | `true` | no |
+| postgresql\_disk\_size | he size of data disk, in GB. Size of a running instance cannot be reduced but can be increased. Default to 100 GB | `number` | `"100"` | no |
+| postgresql\_disk\_type | The type of postgresql data disk: PD\_SSD or PD\_HDD. | `string` | `"PD_SSD"` | no |
+| postgresql\_enable\_backup | Setup if postgres backup configuration is enabled.Default true | `bool` | `true` | no |
+| postgresql\_tier | (Required) The machine type to use.Postgres supports only shared-core machine types, and custom machine types such as db-custom-2-13312 | `string` | `"db-custom-2-8192"` | no |
+| postgresql\_version | (Required) The PostgreSQL version to use. Supported values for Gitlab POSTGRES\_12, POSTGRES\_13. Default: POSTGRES\_12 | `string` | `"POSTGRES_12"` | no |
+| project\_id | GCP Project to deploy resources | `string` | n/a | yes |
+| redis\_size | Redis memory size in GiB. | `number` | `1` | no |
+| redis\_tier | The service tier of the instance. Must be one of these values BASIC and STANDARD\_HA | `string` | `"STANDARD_HA"` | no |
 | region | GCP region to deploy resources to | `string` | `"europe-west1"` | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| cluster\_ca\_certificate | CA Certificate for the GKE cluster that GitLab is deployed in. |
 | cluster\_location | Location of the GKE cluster that GitLab is deployed in. |
 | cluster\_name | Name of the GKE cluster that GitLab is deployed in. |
 | gitlab\_address | IP address where you can connect to your GitLab instance |
 | gitlab\_url | URL where you can access your GitLab instance |
-| host | Host for the GKE cluster that GitLab is deployed in. |
 | root\_password\_instructions | Instructions for getting the root user's password for initial setup |
-| token | Token for the GKE cluster that GitLab is deployed in. |
 
  <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
