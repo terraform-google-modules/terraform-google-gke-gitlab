@@ -16,7 +16,7 @@ There are examples included in the [examples](./examples/) folder but simple usa
 module "gke-gitlab" {
   source                     = "terraform-google-modules/gke-gitlab/google"
   project_id                 = "<PROJECT ID>"
-  certmanager_email          = "test@example.com
+  certmanager_email          = "test@example.com"
 }
 ```
 
