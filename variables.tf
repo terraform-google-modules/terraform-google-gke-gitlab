@@ -219,6 +219,24 @@ variable "gke_enable_image_stream" {
   default     = false
 }
 
+variable "gke_enable_backup_agent" {
+  type        = bool
+  description = "(Beta) Whether Backup for GKE agent is enabled for this cluster."
+  default     = false
+}
+
+variable "gke_enable_istio_addon" {
+  type        = bool
+  description = "(Beta) Enable Istio addon"
+  default     = false
+}
+
+variable "gke_istio_auth" {
+  type        = string
+  description = "(Beta) The authentication type between services in Istio"
+  default     = "AUTH_MUTUAL_TLS"
+}
+
 ##################
 # GITLAB SECTION #
 ##################
