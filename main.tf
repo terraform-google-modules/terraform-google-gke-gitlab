@@ -231,7 +231,6 @@ resource "google_sql_user" "gitlab" {
 resource "google_sql_database" "gitlabhq_production" {
   name       = "gitlabhq_production"
   instance   = google_sql_database_instance.gitlab_db.name
-  depends_on = [google_sql_user.gitlab]
 }
 
 # Redis
@@ -523,7 +522,7 @@ module "gitlab_omniauth_pass" {
   k8s_secret_key   = "provider"
 
   count            = var.gitlab_enable_omniauth ? 1 : 0
-  depends_on = [kubernetes_namespace.gitlab_namespace]
+  depends_on       = [kubernetes_namespace.gitlab_namespace]
 }
 
 data "google_compute_address" "gitlab" {
