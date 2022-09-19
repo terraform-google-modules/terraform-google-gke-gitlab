@@ -15,7 +15,7 @@ output "region" {
 
 output "secret_id" {
   description = "Id of secret"
-  value       = var.secret_id
+  value       = local.secret_id
 }
 
 output "secret_value" {

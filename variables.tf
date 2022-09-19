@@ -174,7 +174,7 @@ variable "gke_disk_replication" {
 variable "gke_version" {
   type        = string
   description = "Version of GKE to use for the GitLab cluster"
-  default     = "1.21.10-gke.2000"
+  default     = "latest"
 }
 
 variable "gke_nodes_subnet_cidr" {
