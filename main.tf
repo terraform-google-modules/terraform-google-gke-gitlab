@@ -569,7 +569,9 @@ data "template_file" "helm_values" {
     BACKUP_PV_SIZE        = var.gitlab_backup_pv_size
     ENABLE_RESTORE_PV     = var.gitlab_enable_restore_pv
     RESTORE_PV_SIZE       = var.gitlab_restore_pv_size
-    
+    BACKUP_PV_SC          = var.gke_sc_gitlab_backup_disk
+    RESTORE_PV_SC         = var.gke_sc_gitlab_restore_disk
+
     #Bucket Names
     LFS_BCKT              = local.git_lfs_bucket_name
     ARTIFACTS_BCKT        = local.gitlab_artifacts_bucket_name

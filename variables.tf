@@ -174,7 +174,7 @@ variable "gke_disk_replication" {
 variable "gke_version" {
   type        = string
   description = "Version of GKE to use for the GitLab cluster"
-  default     = "1.21.10-gke.2000"
+  default     = "latest"
 }
 
 variable "gke_nodes_subnet_cidr" {
@@ -235,6 +235,18 @@ variable "gke_istio_auth" {
   type        = string
   description = "The authentication type between services in Istio"
   default     = "AUTH_MUTUAL_TLS"
+}
+
+variable "gke_sc_gitlab_backup_disk" {
+  type        = string
+  description = "Storage class for Perstistent Volume used for extra space in Backup Cron Job . Default pd-sdd."
+  default     = "pd-ssd"
+}
+
+variable "gke_sc_gitlab_restore_disk" {
+  type        = string
+  description = "Storage class for Perstistent Volume used for extra space in Backup Restore Job. Default pd-sdd."
+  default     = "pd-ssd"
 }
 
 ##################

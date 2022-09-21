@@ -19,11 +19,11 @@ terraform {
   required_providers {
     google = {
       source  = "hashicorp/google"
-      version = "~> 4.35"
+      version = ">= 4.37.0, < 5.0.0"
     }
     google-beta = {
       source  = "hashicorp/google-beta"
-      version = "~> 4.35"
+      version = ">= 4.37.0, < 5.0.0"
     }
     helm = {
       source  = "hashicorp/helm"
@@ -41,13 +41,5 @@ terraform {
       source  = "hashicorp/template"
       version = "~> 2.2"
     }
-  }
-
-  provider_meta "google" {
-    module_name = "blueprints/terraform/terraform-google-gke-gitlab/v0.5.2"
-  }
-
-  provider_meta "google-beta" {
-    module_name = "blueprints/terraform/terraform-google-gke-gitlab/v0.5.2"
   }
 }

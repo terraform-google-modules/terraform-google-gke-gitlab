@@ -213,6 +213,7 @@ gitlab:
         extraArgs: ${BACKUP_EXTRA}
         persistence:
           enabled: ${ENABLE_BACKUP_PV}
+          storageClass: ${BACKUP_PV_SC}
           size: "${BACKUP_PV_SIZE}Gi"
       objectStorage:
         backend: gcs
@@ -222,6 +223,7 @@ gitlab:
           gcpProject: ${PROJECT_ID}
     persistence:
       enabled: ${ENABLE_RESTORE_PV}
+      storageClass: ${RESTORE_PV_SC}
       size: "${RESTORE_PV_SIZE}Gi"
   ## https://docs.gitlab.com/charts/charts/gitlab/gitaly
   gitaly:
