@@ -237,6 +237,18 @@ variable "gke_istio_auth" {
   default     = "AUTH_MUTUAL_TLS"
 }
 
+variable "gke_sc_gitlab_backup_disk" {
+  type        = string
+  description = "Storage class for Perstistent Volume used for extra space in Backup Cron Job . Default pd-sdd."
+  default     = "pd-ssd"
+}
+
+variable "gke_sc_gitlab_restore_disk" {
+  type        = string
+  description = "Storage class for Perstistent Volume used for extra space in Backup Restore Job. Default pd-sdd."
+  default     = "pd-ssd"
+}
+
 ##################
 # GITLAB SECTION #
 ##################
