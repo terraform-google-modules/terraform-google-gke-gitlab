@@ -249,6 +249,11 @@ variable "gke_sc_gitlab_restore_disk" {
   default     = "pd-ssd"
 }
 
+variable "gke_cluster_resource_labels" {
+  type    = map(string)
+  default = {}
+}
+
 ##################
 # GITLAB SECTION #
 ##################
