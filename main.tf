@@ -393,6 +393,8 @@ module "gke" {
     },
   ]
 
+  cluster_resource_labels = var.gke_cluster_resource_labels
+
   node_pools_oauth_scopes = {
     all = ["https://www.googleapis.com/auth/cloud-platform"]
   }
