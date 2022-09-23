@@ -82,7 +82,8 @@ module "project_services" {
     "cloudresourcemanager.googleapis.com",
     "redis.googleapis.com",
     "secretmanager.googleapis.com",
-    "containerfilesystem.googleapis.com"
+    "containerfilesystem.googleapis.com",
+    "storagetransfer.googleapis.com"
   ]
 }
 
