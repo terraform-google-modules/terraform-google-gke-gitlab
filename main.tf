@@ -24,7 +24,7 @@ provider "google-beta" {
 
 locals {
   # Postgres DB Name
-  gitlab_db_name                      = var.postgresql_db_random_suffix ? "${var.gitlab_db_name}-${random_id.suffix[0].hex}" : var.gitlab_db_name
+  gitlab_db_name = var.postgresql_db_random_suffix ? "${var.gitlab_db_name}-${random_id.suffix[0].hex}" : var.gitlab_db_name
   # Gitlab Bucket Names
   gitlab_backups_bucket_name          = var.gcs_bucket_random_suffix ? "${var.project_id}-gitlab-backups-${random_id.bucket_suffix[0].hex}" : "${var.project_id}-gitlab-backups"
   gitlab_tmp_backups_bucket_name      = var.gcs_bucket_random_suffix ? "${var.project_id}-gitlab-tmp-backups-${random_id.bucket_suffix[0].hex}" : "${var.project_id}-gitlab-tmp-backups"
@@ -41,12 +41,12 @@ locals {
 }
 
 resource "random_id" "suffix" {
-  count = var.postgresql_db_random_suffix ? 2 : 1
+  count       = var.postgresql_db_random_suffix ? 2 : 1
   byte_length = 4
 }
 
 resource "random_id" "bucket_suffix" {
-  count = var.gcs_bucket_random_suffix ? 1 : 0
+  count       = var.gcs_bucket_random_suffix ? 1 : 0
   byte_length = 4
 }
 
@@ -138,15 +138,15 @@ resource "google_compute_address" "gitlab" {
 }
 
 module "cloud_nat" {
-  source      = "terraform-google-modules/cloud-nat/google"
-  version     = "~> 2.2.0"
-  project_id  = var.project_id
-  region      = var.region
-  router      = format("%s-router", var.project_id)
-  name        = "${var.project_id}-cloud-nat-${random_id.suffix[1].hex}"
-  network     = google_compute_network.gitlab.self_link
-  create_router     = true
-  min_ports_per_vm  = "2048"
+  source           = "terraform-google-modules/cloud-nat/google"
+  version          = "~> 2.2.0"
+  project_id       = var.project_id
+  region           = var.region
+  router           = format("%s-router", var.project_id)
+  name             = "${var.project_id}-cloud-nat-${random_id.suffix[1].hex}"
+  network          = google_compute_network.gitlab.self_link
+  create_router    = true
+  min_ports_per_vm = "2048"
 }
 
 resource "google_compute_firewall" "admission_webhook" {
@@ -181,18 +181,18 @@ resource "google_service_networking_connection" "private_vpc_connection" {
 }
 
 resource "google_sql_database_instance" "gitlab_db" {
-  depends_on           = [google_service_networking_connection.private_vpc_connection]
-  name                 = local.gitlab_db_name
-  region               = var.region
-  database_version     = var.postgresql_version
-  deletion_protection  = var.postgresql_del_protection
+  depends_on          = [google_service_networking_connection.private_vpc_connection]
+  name                = local.gitlab_db_name
+  region              = var.region
+  database_version    = var.postgresql_version
+  deletion_protection = var.postgresql_del_protection
 
   settings {
-    tier               = var.postgresql_tier
-    availability_type  = var.postgresql_availability_type
-    disk_size          = var.postgresql_disk_size
-    disk_type          = var.postgresql_disk_type
-    disk_autoresize    = true
+    tier              = var.postgresql_tier
+    availability_type = var.postgresql_availability_type
+    disk_size         = var.postgresql_disk_size
+    disk_type         = var.postgresql_disk_type
+    disk_autoresize   = true
 
     ip_configuration {
       ipv4_enabled    = "false"
@@ -204,9 +204,9 @@ resource "google_sql_database_instance" "gitlab_db" {
       enabled                        = var.postgresql_enable_backup
       start_time                     = var.postgresql_backup_start_time
       point_in_time_recovery_enabled = true
-        backup_retention_settings {
-          retained_backups = var. postgresql_backup_retained_count
-        }
+      backup_retention_settings {
+        retained_backups = var.postgresql_backup_retained_count
+      }
     }
 
     maintenance_window {
@@ -230,8 +230,8 @@ resource "google_sql_user" "gitlab" {
 }
 
 resource "google_sql_database" "gitlabhq_production" {
-  name       = "gitlabhq_production"
-  instance   = google_sql_database_instance.gitlab_db.name
+  name     = "gitlabhq_production"
+  instance = google_sql_database_instance.gitlab_db.name
 }
 
 # Redis
@@ -340,35 +340,35 @@ module "gke" {
   # Create an implicit dependency on service activation
   project_id = module.project_services.project_id
 
-  name                          = "gitlab"
-  region                        = var.region
-  regional                      = true
-  kubernetes_version            = var.gke_version
+  name               = "gitlab"
+  region             = var.region
+  regional           = true
+  kubernetes_version = var.gke_version
 
-  network                       = google_compute_network.gitlab.name
-  subnetwork                    = google_compute_subnetwork.subnetwork.name
-  ip_range_pods                 = "gitlab-cluster-pod-cidr"
-  ip_range_services             = "gitlab-cluster-service-cidr"
+  network           = google_compute_network.gitlab.name
+  subnetwork        = google_compute_subnetwork.subnetwork.name
+  ip_range_pods     = "gitlab-cluster-pod-cidr"
+  ip_range_services = "gitlab-cluster-service-cidr"
 
-  enable_private_endpoint       = false
-  enable_private_nodes          = true
-  release_channel               = "STABLE"
-  maintenance_start_time        = "03:00"
-  network_policy                = false
-  enable_shielded_nodes         = true
-  dns_cache                     = true
+  enable_private_endpoint = false
+  enable_private_nodes    = true
+  release_channel         = "STABLE"
+  maintenance_start_time  = "03:00"
+  network_policy          = false
+  enable_shielded_nodes   = true
+  dns_cache               = true
 
-  remove_default_node_pool      = true
-  
+  remove_default_node_pool = true
+
   # Kube-proxy - eBPF setting 
-  datapath_provider             = var.gke_datapath
+  datapath_provider = var.gke_datapath
   # Google Group for RBAC
-  authenticator_security_group  = var.gke_google_group_rbac_mail
+  authenticator_security_group = var.gke_google_group_rbac_mail
   # Backup for GKE 
-  gke_backup_agent_config       = var.gke_enable_backup_agent
+  gke_backup_agent_config = var.gke_enable_backup_agent
   # Istio 
-  istio                         = var.gke_enable_istio_addon
-  istio_auth                    = var.gke_istio_auth
+  istio      = var.gke_enable_istio_addon
+  istio_auth = var.gke_istio_auth
 
   node_pools = [
     {
@@ -386,10 +386,10 @@ module "gke" {
       cloudrun                   = var.gke_enable_cloudrun
       enable_pod_security_policy = false
       preemptible                = false
-      autoscaling                = true 
-      
+      autoscaling                = true
+
       #Image Streaming
-      enable_gcfs                = var.gke_enable_image_stream
+      enable_gcfs = var.gke_enable_image_stream
     },
   ]
 
@@ -411,7 +411,7 @@ resource "kubernetes_storage_class" "storage_class" {
   }
   storage_provisioner = "kubernetes.io/gce-pd"
   parameters = {
-    type = var.gke_storage_class
+    type             = var.gke_storage_class
     replication-type = var.gke_disk_replication
   }
   depends_on = [time_sleep.sleep_for_cluster_fix_helm_6361]
@@ -419,13 +419,13 @@ resource "kubernetes_storage_class" "storage_class" {
 
 # Secret for Postgres DB Pass
 module "gitlab_db_pass" {
-  source           = "./modules/secret_manager"
-  project          = var.project_id
-  region           = var.region
-  secret_id        = var.gcp_existing_db_secret_name
-  k8s_namespace    = var.gitlab_namespace
-  k8s_secret_name  = "gitlab-postgres-secret"
-  k8s_secret_key   = "password"
+  source          = "./modules/secret_manager"
+  project         = var.project_id
+  region          = var.region
+  secret_id       = var.gcp_existing_db_secret_name
+  k8s_namespace   = var.gitlab_namespace
+  k8s_secret_name = "gitlab-postgres-secret"
+  k8s_secret_key  = "password"
 
   depends_on = [kubernetes_namespace.gitlab_namespace]
 }
@@ -491,39 +491,39 @@ resource "kubernetes_secret" "postgresql_mtls_secret" {
   }
 
   data = {
-    cert              = google_sql_ssl_cert.postgres_client_cert.cert
-    private_key       = google_sql_ssl_cert.postgres_client_cert.private_key
-    server_ca_cert    = google_sql_ssl_cert.postgres_client_cert.server_ca_cert
+    cert           = google_sql_ssl_cert.postgres_client_cert.cert
+    private_key    = google_sql_ssl_cert.postgres_client_cert.private_key
+    server_ca_cert = google_sql_ssl_cert.postgres_client_cert.server_ca_cert
   }
   depends_on = [kubernetes_namespace.gitlab_namespace]
 }
 
 #Secret for SMTP Pass
 module "gitlab_smtp_pass" {
-  source           = "./modules/secret_manager"
-  project          = var.project_id
-  region           = var.region
-  secret_id        = var.gcp_existing_smtp_secret_name
-  k8s_namespace    = var.gitlab_namespace
-  k8s_secret_name  = "gitlab-smtp-secret"
-  k8s_secret_key   = "password"
+  source          = "./modules/secret_manager"
+  project         = var.project_id
+  region          = var.region
+  secret_id       = var.gcp_existing_smtp_secret_name
+  k8s_namespace   = var.gitlab_namespace
+  k8s_secret_name = "gitlab-smtp-secret"
+  k8s_secret_key  = "password"
 
-  count            = var.gitlab_enable_smtp ? 1 : 0
+  count      = var.gitlab_enable_smtp ? 1 : 0
   depends_on = [kubernetes_namespace.gitlab_namespace]
 }
 
 #Secret for Omniauth Pass
 module "gitlab_omniauth_pass" {
-  source           = "./modules/secret_manager"
-  project          = var.project_id
-  region           = var.region
-  secret_id        = var.gcp_existing_omniauth_secret_name
-  k8s_namespace    = var.gitlab_namespace
-  k8s_secret_name  = "gitlab-omniauth-secret"
-  k8s_secret_key   = "provider"
+  source          = "./modules/secret_manager"
+  project         = var.project_id
+  region          = var.region
+  secret_id       = var.gcp_existing_omniauth_secret_name
+  k8s_namespace   = var.gitlab_namespace
+  k8s_secret_name = "gitlab-omniauth-secret"
+  k8s_secret_key  = "provider"
 
-  count            = var.gitlab_enable_omniauth ? 1 : 0
-  depends_on       = [kubernetes_namespace.gitlab_namespace]
+  count      = var.gitlab_enable_omniauth ? 1 : 0
+  depends_on = [kubernetes_namespace.gitlab_namespace]
 }
 
 data "google_compute_address" "gitlab" {
@@ -535,9 +535,9 @@ data "google_compute_address" "gitlab" {
 }
 
 locals {
-  gitlab_address     = var.gitlab_address_name == "" ? google_compute_address.gitlab[0].address : data.google_compute_address.gitlab[0].address
-  domain             = var.domain != "" ? var.domain : "${local.gitlab_address}.xip.io"
-  gitlab_smtp_user   = var.gitlab_enable_smtp != false ? var.gitlab_smtp_user : ""
+  gitlab_address   = var.gitlab_address_name == "" ? google_compute_address.gitlab[0].address : data.google_compute_address.gitlab[0].address
+  domain           = var.domain != "" ? var.domain : "${local.gitlab_address}.xip.io"
+  gitlab_smtp_user = var.gitlab_enable_smtp != false ? var.gitlab_smtp_user : ""
 }
 
 data "template_file" "helm_values" {
@@ -560,9 +560,9 @@ data "template_file" "helm_values" {
     ENABLE_CRON_BACKUP    = var.gitlab_enable_cron_backup
     SCHEDULE_CRON_BACKUP  = var.gitlab_schedule_cron_backup
     GITALY_PV_SIZE        = var.gitlab_gitaly_disk_size
-    PV_STORAGE_CLASS      = var.gke_storage_class 
+    PV_STORAGE_CLASS      = var.gke_storage_class
     ENABLE_SMTP           = var.gitlab_enable_smtp
-    SMTP_USER             = local.gitlab_smtp_user 
+    SMTP_USER             = local.gitlab_smtp_user
     BACKUP_EXTRA          = var.gitlab_backup_extra_args
     TIMEZONE              = var.gitlab_time_zone
     ENABLE_OMNIAUTH       = var.gitlab_enable_omniauth
@@ -574,17 +574,17 @@ data "template_file" "helm_values" {
     RESTORE_PV_SC         = var.gke_sc_gitlab_restore_disk
 
     #Bucket Names
-    LFS_BCKT              = local.git_lfs_bucket_name
-    ARTIFACTS_BCKT        = local.gitlab_artifacts_bucket_name
-    UPLOADS_BCKT          = local.gitlab_uploads_bucket_name
-    PACKAGES_BCKT         = local.gitlab_packages_bucket_name
-    EXT_DIFF_BCKT         = local.gitlab_external_diffs_bucket_name
-    TERRAFORM_BCKT        = local.gitlab_terraform_state_bucket_name
-    DEP_PROXY_BCKT        = local.gitlab_dependency_proxy_bucket_name
-    BACKUP_BCKT           = local.gitlab_backups_bucket_name
-    BACKUP_TMP_BCKT       = local.gitlab_tmp_backups_bucket_name
-    REGISTRY_BCKT         = local.gitlab_registry_bucket_name
-    RUNNER_CACHE_BCKT     = local.gitlab_runner_cache_bucket_name
+    LFS_BCKT          = local.git_lfs_bucket_name
+    ARTIFACTS_BCKT    = local.gitlab_artifacts_bucket_name
+    UPLOADS_BCKT      = local.gitlab_uploads_bucket_name
+    PACKAGES_BCKT     = local.gitlab_packages_bucket_name
+    EXT_DIFF_BCKT     = local.gitlab_external_diffs_bucket_name
+    TERRAFORM_BCKT    = local.gitlab_terraform_state_bucket_name
+    DEP_PROXY_BCKT    = local.gitlab_dependency_proxy_bucket_name
+    BACKUP_BCKT       = local.gitlab_backups_bucket_name
+    BACKUP_TMP_BCKT   = local.gitlab_tmp_backups_bucket_name
+    REGISTRY_BCKT     = local.gitlab_registry_bucket_name
+    RUNNER_CACHE_BCKT = local.gitlab_runner_cache_bucket_name
 
     # HPA settings for cost/performance optimization
     HPA_MIN_REPLICAS_REGISTRY   = var.gitlab_hpa_min_replicas_registry
@@ -630,4 +630,14 @@ resource "helm_release" "gitlab" {
     module.cloud_nat,
     module.gitlab_db_pass,
   ]
+}
+
+module "monitoring" {
+  source                      = "sparkfabrik/gcp-http-monitoring/sparkfabrik"
+  version                     = "~> 0.4.0"
+  count                       = var.notification_channels != "" ? 1 : 0
+  gcp_project                 = var.project_id
+  uptime_monitoring_host      = var.domain
+  uptime_monitoring_path      = var.uptime_monitoring_path
+  alert_notification_channels = var.notification_channels
 }
