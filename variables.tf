@@ -250,8 +250,9 @@ variable "gke_sc_gitlab_restore_disk" {
 }
 
 variable "gke_cluster_resource_labels" {
-  type    = map(string)
-  default = {}
+  type        = map(string)
+  description = "The GCE resource labels (a map of key/value pairs) to be applied to the cluster"
+  default     = {}
 }
 
 ##################
@@ -496,4 +497,5 @@ variable "uptime_monitoring_path" {
 variable "notification_channels" {
   type        = list(string)
   description = "Identifies the notification channels to which notifications should be sent when incidents are opened or closed. The syntax of the entries in this field is projects/[PROJECT_ID]/notificationChannels/[CHANNEL_ID]"
+  default     = [""]
 }

@@ -73,6 +73,7 @@ Then perform the following commands on the root folder:
 | gitlab\_schedule\_cron\_backup | Setup Cron Job for Gitlab Scheduled Backup using unix-cron string format. Default to '0 1 \* \* \*' (Everyday at 1 AM). | `string` | `"0 1 * * *"` | no |
 | gitlab\_smtp\_user | Setup email sender address for Gitlab smtp server to send emails. | `string` | `"user@example.com"` | no |
 | gitlab\_time\_zone | Setup timezone for gitlab containers | `string` | `"Europe/Rome"` | no |
+| gke\_cluster\_resource\_labels | The GCE resource labels (a map of key/value pairs) to be applied to the cluster | `map(string)` | `{}` | no |
 | gke\_datapath | The desired datapath provider for this cluster. By default, DATAPATH\_PROVIDER\_UNSPECIFIED enables the IPTables-based kube-proxy implementation. ADVANCED\_DATAPATH enables Dataplane-V2 feature. | `string` | `"DATAPATH_PROVIDER_UNSPECIFIED"` | no |
 | gke\_disk\_replication | Setup replication type for disk persistent volune. Possible values none or regional-pd. Default to none. | `string` | `"none"` | no |
 | gke\_enable\_backup\_agent | Whether Backup for GKE agent is enabled for this cluster. | `bool` | `false` | no |
@@ -92,6 +93,7 @@ Then perform the following commands on the root folder:
 | gke\_storage\_class | Default storage class for GKE Cluster. Default pd-sdd. | `string` | `"pd-ssd"` | no |
 | gke\_version | Version of GKE to use for the GitLab cluster | `string` | `"latest"` | no |
 | helm\_chart\_version | Helm chart version to install during deployment - Default Gitlab 14.9.3 | `string` | `"5.9.3"` | no |
+| notification\_channels | Identifies the notification channels to which notifications should be sent when incidents are opened or closed. The syntax of the entries in this field is projects/[PROJECT\_ID]/notificationChannels/[CHANNEL\_ID] | `list(string)` | <pre>[<br>  ""<br>]</pre> | no |
 | postgresql\_availability\_type | The availability type of the Cloud SQL instance, high availability (REGIONAL) or single zone (ZONAL). | `string` | `"REGIONAL"` | no |
 | postgresql\_backup\_retained\_count | Numeber of postgres backup to be retained. Default 30. | `number` | `"30"` | no |
 | postgresql\_backup\_start\_time | HH:MM format time indicating when postgres backup configuration starts. | `string` | `"02:00"` | no |
@@ -106,6 +108,7 @@ Then perform the following commands on the root folder:
 | redis\_size | Redis memory size in GiB. | `number` | `1` | no |
 | redis\_tier | The service tier of the instance. Must be one of these values BASIC and STANDARD\_HA | `string` | `"STANDARD_HA"` | no |
 | region | GCP region to deploy resources to | `string` | `"europe-west1"` | no |
+| uptime\_monitoring\_path | The path to the page to run the check against. | `string` | `"/-/liveness"` | no |
 
 ## Outputs
 
