@@ -29,12 +29,6 @@ variable "region" {
   default     = "europe-west1"
 }
 
-variable "allow_force_destroy" {
-  type        = bool
-  default     = false
-  description = "Allows full cleanup of resources by disabling any deletion safe guards"
-}
-
 variable "gitlab_address_name" {
   type        = string
   description = "Name of the address to use for GitLab ingress"
@@ -131,10 +125,34 @@ variable "gcs_bucket_random_suffix" {
   default     = false
 }
 
+variable "gcs_bucket_allow_force_destroy" {
+  type        = bool
+  default     = false
+  description = "Allows full cleanup of buckets by disabling any deletion safe guards"
+}
+
 variable "gcs_bucket_storage_class" {
   type        = string
   description = "Bucket storage class. Supported values include: STANDARD, MULTI_REGIONAL, REGIONAL, NEARLINE, COLDLINE, ARCHIVE "
   default     = "STANDARD"
+}
+
+variable "gcs_bucket_versioning" {
+  type        = bool
+  description = "Setup Object Storage versioning for all Bucket created."
+  default     = false
+}
+
+variable "gcs_bucket_backup_sc_change" {
+  type        = number
+  description = "When the backup lifecycle is enabled, set the number of days after the storage class changes to coldline"
+  default     = 14
+}
+
+variable "gcs_bucket_backup_duration" {
+  type        = number
+  description = "When the backup lifecycle is enabled, set the number of days after which the backup files are deleted"
+  default     = 120
 }
 
 ##################
@@ -240,13 +258,13 @@ variable "gke_istio_auth" {
 variable "gke_sc_gitlab_backup_disk" {
   type        = string
   description = "Storage class for Perstistent Volume used for extra space in Backup Cron Job . Default pd-sdd."
-  default     = "pd-ssd"
+  default     = "standard"
 }
 
 variable "gke_sc_gitlab_restore_disk" {
   type        = string
   description = "Storage class for Perstistent Volume used for extra space in Backup Restore Job. Default pd-sdd."
-  default     = "pd-ssd"
+  default     = "standard"
 }
 
 variable "gke_cluster_resource_labels" {

@@ -25,28 +25,10 @@ provider "google-beta" {
 locals {
   # Postgres DB Name
   gitlab_db_name = var.postgresql_db_random_suffix ? "${var.gitlab_db_name}-${random_id.suffix[0].hex}" : var.gitlab_db_name
-  # Gitlab Bucket Names
-  gitlab_backups_bucket_name          = var.gcs_bucket_random_suffix ? "${var.project_id}-gitlab-backups-${random_id.bucket_suffix[0].hex}" : "${var.project_id}-gitlab-backups"
-  gitlab_tmp_backups_bucket_name      = var.gcs_bucket_random_suffix ? "${var.project_id}-gitlab-tmp-backups-${random_id.bucket_suffix[0].hex}" : "${var.project_id}-gitlab-tmp-backups"
-  gitlab_uploads_bucket_name          = var.gcs_bucket_random_suffix ? "${var.project_id}-gitlab-uploads-${random_id.bucket_suffix[0].hex}" : "${var.project_id}-gitlab-uploads"
-  gitlab_artifacts_bucket_name        = var.gcs_bucket_random_suffix ? "${var.project_id}-gitlab-artifacts-${random_id.bucket_suffix[0].hex}" : "${var.project_id}-gitlab-artifacts"
-  git_lfs_bucket_name                 = var.gcs_bucket_random_suffix ? "${var.project_id}-git-lfs-${random_id.bucket_suffix[0].hex}" : "${var.project_id}-git-lfs"
-  gitlab_packages_bucket_name         = var.gcs_bucket_random_suffix ? "${var.project_id}-gitlab-packages-${random_id.bucket_suffix[0].hex}" : "${var.project_id}-gitlab-packages"
-  gitlab_registry_bucket_name         = var.gcs_bucket_random_suffix ? "${var.project_id}-gitlab-registry-${random_id.bucket_suffix[0].hex}" : "${var.project_id}-gitlab-registry"
-  gitlab_pseudo_bucket_name           = var.gcs_bucket_random_suffix ? "${var.project_id}-pseudo-${random_id.bucket_suffix[0].hex}" : "${var.project_id}-pseudo"
-  gitlab_runner_cache_bucket_name     = var.gcs_bucket_random_suffix ? "${var.project_id}-runner-cache-${random_id.bucket_suffix[0].hex}" : "${var.project_id}-runner-cache"
-  gitlab_dependency_proxy_bucket_name = var.gcs_bucket_random_suffix ? "${var.project_id}-dependency-proxy-${random_id.bucket_suffix[0].hex}" : "${var.project_id}-dependency-proxy"
-  gitlab_terraform_state_bucket_name  = var.gcs_bucket_random_suffix ? "${var.project_id}-terraform-state-${random_id.bucket_suffix[0].hex}" : "${var.project_id}-terraform-state"
-  gitlab_external_diffs_bucket_name   = var.gcs_bucket_random_suffix ? "${var.project_id}-gitlab-external-diffs-${random_id.bucket_suffix[0].hex}" : "${var.project_id}-gitlab-external-diffs"
 }
 
 resource "random_id" "suffix" {
   count       = var.postgresql_db_random_suffix ? 2 : 1
-  byte_length = 4
-}
-
-resource "random_id" "bucket_suffix" {
-  count       = var.gcs_bucket_random_suffix ? 1 : 0
   byte_length = 4
 }
 
@@ -96,12 +78,6 @@ resource "google_service_account" "gitlab_gcs" {
 
 resource "google_service_account_key" "gitlab_gcs" {
   service_account_id = google_service_account.gitlab_gcs.name
-}
-
-resource "google_project_iam_member" "project" {
-  project = var.project_id
-  role    = "roles/storage.admin"
-  member  = "serviceAccount:${google_service_account.gitlab_gcs.email}"
 }
 
 # Networking
@@ -248,88 +224,80 @@ resource "google_redis_instance" "gitlab" {
 }
 
 # Cloud Storage
-resource "google_storage_bucket" "gitlab_backups" {
-  name          = local.gitlab_backups_bucket_name
-  location      = var.region
-  storage_class = var.gcs_bucket_storage_class
-  force_destroy = var.allow_force_destroy
-}
+module "gitlab_buckets" {
+  source           = "terraform-google-modules/cloud-storage/google"
+  version          = "~> 3.4"
+  project_id       = var.project_id
+  location         = var.region
+  storage_class    = var.gcs_bucket_storage_class
+  prefix           = var.project_id
+  randomize_suffix = var.gcs_bucket_random_suffix
+  names = ["-gitlab-artifacts-",
+    "-gitlab-backups-",
+    "-gitlab-dependency-proxy-",
+    "-gitlab-external-diffs-",
+    "-gitlab-git-lfs-",
+    "-gitlab-packages-",
+    "-gitlab-registry-",
+    "-gitlab-pseudo-",
+    "-gitlab-runner-cache-",
+    "-gitlab-terraform-state-",
+    "-gitlab-tmp-backups-",
+    "-gitlab-uploads-"
+  ]
+  versioning = {
+    "-gitlab-artifacts-"        = var.gcs_bucket_versioning
+    "-gitlab-backups-"          = var.gcs_bucket_versioning
+    "-gitlab-dependency-proxy-" = var.gcs_bucket_versioning
+    "-gitlab-external-diffs-"   = var.gcs_bucket_versioning
+    "-gitlab-git-lfs-"          = var.gcs_bucket_versioning
+    "-gitlab-packages-"         = var.gcs_bucket_versioning
+    "-gitlab-registry-"         = var.gcs_bucket_versioning
+    "-gitlab-pseudo-"           = var.gcs_bucket_versioning
+    "-gitlab-runner-cache-"     = var.gcs_bucket_versioning
+    "-gitlab-terraform-state-"  = var.gcs_bucket_versioning
+    "-gitlab-tmp-backups-"      = var.gcs_bucket_versioning
+    "-gitlab-uploads-"          = var.gcs_bucket_versioning
+  }
+  force_destroy = {
+    "-gitlab-artifacts-"        = var.gcs_bucket_allow_force_destroy
+    "-gitlab-backups-"          = var.gcs_bucket_allow_force_destroy
+    "-gitlab-dependency-proxy-" = var.gcs_bucket_allow_force_destroy
+    "-gitlab-external-diffs-"   = var.gcs_bucket_allow_force_destroy
+    "-gitlab-git-lfs-"          = var.gcs_bucket_allow_force_destroy
+    "-gitlab-packages-"         = var.gcs_bucket_allow_force_destroy
+    "-gitlab-registry-"         = var.gcs_bucket_allow_force_destroy
+    "-gitlab-pseudo-"           = var.gcs_bucket_allow_force_destroy
+    "-gitlab-runner-cache-"     = var.gcs_bucket_allow_force_destroy
+    "-gitlab-terraform-state-"  = var.gcs_bucket_allow_force_destroy
+    "-gitlab-tmp-backups-"      = var.gcs_bucket_allow_force_destroy
+    "-gitlab-uploads-"          = var.gcs_bucket_allow_force_destroy
+  }
 
-resource "google_storage_bucket" "gitlab_tmp_backups" {
-  name          = local.gitlab_tmp_backups_bucket_name
-  location      = var.region
-  storage_class = var.gcs_bucket_storage_class
-  force_destroy = var.allow_force_destroy
-}
-
-resource "google_storage_bucket" "gitlab_uploads" {
-  name          = local.gitlab_uploads_bucket_name
-  location      = var.region
-  storage_class = var.gcs_bucket_storage_class
-  force_destroy = var.allow_force_destroy
-}
-
-resource "google_storage_bucket" "gitlab_artifacts" {
-  name          = local.gitlab_artifacts_bucket_name
-  location      = var.region
-  storage_class = var.gcs_bucket_storage_class
-  force_destroy = var.allow_force_destroy
-}
-
-resource "google_storage_bucket" "git_lfs" {
-  name          = local.git_lfs_bucket_name
-  location      = var.region
-  storage_class = var.gcs_bucket_storage_class
-  force_destroy = var.allow_force_destroy
-}
-
-resource "google_storage_bucket" "gitlab_packages" {
-  name          = local.gitlab_packages_bucket_name
-  location      = var.region
-  storage_class = var.gcs_bucket_storage_class
-  force_destroy = var.allow_force_destroy
-}
-
-resource "google_storage_bucket" "gitlab_registry" {
-  name          = local.gitlab_registry_bucket_name
-  location      = var.region
-  storage_class = var.gcs_bucket_storage_class
-  force_destroy = var.allow_force_destroy
-}
-
-resource "google_storage_bucket" "gitlab_pseudo" {
-  name          = local.gitlab_pseudo_bucket_name
-  location      = var.region
-  storage_class = var.gcs_bucket_storage_class
-  force_destroy = var.allow_force_destroy
-}
-
-resource "google_storage_bucket" "gitlab_runner_cache" {
-  name          = local.gitlab_runner_cache_bucket_name
-  location      = var.region
-  storage_class = var.gcs_bucket_storage_class
-  force_destroy = var.allow_force_destroy
-}
-
-resource "google_storage_bucket" "gitlab_dependency_proxy" {
-  name          = local.gitlab_dependency_proxy_bucket_name
-  location      = var.region
-  storage_class = var.gcs_bucket_storage_class
-  force_destroy = var.allow_force_destroy
-}
-
-resource "google_storage_bucket" "gitlab_terraform_state" {
-  name          = local.gitlab_terraform_state_bucket_name
-  location      = var.region
-  storage_class = var.gcs_bucket_storage_class
-  force_destroy = var.allow_force_destroy
-}
-
-resource "google_storage_bucket" "gitlab_external_diffs" {
-  name          = local.gitlab_external_diffs_bucket_name
-  location      = var.region
-  storage_class = var.gcs_bucket_storage_class
-  force_destroy = var.allow_force_destroy
+  bucket_lifecycle_rules = {
+    "-gitlab-backups-" = [{
+      action = {
+        type          = "SetStorageClass"
+        storage_class = "COLDLINE"
+      }
+      condition = {
+        age                   = var.gcs_bucket_backup_sc_change
+        matches_storage_class = var.gcs_bucket_storage_class
+      }
+      action = {
+        type = "Delete"
+      }
+      condition = {
+        age                   = var.gcs_bucket_backup_duration
+        with_state            = "ANY"
+        matches_storage_class = "COLDLINE"
+      }
+    }]
+  }
+  admins = [
+    "serviceAccount:${google_service_account.gitlab_gcs.email}"
+  ]
+  set_admin_roles = true
 }
 
 # GKE Cluster
@@ -464,7 +432,7 @@ ${base64decode(google_service_account_key.gitlab_gcs.private_key)}
 EOT
     storage    = <<EOT
 gcs:
-  bucket: ${local.gitlab_registry_bucket_name}
+  bucket: ${module.gitlab_buckets.names_list[6].name}
   keyfile: /etc/docker/registry/storage/gcs.json
 EOT
   }
@@ -576,17 +544,17 @@ data "template_file" "helm_values" {
     RESTORE_PV_SC         = var.gke_sc_gitlab_restore_disk
 
     #Bucket Names
-    LFS_BCKT          = local.git_lfs_bucket_name
-    ARTIFACTS_BCKT    = local.gitlab_artifacts_bucket_name
-    UPLOADS_BCKT      = local.gitlab_uploads_bucket_name
-    PACKAGES_BCKT     = local.gitlab_packages_bucket_name
-    EXT_DIFF_BCKT     = local.gitlab_external_diffs_bucket_name
-    TERRAFORM_BCKT    = local.gitlab_terraform_state_bucket_name
-    DEP_PROXY_BCKT    = local.gitlab_dependency_proxy_bucket_name
-    BACKUP_BCKT       = local.gitlab_backups_bucket_name
-    BACKUP_TMP_BCKT   = local.gitlab_tmp_backups_bucket_name
-    REGISTRY_BCKT     = local.gitlab_registry_bucket_name
-    RUNNER_CACHE_BCKT = local.gitlab_runner_cache_bucket_name
+    ARTIFACTS_BCKT    = module.gitlab_buckets.names_list[0].name
+    BACKUP_BCKT       = module.gitlab_buckets.names_list[1].name
+    DEP_PROXY_BCKT    = module.gitlab_buckets.names_list[2].name
+    EXT_DIFF_BCKT     = module.gitlab_buckets.names_list[3].name
+    LFS_BCKT          = module.gitlab_buckets.names_list[4].name
+    PACKAGES_BCKT     = module.gitlab_buckets.names_list[5].name
+    REGISTRY_BCKT     = module.gitlab_buckets.names_list[6].name
+    RUNNER_CACHE_BCKT = module.gitlab_buckets.names_list[8].name
+    TERRAFORM_BCKT    = module.gitlab_buckets.names_list[9].name
+    BACKUP_TMP_BCKT   = module.gitlab_buckets.names_list[10].name
+    UPLOADS_BCKT      = module.gitlab_buckets.names_list[11].name
 
     # HPA settings for cost/performance optimization
     HPA_MIN_REPLICAS_REGISTRY   = var.gitlab_hpa_min_replicas_registry
