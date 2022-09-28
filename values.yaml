@@ -10,6 +10,7 @@ global:
 
   ## doc/charts/globals.md#configure-ingress-settings
   ingress:
+    apiVersion: networking.k8s.io/v1
     configureCertmanager: true
     enabled: true
     tls:
@@ -24,7 +25,7 @@ global:
     port: 5432
     username: gitlab
     database: gitlabhq_production
-    ssl: 
+    ssl:
       secret: gitlab-postgres-mtls
       clientCertificate: cert
       clientKey: private_key
@@ -39,7 +40,7 @@ global:
   minio:
     enabled: false
 
-   ## https://docs.gitlab.com/charts/charts/globals#configure-grafana-integration
+  ## https://docs.gitlab.com/charts/charts/globals#configure-grafana-integration
   grafana:
     enabled: ${INSTALL_GRAFANA}
 
@@ -56,10 +57,11 @@ global:
     object_store:
       enabled: true
       proxy_download: false
-      storage_options: {}
+      storage_options:
+        {}
         # server_side_encryption:
         # server_side_encryption_kms_key_id
-      connection: 
+      connection:
         secret: gitlab-rails-storage
         key: connection
     lfs:
@@ -87,7 +89,7 @@ global:
     backups:
       bucket: ${BACKUP_BCKT}
       tmpBucket: ${BACKUP_TMP_BCKT}
-    
+
     ## https://docs.gitlab.com/charts/charts/globals#omniauth
     omniauth:
       enabled: ${ENABLE_OMNIAUTH}
@@ -97,22 +99,22 @@ global:
         - secret: gitlab-omniauth-secret
           key: provider
 
-## https://docs.gitlab.com/charts/charts/gitlab/kas/
+  ## https://docs.gitlab.com/charts/charts/gitlab/kas/
   kas:
     enabled: ${INSTALL_KAS}
-  
+
   ## https://docs.gitlab.com/charts/charts/globals#configure-registry-settings
   ## If we do not set the legacy bucket name here, the registry is not included
   ## in the Gitlab backup archive.
   registry:
-     bucket: ${REGISTRY_BCKT}
+    bucket: ${REGISTRY_BCKT}
 
   ## https://docs.gitlab.com/charts/installation/deployment#outgoing-email
   ## Outgoing email server settings
   smtp:
     enabled: ${ENABLE_SMTP}
     user_name: ${SMTP_USER}
-    password: 
+    password:
       secret: gitlab-smtp-secret
       key: password
     starttls_auto: true
@@ -124,9 +126,9 @@ global:
 
   ## https://docs.gitlab.com/charts/charts/globals
   extraEnv:
-    PGSSLCERT: '/etc/gitlab/postgres/ssl/client-certificate.pem'
-    PGSSLKEY: '/etc/gitlab/postgres/ssl/client-key.pem'
-    PGSSLROOTCERT: '/etc/gitlab/postgres/ssl/server-ca.pem'
+    PGSSLCERT: "/etc/gitlab/postgres/ssl/client-certificate.pem"
+    PGSSLKEY: "/etc/gitlab/postgres/ssl/client-key.pem"
+    PGSSLROOTCERT: "/etc/gitlab/postgres/ssl/server-ca.pem"
 
 ## Settings to for the Let's Encrypt ACME Issuer
 certmanager-issuer:
@@ -196,7 +198,7 @@ gitlab:
   kas:
     minReplicas: ${HPA_MIN_REPLICAS_KAS}
     maxReplicas: ${HPA_MAX_REPLICAS_KAS}
-  webservice: 
+  webservice:
     minReplicas: ${HPA_MIN_REPLICAS_WEBSERVICE}
     maxReplicas: ${HPA_MAX_REPLICAS_WEBSERVICE}
   sidekiq:
@@ -209,7 +211,7 @@ gitlab:
         enabled: ${ENABLE_CRON_BACKUP}
         failedJobsHistoryLimit: 7
         successfulJobsHistoryLimit: 3
-        schedule: '${SCHEDULE_CRON_BACKUP}'
+        schedule: "${SCHEDULE_CRON_BACKUP}"
         extraArgs: ${BACKUP_EXTRA}
         persistence:
           enabled: ${ENABLE_BACKUP_PV}
