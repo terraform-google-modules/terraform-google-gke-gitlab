@@ -33,6 +33,7 @@ Then perform the following commands on the root folder:
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| allow\_force\_destroy | Allows full cleanup of resources by disabling any deletion safe guards | `bool` | `false` | no |
 | certmanager\_email | Email used to retrieve SSL certificates from Let's Encrypt | `string` | n/a | yes |
 | domain | Domain for hosting gitlab functionality (ie mydomain.com would access gitlab at gitlab.mydomain.com) | `string` | `""` | no |
 | gcp\_existing\_db\_secret\_name | Setup the GCP secret name where to retrieve the password value that will be used for postgres DB. In case an empty string is passed,a random value will be filled in a default gcp secret named gitlab-db-password | `string` | `""` | no |
@@ -40,10 +41,9 @@ Then perform the following commands on the root folder:
 | gcp\_existing\_smtp\_secret\_name | Only if STMP is enabled. Setup the GCP secret name where to retrieve the password value that will be used for Smtp Account. | `string` | `""` | no |
 | gcs\_bucket\_allow\_force\_destroy | Allows full cleanup of buckets by disabling any deletion safe guards | `bool` | `false` | no |
 | gcs\_bucket\_backup\_duration | When the backup lifecycle is enabled, set the number of days after which the backup files are deleted | `number` | `120` | no |
-| gcs\_bucket\_backup\_sc\_change | When the backup lifecycle is enabled, set the number of days after the storage class changes to coldline | `number` | `14` | no |
-| gcs\_bucket\_random\_suffix | Sets random suffix at the end of the bucket name. | `bool` | `false` | no |
+| gcs\_bucket\_backup\_sc\_change | When the backup lifecycle is enabled, set the number of days after the storage class changes to coldline | `number` | `30` | no |
 | gcs\_bucket\_storage\_class | Bucket storage class. Supported values include: STANDARD, MULTI\_REGIONAL, REGIONAL, NEARLINE, COLDLINE, ARCHIVE | `string` | `"STANDARD"` | no |
-| gcs\_bucket\_versioning | Setup Object Storage versioning for all Bucket created. | `bool` | `false` | no |
+| gcs\_bucket\_versioning | Setup Object Storage versioning for all Bucket created. | `bool` | `true` | no |
 | gitlab\_address\_name | Name of the address to use for GitLab ingress | `string` | `""` | no |
 | gitlab\_backup\_extra\_args | Add a string of extra arguments for the gitlab backup-utility. | `string` | `""` | no |
 | gitlab\_backup\_pv\_size | Set the size of the additional storage for Backup TAR Creation | `number` | `100` | no |

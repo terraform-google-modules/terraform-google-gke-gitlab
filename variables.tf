@@ -119,12 +119,6 @@ variable "redis_size" {
 #  GCS SECTION   #
 ##################
 
-variable "gcs_bucket_random_suffix" {
-  type        = bool
-  description = "Sets random suffix at the end of the bucket name."
-  default     = false
-}
-
 variable "gcs_bucket_allow_force_destroy" {
   type        = bool
   default     = false
@@ -140,13 +134,13 @@ variable "gcs_bucket_storage_class" {
 variable "gcs_bucket_versioning" {
   type        = bool
   description = "Setup Object Storage versioning for all Bucket created."
-  default     = false
+  default     = true
 }
 
 variable "gcs_bucket_backup_sc_change" {
   type        = number
   description = "When the backup lifecycle is enabled, set the number of days after the storage class changes to coldline"
-  default     = 14
+  default     = 30
 }
 
 variable "gcs_bucket_backup_duration" {

@@ -25,6 +25,25 @@ provider "google-beta" {
 locals {
   # Postgres DB Name
   gitlab_db_name = var.postgresql_db_random_suffix ? "${var.gitlab_db_name}-${random_id.suffix[0].hex}" : var.gitlab_db_name
+  
+  buckets = [
+    "artifacts",
+    "runner-cache",
+    "backups",
+    "dependency-proxy",
+    "external-diffs",
+    "git-lfs",
+    "packages",
+    "registry",
+    "pseudo",
+    "terraform-state",
+    "tmp-backups",
+    "uploads"
+  ]
+
+  buckets_with_lifecycle_rules = [
+    "backups",
+  ]
 }
 
 resource "random_id" "suffix" {
@@ -224,80 +243,60 @@ resource "google_redis_instance" "gitlab" {
 }
 
 # Cloud Storage
-module "gitlab_buckets" {
-  source           = "terraform-google-modules/cloud-storage/google"
-  version          = "~> 3.4"
-  project_id       = var.project_id
-  location         = var.region
-  storage_class    = var.gcs_bucket_storage_class
-  prefix           = var.project_id
-  randomize_suffix = var.gcs_bucket_random_suffix
-  names = ["-gitlab-artifacts-",
-    "-gitlab-backups-",
-    "-gitlab-dependency-proxy-",
-    "-gitlab-external-diffs-",
-    "-gitlab-git-lfs-",
-    "-gitlab-packages-",
-    "-gitlab-registry-",
-    "-gitlab-pseudo-",
-    "-gitlab-runner-cache-",
-    "-gitlab-terraform-state-",
-    "-gitlab-tmp-backups-",
-    "-gitlab-uploads-"
-  ]
-  versioning = {
-    "-gitlab-artifacts-"        = var.gcs_bucket_versioning
-    "-gitlab-backups-"          = var.gcs_bucket_versioning
-    "-gitlab-dependency-proxy-" = var.gcs_bucket_versioning
-    "-gitlab-external-diffs-"   = var.gcs_bucket_versioning
-    "-gitlab-git-lfs-"          = var.gcs_bucket_versioning
-    "-gitlab-packages-"         = var.gcs_bucket_versioning
-    "-gitlab-registry-"         = var.gcs_bucket_versioning
-    "-gitlab-pseudo-"           = var.gcs_bucket_versioning
-    "-gitlab-runner-cache-"     = var.gcs_bucket_versioning
-    "-gitlab-terraform-state-"  = var.gcs_bucket_versioning
-    "-gitlab-tmp-backups-"      = var.gcs_bucket_versioning
-    "-gitlab-uploads-"          = var.gcs_bucket_versioning
-  }
-  force_destroy = {
-    "-gitlab-artifacts-"        = var.gcs_bucket_allow_force_destroy
-    "-gitlab-backups-"          = var.gcs_bucket_allow_force_destroy
-    "-gitlab-dependency-proxy-" = var.gcs_bucket_allow_force_destroy
-    "-gitlab-external-diffs-"   = var.gcs_bucket_allow_force_destroy
-    "-gitlab-git-lfs-"          = var.gcs_bucket_allow_force_destroy
-    "-gitlab-packages-"         = var.gcs_bucket_allow_force_destroy
-    "-gitlab-registry-"         = var.gcs_bucket_allow_force_destroy
-    "-gitlab-pseudo-"           = var.gcs_bucket_allow_force_destroy
-    "-gitlab-runner-cache-"     = var.gcs_bucket_allow_force_destroy
-    "-gitlab-terraform-state-"  = var.gcs_bucket_allow_force_destroy
-    "-gitlab-tmp-backups-"      = var.gcs_bucket_allow_force_destroy
-    "-gitlab-uploads-"          = var.gcs_bucket_allow_force_destroy
+resource "random_string" "random_suffix" {
+  length  = 4
+  upper   = "false"
+  lower   = "true"
+  numeric = "false"
+  special = "false"
+}
+
+resource "google_storage_bucket" "gitlab_bucket" {
+  for_each = toset(local.buckets)
+
+  name          = "${var.project_id}-gitlab-${each.value}-${random_string.random_suffix.result}"
+  location      = var.region
+  storage_class = var.gcs_bucket_storage_class
+  force_destroy = var.gcs_bucket_allow_force_destroy
+
+  versioning {
+    enabled = var.gcs_bucket_versioning
   }
 
-  bucket_lifecycle_rules = {
-    "-gitlab-backups-" = [{
-      action = {
+  dynamic "lifecycle_rule" {
+    for_each = contains(local.buckets_with_lifecycle_rules, each.value) ? [1] : []
+    content {
+      action {
         type          = "SetStorageClass"
         storage_class = "COLDLINE"
       }
-      condition = {
+      condition {
         age                   = var.gcs_bucket_backup_sc_change
-        matches_storage_class = var.gcs_bucket_storage_class
+        matches_storage_class = ["STANDARD"]
       }
-      action = {
+    }
+  }
+  dynamic "lifecycle_rule" {
+    for_each = contains(local.buckets_with_lifecycle_rules, each.value) ? [1] : []
+    content {
+      action {
         type = "Delete"
       }
-      condition = {
+      condition {
         age                   = var.gcs_bucket_backup_duration
-        with_state            = "ANY"
-        matches_storage_class = "COLDLINE"
+        matches_storage_class = ["COLDLINE"]
       }
-    }]
+    }
   }
-  admins = [
+}
+
+resource "google_storage_bucket_iam_binding" "gitlab_bucket_iam_binding_admin" {
+  for_each = google_storage_bucket.gitlab_bucket
+  bucket   = each.value.name
+  role     = "roles/storage.objectAdmin"
+  members = [
     "serviceAccount:${google_service_account.gitlab_gcs.email}"
   ]
-  set_admin_roles = true
 }
 
 # GKE Cluster
@@ -432,7 +431,7 @@ ${base64decode(google_service_account_key.gitlab_gcs.private_key)}
 EOT
     storage    = <<EOT
 gcs:
-  bucket: ${module.gitlab_buckets.names_list[6].name}
+  bucket: ${google_storage_bucket.gitlab_bucket["registry"].name}
   keyfile: /etc/docker/registry/storage/gcs.json
 EOT
   }
@@ -544,17 +543,17 @@ data "template_file" "helm_values" {
     RESTORE_PV_SC         = var.gke_sc_gitlab_restore_disk
 
     #Bucket Names
-    ARTIFACTS_BCKT    = module.gitlab_buckets.names_list[0].name
-    BACKUP_BCKT       = module.gitlab_buckets.names_list[1].name
-    DEP_PROXY_BCKT    = module.gitlab_buckets.names_list[2].name
-    EXT_DIFF_BCKT     = module.gitlab_buckets.names_list[3].name
-    LFS_BCKT          = module.gitlab_buckets.names_list[4].name
-    PACKAGES_BCKT     = module.gitlab_buckets.names_list[5].name
-    REGISTRY_BCKT     = module.gitlab_buckets.names_list[6].name
-    RUNNER_CACHE_BCKT = module.gitlab_buckets.names_list[8].name
-    TERRAFORM_BCKT    = module.gitlab_buckets.names_list[9].name
-    BACKUP_TMP_BCKT   = module.gitlab_buckets.names_list[10].name
-    UPLOADS_BCKT      = module.gitlab_buckets.names_list[11].name
+    ARTIFACTS_BCKT    = google_storage_bucket.gitlab_bucket["artifacts"].name
+    BACKUP_BCKT       = google_storage_bucket.gitlab_bucket["backups"].name
+    DEP_PROXY_BCKT    = google_storage_bucket.gitlab_bucket["dependency-proxy"].name
+    EXT_DIFF_BCKT     = google_storage_bucket.gitlab_bucket["external-diffs"].name
+    LFS_BCKT          = google_storage_bucket.gitlab_bucket["git-lfs"].name
+    PACKAGES_BCKT     = google_storage_bucket.gitlab_bucket["packages"].name
+    REGISTRY_BCKT     = google_storage_bucket.gitlab_bucket["registry"].name
+    RUNNER_CACHE_BCKT = google_storage_bucket.gitlab_bucket["runner-cache"].name
+    TERRAFORM_BCKT    = google_storage_bucket.gitlab_bucket["terraform-state"].name
+    BACKUP_TMP_BCKT   = google_storage_bucket.gitlab_bucket["tmp-backups"].name
+    UPLOADS_BCKT      = google_storage_bucket.gitlab_bucket["uploads"].name
 
     # HPA settings for cost/performance optimization
     HPA_MIN_REPLICAS_REGISTRY   = var.gitlab_hpa_min_replicas_registry
