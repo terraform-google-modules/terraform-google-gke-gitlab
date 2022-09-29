@@ -137,10 +137,22 @@ variable "gcs_bucket_versioning" {
   default     = true
 }
 
-variable "gcs_bucket_backup_sc_change" {
+variable "gcs_bucket_enable_backup_lifecycle_rule" {
+  type        = bool
+  description = "Enable lifecycle rule for backup bucket"
+  default     = false
+}
+
+variable "gcs_bucket_age_backup_sc_change" {
   type        = number
-  description = "When the backup lifecycle is enabled, set the number of days after the storage class changes to coldline"
+  description = "When the backup lifecycle is enabled, set the number of days after the storage class changes"
   default     = 30
+}
+
+variable "gcs_bucket_target_storage_class" {
+  type        = string
+  description = "The target Storage Class of objects affected by this Lifecycle Rule. Supported values include: STANDARD, MULTI_REGIONAL, REGIONAL, NEARLINE, COLDLINE, ARCHIVE."
+  default     = "COLDLINE"
 }
 
 variable "gcs_bucket_backup_duration" {

@@ -25,7 +25,7 @@ provider "google-beta" {
 locals {
   # Postgres DB Name
   gitlab_db_name = var.postgresql_db_random_suffix ? "${var.gitlab_db_name}-${random_id.suffix[0].hex}" : var.gitlab_db_name
-  
+
   buckets = [
     "artifacts",
     "runner-cache",
@@ -39,10 +39,6 @@ locals {
     "terraform-state",
     "tmp-backups",
     "uploads"
-  ]
-
-  buckets_with_lifecycle_rules = [
-    "backups",
   ]
 }
 
@@ -264,27 +260,27 @@ resource "google_storage_bucket" "gitlab_bucket" {
   }
 
   dynamic "lifecycle_rule" {
-    for_each = contains(local.buckets_with_lifecycle_rules, each.value) ? [1] : []
+    for_each = var.gcs_bucket_enable_backup_lifecycle_rule == true && each.value == "backups" ? [1] : []
     content {
       action {
         type          = "SetStorageClass"
-        storage_class = "COLDLINE"
+        storage_class = var.gcs_bucket_target_storage_class
       }
       condition {
-        age                   = var.gcs_bucket_backup_sc_change
-        matches_storage_class = ["STANDARD"]
+        age                   = var.gcs_bucket_age_backup_sc_change
+        matches_storage_class = [var.gcs_bucket_storage_class]
       }
     }
   }
   dynamic "lifecycle_rule" {
-    for_each = contains(local.buckets_with_lifecycle_rules, each.value) ? [1] : []
+    for_each = var.gcs_bucket_enable_backup_lifecycle_rule == true && each.value == "backups" ? [1] : []
     content {
       action {
         type = "Delete"
       }
       condition {
         age                   = var.gcs_bucket_backup_duration
-        matches_storage_class = ["COLDLINE"]
+        matches_storage_class = [var.gcs_bucket_target_storage_class]
       }
     }
   }
