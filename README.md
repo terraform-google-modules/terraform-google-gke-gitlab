@@ -33,14 +33,18 @@ Then perform the following commands on the root folder:
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| allow\_force\_destroy | Allows full cleanup of resources by disabling any deletion safe guards | `bool` | `false` | no |
 | certmanager\_email | Email used to retrieve SSL certificates from Let's Encrypt | `string` | n/a | yes |
 | domain | Domain for hosting gitlab functionality (ie mydomain.com would access gitlab at gitlab.mydomain.com) | `string` | `""` | no |
 | gcp\_existing\_db\_secret\_name | Setup the GCP secret name where to retrieve the password value that will be used for postgres DB. In case an empty string is passed,a random value will be filled in a default gcp secret named gitlab-db-password | `string` | `""` | no |
 | gcp\_existing\_omniauth\_secret\_name | Only if Omniauth is enabled. Setup the GCP secret name where to retrieve the configuration that will be used for Omniauth Configuration. | `string` | `""` | no |
 | gcp\_existing\_smtp\_secret\_name | Only if STMP is enabled. Setup the GCP secret name where to retrieve the password value that will be used for Smtp Account. | `string` | `""` | no |
-| gcs\_bucket\_random\_suffix | Sets random suffix at the end of the bucket name. | `bool` | `false` | no |
+| gcs\_bucket\_age\_backup\_sc\_change | When the backup lifecycle is enabled, set the number of days after the storage class changes | `number` | `30` | no |
+| gcs\_bucket\_allow\_force\_destroy | Allows full cleanup of buckets by disabling any deletion safe guards | `bool` | `false` | no |
+| gcs\_bucket\_backup\_duration | When the backup lifecycle is enabled, set the number of days after which the backup files are deleted | `number` | `120` | no |
+| gcs\_bucket\_enable\_backup\_lifecycle\_rule | Enable lifecycle rule for backup bucket | `bool` | `false` | no |
 | gcs\_bucket\_storage\_class | Bucket storage class. Supported values include: STANDARD, MULTI\_REGIONAL, REGIONAL, NEARLINE, COLDLINE, ARCHIVE | `string` | `"STANDARD"` | no |
+| gcs\_bucket\_target\_storage\_class | The target Storage Class of objects affected by this Lifecycle Rule. Supported values include: STANDARD, MULTI\_REGIONAL, REGIONAL, NEARLINE, COLDLINE, ARCHIVE. | `string` | `"COLDLINE"` | no |
+| gcs\_bucket\_versioning | Setup Object Storage versioning for all Bucket created. | `bool` | `true` | no |
 | gitlab\_address\_name | Name of the address to use for GitLab ingress | `string` | `""` | no |
 | gitlab\_backup\_extra\_args | Add a string of extra arguments for the gitlab backup-utility. | `string` | `""` | no |
 | gitlab\_backup\_pv\_size | Set the size of the additional storage for Backup TAR Creation | `number` | `100` | no |
@@ -87,8 +91,8 @@ Then perform the following commands on the root folder:
 | gke\_min\_node\_count | Define the minimum number of nodes of the autoscaling cluster. Default 1 | `number` | `1` | no |
 | gke\_nodes\_subnet\_cidr | Cidr range to use for gitlab GKE nodes subnet | `string` | `"10.10.0.0/16"` | no |
 | gke\_pods\_subnet\_cidr | Cidr range to use for gitlab GKE pods subnet | `string` | `"10.30.0.0/16"` | no |
-| gke\_sc\_gitlab\_backup\_disk | Storage class for Perstistent Volume used for extra space in Backup Cron Job . Default pd-sdd. | `string` | `"pd-ssd"` | no |
-| gke\_sc\_gitlab\_restore\_disk | Storage class for Perstistent Volume used for extra space in Backup Restore Job. Default pd-sdd. | `string` | `"pd-ssd"` | no |
+| gke\_sc\_gitlab\_backup\_disk | Storage class for Perstistent Volume used for extra space in Backup Cron Job . Default pd-sdd. | `string` | `"standard"` | no |
+| gke\_sc\_gitlab\_restore\_disk | Storage class for Perstistent Volume used for extra space in Backup Restore Job. Default pd-sdd. | `string` | `"standard"` | no |
 | gke\_services\_subnet\_cidr | Cidr range to use for gitlab GKE services subnet | `string` | `"10.20.0.0/16"` | no |
 | gke\_storage\_class | Default storage class for GKE Cluster. Default pd-sdd. | `string` | `"pd-ssd"` | no |
 | gke\_version | Version of GKE to use for the GitLab cluster | `string` | `"latest"` | no |
@@ -119,6 +123,7 @@ Then perform the following commands on the root folder:
 | gitlab\_address | IP address where you can connect to your GitLab instance |
 | gitlab\_url | URL where you can access your GitLab instance |
 | root\_password\_instructions | Instructions for getting the root user's password for initial setup |
+| service\_account\_id | The id of the default service account |
 
  <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 

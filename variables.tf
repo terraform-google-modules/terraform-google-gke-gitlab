@@ -29,12 +29,6 @@ variable "region" {
   default     = "europe-west1"
 }
 
-variable "allow_force_destroy" {
-  type        = bool
-  default     = false
-  description = "Allows full cleanup of resources by disabling any deletion safe guards"
-}
-
 variable "gitlab_address_name" {
   type        = string
   description = "Name of the address to use for GitLab ingress"
@@ -125,16 +119,46 @@ variable "redis_size" {
 #  GCS SECTION   #
 ##################
 
-variable "gcs_bucket_random_suffix" {
+variable "gcs_bucket_allow_force_destroy" {
   type        = bool
-  description = "Sets random suffix at the end of the bucket name."
   default     = false
+  description = "Allows full cleanup of buckets by disabling any deletion safe guards"
 }
 
 variable "gcs_bucket_storage_class" {
   type        = string
   description = "Bucket storage class. Supported values include: STANDARD, MULTI_REGIONAL, REGIONAL, NEARLINE, COLDLINE, ARCHIVE "
   default     = "STANDARD"
+}
+
+variable "gcs_bucket_versioning" {
+  type        = bool
+  description = "Setup Object Storage versioning for all Bucket created."
+  default     = true
+}
+
+variable "gcs_bucket_enable_backup_lifecycle_rule" {
+  type        = bool
+  description = "Enable lifecycle rule for backup bucket"
+  default     = false
+}
+
+variable "gcs_bucket_age_backup_sc_change" {
+  type        = number
+  description = "When the backup lifecycle is enabled, set the number of days after the storage class changes"
+  default     = 30
+}
+
+variable "gcs_bucket_target_storage_class" {
+  type        = string
+  description = "The target Storage Class of objects affected by this Lifecycle Rule. Supported values include: STANDARD, MULTI_REGIONAL, REGIONAL, NEARLINE, COLDLINE, ARCHIVE."
+  default     = "COLDLINE"
+}
+
+variable "gcs_bucket_backup_duration" {
+  type        = number
+  description = "When the backup lifecycle is enabled, set the number of days after which the backup files are deleted"
+  default     = 120
 }
 
 ##################
@@ -240,13 +264,13 @@ variable "gke_istio_auth" {
 variable "gke_sc_gitlab_backup_disk" {
   type        = string
   description = "Storage class for Perstistent Volume used for extra space in Backup Cron Job . Default pd-sdd."
-  default     = "pd-ssd"
+  default     = "standard"
 }
 
 variable "gke_sc_gitlab_restore_disk" {
   type        = string
   description = "Storage class for Perstistent Volume used for extra space in Backup Restore Job. Default pd-sdd."
-  default     = "pd-ssd"
+  default     = "standard"
 }
 
 variable "gke_cluster_resource_labels" {

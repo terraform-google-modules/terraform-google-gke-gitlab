@@ -45,3 +45,8 @@ output "root_password_instructions" {
 
   description = "Instructions for getting the root user's password for initial setup"
 }
+
+output "service_account_id" {
+  value       = google_service_account.gitlab_gcs.account_id
+  description = "The id of the default service account"
+}
