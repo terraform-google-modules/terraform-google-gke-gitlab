@@ -184,6 +184,7 @@ resource "google_sql_database_instance" "gitlab_db" {
     disk_size         = var.postgresql_disk_size
     disk_type         = var.postgresql_disk_type
     disk_autoresize   = true
+    user_labels       = var.gke_cluster_resource_labels
 
     ip_configuration {
       ipv4_enabled    = "false"
@@ -254,6 +255,7 @@ resource "google_storage_bucket" "gitlab_bucket" {
   location      = var.region
   storage_class = var.gcs_bucket_storage_class
   force_destroy = var.gcs_bucket_allow_force_destroy
+  labels        = var.gke_cluster_resource_labels
 
   versioning {
     enabled = var.gcs_bucket_versioning
@@ -537,6 +539,8 @@ data "template_file" "helm_values" {
     RESTORE_PV_SIZE       = var.gitlab_restore_pv_size
     BACKUP_PV_SC          = var.gke_sc_gitlab_backup_disk
     RESTORE_PV_SC         = var.gke_sc_gitlab_restore_disk
+    PV_MATCH_LABEL        = var.gke_gitaly_pv_labels[""]
+    ENABLE_MIGRATIONS     = var.gitab_enable_migrations
 
     #Bucket Names
     ARTIFACTS_BCKT    = google_storage_bucket.gitlab_bucket["artifacts"].name

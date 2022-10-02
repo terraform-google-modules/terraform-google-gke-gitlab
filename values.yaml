@@ -204,6 +204,8 @@ gitlab:
   sidekiq:
     minReplicas: ${HPA_MIN_REPLICAS_SIDEKIQ}
     maxReplicas: ${HPA_MAX_REPLICAS_SIDEKIQ}
+  migrations:
+    enabled: ${ENABLE_MIGRATIONS}
   ## https://docs.gitlab.com/charts/charts/gitlab/toolbox
   toolbox:
     backups:
@@ -232,3 +234,4 @@ gitlab:
     persistence:
       size: "${GITALY_PV_SIZE}Gi"
       storageClass: ${PV_STORAGE_CLASS}
+      matchLabels: {${PV_MATCH_LABEL}}
