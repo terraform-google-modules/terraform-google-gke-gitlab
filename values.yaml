@@ -237,4 +237,4 @@ gitlab:
       size: "${GITALY_PV_SIZE}Gi"
       storageClass: ${PV_STORAGE_CLASS}
       matchLabels:
-        {${PV_MATCH_LABEL}}
+        ${PV_MATCH_LABEL}
