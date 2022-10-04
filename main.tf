@@ -539,7 +539,7 @@ data "template_file" "helm_values" {
     RESTORE_PV_SIZE       = var.gitlab_restore_pv_size
     BACKUP_PV_SC          = var.gke_sc_gitlab_backup_disk
     RESTORE_PV_SC         = var.gke_sc_gitlab_restore_disk
-    PV_MATCH_LABEL        = yamlencode(var.gke_gitaly_pv_labels)
+    PV_MATCH_LABEL        = var.gke_gitaly_pv_labels
     ENABLE_MIGRATIONS     = var.gitab_enable_migrations
     ENABLE_PROM_EXPORTER  = var.gitab_enable_prom_exporter
 
