@@ -281,7 +281,7 @@ variable "gke_cluster_resource_labels" {
 
 variable "gke_gitaly_pv_labels" {
   type        = map(string)
-  description = "The GITALY Persistent Volume labels (a map of key/value pairs) to match against when choosing a volume to bind. This is used in the PersistentVolumeClaim selector section"
+  description = "The GITALY Persistent Volume labels (a map of key/value pairs comma separeted) to match against when choosing a volume to bind. This is used in the PersistentVolumeClaim selector section"
   default     = {}
 }
 
