@@ -206,6 +206,8 @@ gitlab:
     maxReplicas: ${HPA_MAX_REPLICAS_SIDEKIQ}
   migrations:
     enabled: ${ENABLE_MIGRATIONS}
+  gitlab-exporter:
+    enabled: ${ENABLE_PROM_EXPORTER}
   ## https://docs.gitlab.com/charts/charts/gitlab/toolbox
   toolbox:
     backups:

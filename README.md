@@ -46,6 +46,7 @@ Then perform the following commands on the root folder:
 | gcs\_bucket\_target\_storage\_class | The target Storage Class of objects affected by this Lifecycle Rule. Supported values include: STANDARD, MULTI\_REGIONAL, REGIONAL, NEARLINE, COLDLINE, ARCHIVE. | `string` | `"COLDLINE"` | no |
 | gcs\_bucket\_versioning | Setup Object Storage versioning for all Bucket created. | `bool` | `true` | no |
 | gitab\_enable\_migrations | Enable migrations sub chart | `bool` | `true` | no |
+| gitab\_enable\_prom\_exporter | Enable gitlab prometheus exporter | `bool` | `false` | no |
 | gitlab\_address\_name | Name of the address to use for GitLab ingress | `string` | `""` | no |
 | gitlab\_backup\_extra\_args | Add a string of extra arguments for the gitlab backup-utility. | `string` | `""` | no |
 | gitlab\_backup\_pv\_size | Set the size of the additional storage for Backup TAR Creation | `number` | `100` | no |
@@ -57,7 +58,7 @@ Then perform the following commands on the root folder:
 | gitlab\_enable\_registry | Choose whether to enable Gitlab Container registry. Default to false. | `bool` | `false` | no |
 | gitlab\_enable\_restore\_pv | Enable additional storage for TAR Restoration creation of any appreciable size | `bool` | `false` | no |
 | gitlab\_enable\_smtp | Setup Gitlab email address to send email. | `bool` | `false` | no |
-| gitlab\_gitaly\_disk\_size | Setup persistent disk size for gitaly data in GB. Default 200 GB | `number` | `100` | no |
+| gitlab\_gitaly\_disk\_size | Setup persistent disk size for gitaly data in GB. Default 100 GB | `number` | `100` | no |
 | gitlab\_hpa\_max\_replicas\_kas | Set the maximum hpa pod replicas for the Gitlab Kas. | `number` | `10` | no |
 | gitlab\_hpa\_max\_replicas\_registry | Set the maximum hpa pod replicas for the Gitlab Registry. | `number` | `10` | no |
 | gitlab\_hpa\_max\_replicas\_shell | Set the maximum hpa pod replicas for the Gitlab Shell. | `number` | `10` | no |

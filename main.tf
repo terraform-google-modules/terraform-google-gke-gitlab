@@ -541,6 +541,7 @@ data "template_file" "helm_values" {
     RESTORE_PV_SC         = var.gke_sc_gitlab_restore_disk
     PV_MATCH_LABEL        = yamlencode(var.gke_gitaly_pv_labels)
     ENABLE_MIGRATIONS     = var.gitab_enable_migrations
+    ENABLE_PROM_EXPORTER  = var.gitab_enable_prom_exporter
 
     #Bucket Names
     ARTIFACTS_BCKT    = google_storage_bucket.gitlab_bucket["artifacts"].name
