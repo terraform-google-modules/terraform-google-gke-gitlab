@@ -240,4 +240,3 @@ gitlab:
         %{ for key, value in PV_MATCH_LABEL ~}
         ${key}: ${value}
         %{ endfor ~}
-        
