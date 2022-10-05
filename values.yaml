@@ -237,6 +237,6 @@ gitlab:
       size: "${GITALY_PV_SIZE}Gi"
       storageClass: ${PV_STORAGE_CLASS}
       matchLabels:
-        %{ for key, value in PV_MATCH_LABEL ~}
+%{ for key, value in PV_MATCH_LABEL ~}
         ${key}: ${value}
-        %{ endfor ~}
+%{ endfor ~}
