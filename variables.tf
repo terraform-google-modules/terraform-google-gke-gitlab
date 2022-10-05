@@ -279,6 +279,12 @@ variable "gke_cluster_resource_labels" {
   default     = {}
 }
 
+variable "gke_gitaly_pv_labels" {
+  type        = map(string)
+  description = "The GITALY Persistent Volume labels (a map of key/value pairs comma separeted) to match against when choosing a volume to bind. This is used in the PersistentVolumeClaim selector section"
+  default     = {}
+}
+
 ##################
 # GITLAB SECTION #
 ##################
@@ -413,7 +419,7 @@ variable "gitlab_schedule_cron_backup" {
 
 variable "gitlab_gitaly_disk_size" {
   type        = number
-  description = "Setup persistent disk size for gitaly data in GB. Default 200 GB"
+  description = "Setup persistent disk size for gitaly data in GB. Default 100 GB"
   default     = 100
 }
 
@@ -445,6 +451,18 @@ variable "gitlab_restore_pv_size" {
   type        = number
   description = "Set the size of the additional storage for Backup TAR Restoration Process"
   default     = 100
+}
+
+variable "gitab_enable_migrations" {
+  type        = bool
+  description = "Enable migrations sub chart"
+  default     = true
+}
+
+variable "gitab_enable_prom_exporter" {
+  type        = bool
+  description = "Enable gitlab prometheus exporter"
+  default     = false
 }
 
 # Peformance optimization. Max and min pod replicas for HPA.
