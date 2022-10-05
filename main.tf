@@ -24,7 +24,7 @@ provider "google-beta" {
 
 locals {
   # Postgres DB Name
-  gitlab_db_name = var.postgresql_db_random_suffix ? "${var.gitlab_db_name}-${random_id.suffix[0].hex}" : var.gitlab_db_name
+  gitlab_db_name = var.postgresql_db_random_suffix ? "${var.gitlab_db_name}-${random_id.postgresql_suffix[0].hex}" : var.gitlab_db_name
 
   buckets = [
     "artifacts",
@@ -42,8 +42,8 @@ locals {
   ]
 }
 
-resource "random_id" "suffix" {
-  count       = var.postgresql_db_random_suffix ? 2 : 1
+resource "random_id" "postgresql_suffix" {
+  count       = var.postgresql_db_random_suffix ? 1 : 0
   byte_length = 4
 }
 
@@ -128,13 +128,17 @@ resource "google_compute_address" "gitlab" {
   count        = var.gitlab_address_name == "" ? 1 : 0
 }
 
+resource "random_id" "cloud_nat_suffix" {
+  byte_length = 4
+}
+
 module "cloud_nat" {
   source           = "terraform-google-modules/cloud-nat/google"
   version          = "~> 2.2.0"
   project_id       = var.project_id
   region           = var.region
   router           = format("%s-router", var.project_id)
-  name             = "${var.project_id}-cloud-nat-${random_id.suffix[1].hex}"
+  name             = "${var.project_id}-cloud-nat-${random_id.cloud_nat_suffix.hex}"
   network          = google_compute_network.gitlab.self_link
   create_router    = true
   min_ports_per_vm = "2048"
