@@ -34,6 +34,18 @@ output "cluster_location" {
   description = "Location of the GKE cluster that GitLab is deployed in."
 }
 
+output "cluster_endpoint" {
+  sensitive   = true
+  value       = module.gke.endpoint
+  description = "Endpoint of the GKE cluster API server that GitLab is deployed in."
+}
+
+output "cluster_ca_certificate" {
+  sensitive   = true
+  value       = module.gke.ca_certificate
+  description = "Certification Authority of the GKE cluster API server that GitLab is deployed in."
+}
+
 output "root_password_instructions" {
   value = <<EOF
 
