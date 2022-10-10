@@ -601,13 +601,3 @@ resource "helm_release" "gitlab" {
     module.gitlab_db_pass,
   ]
 }
-
-module "monitoring" {
-  source                      = "sparkfabrik/gcp-http-monitoring/sparkfabrik"
-  version                     = "~> 0.4.0"
-  count                       = trimspace(var.notification_channels[0]) != "" ? 1 : 0
-  gcp_project                 = var.project_id
-  uptime_monitoring_host      = "gitlab.${var.domain}"
-  uptime_monitoring_path      = var.uptime_monitoring_path
-  alert_notification_channels = var.notification_channels
-}

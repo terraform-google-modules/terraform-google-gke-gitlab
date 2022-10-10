@@ -525,19 +525,3 @@ variable "gitlab_hpa_max_replicas_webservice" {
   description = "Set the maximum hpa pod replicas for the Gitlab webservice."
   default     = 10
 }
-
-######################
-# MONITORING SECTION #
-######################
-
-variable "uptime_monitoring_path" {
-  type        = string
-  description = "The path to the page to run the check against."
-  default     = "/-/liveness"
-}
-
-variable "notification_channels" {
-  type        = list(string)
-  description = "Identifies the notification channels to which notifications should be sent when incidents are opened or closed. The syntax of the entries in this field is projects/[PROJECT_ID]/notificationChannels/[CHANNEL_ID]"
-  default     = [""]
-}
