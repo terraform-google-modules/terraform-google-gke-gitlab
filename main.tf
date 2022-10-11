@@ -22,6 +22,23 @@ provider "google-beta" {
   project = var.project_id
 }
 
+# google_client_config and kubernetes provider must be explicitly specified like the following.
+data "google_client_config" "default" {}
+
+provider "helm" {
+  kubernetes {
+    host                   = "https://${module.gke.endpoint}"
+    token                  = data.google_client_config.default.access_token
+    cluster_ca_certificate = base64decode(module.gke.ca_certificate)
+  }
+}
+
+provider "kubernetes" {
+  host                   = "https://${module.gke.endpoint}"
+  token                  = data.google_client_config.default.access_token
+  cluster_ca_certificate = base64decode(module.gke.ca_certificate)
+}
+
 locals {
   # Postgres DB Name
   gitlab_db_name = var.postgresql_db_random_suffix ? "${var.gitlab_db_name}-${random_id.suffix[0].hex}" : var.gitlab_db_name
@@ -40,28 +57,14 @@ locals {
     "tmp-backups",
     "uploads"
   ]
+
+  subnet_name_pod_cidr     = "gitlab-cluster-pod-cidr"
+  subnet_name_service_cidr = "gitlab-cluster-service-cidr"
 }
 
 resource "random_id" "suffix" {
   count       = var.postgresql_db_random_suffix ? 2 : 1
   byte_length = 4
-}
-
-# google_client_config and kubernetes provider must be explicitly specified like the following.
-data "google_client_config" "default" {}
-
-provider "helm" {
-  kubernetes {
-    host                   = "https://${module.gke.endpoint}"
-    token                  = data.google_client_config.default.access_token
-    cluster_ca_certificate = base64decode(module.gke.ca_certificate)
-  }
-}
-
-provider "kubernetes" {
-  host                   = "https://${module.gke.endpoint}"
-  token                  = data.google_client_config.default.access_token
-  cluster_ca_certificate = base64decode(module.gke.ca_certificate)
 }
 
 # Services
@@ -109,12 +112,12 @@ resource "google_compute_subnetwork" "subnetwork" {
   network       = google_compute_network.gitlab.self_link
 
   secondary_ip_range {
-    range_name    = "gitlab-cluster-pod-cidr"
+    range_name    = local.subnet_name_pod_cidr
     ip_cidr_range = var.gke_pods_subnet_cidr
   }
 
   secondary_ip_range {
-    range_name    = "gitlab-cluster-service-cidr"
+    range_name    = local.subnet_name_service_cidr
     ip_cidr_range = var.gke_services_subnet_cidr
   }
 }
@@ -312,8 +315,8 @@ module "gke" {
 
   network           = google_compute_network.gitlab.name
   subnetwork        = google_compute_subnetwork.subnetwork.name
-  ip_range_pods     = "gitlab-cluster-pod-cidr"
-  ip_range_services = "gitlab-cluster-service-cidr"
+  ip_range_pods     = local.subnet_name_pod_cidr
+  ip_range_services = local.subnet_name_service_cidr
 
   enable_private_endpoint = false
   enable_private_nodes    = true
@@ -505,9 +508,14 @@ locals {
   gitlab_address   = var.gitlab_address_name == "" ? google_compute_address.gitlab[0].address : data.google_compute_address.gitlab[0].address
   domain           = var.domain != "" ? var.domain : "${local.gitlab_address}.xip.io"
   gitlab_smtp_user = var.gitlab_enable_smtp != false ? var.gitlab_smtp_user : ""
-}
 
-locals {
+  monitoring_allowed_cidrs = distinct(
+    concat(
+      var.gitlab_monitoring_restrict_to_pod_subnet ? ["127.0.0.0/8", var.gke_pods_subnet_cidr] : [],
+      length(var.gitlab_monitoring_allowed_cidrs) > 0 ? concat(["127.0.0.0/8", var.gke_pods_subnet_cidr], var.gitlab_monitoring_allowed_cidrs) : []
+    )
+  )
+
   gitlab_release_helm_values = templatefile(
     "${path.module}/values.yaml",
     {
@@ -567,6 +575,7 @@ locals {
       HPA_MAX_REPLICAS_KAS        = var.gitlab_hpa_max_replicas_kas
       HPA_MIN_REPLICAS_SHELL      = var.gitlab_hpa_min_replicas_shell
       HPA_MAX_REPLICAS_SHELL      = var.gitlab_hpa_max_replicas_shell
+      MONITORING_ALLOWED_CIDRS    = local.monitoring_allowed_cidrs
     }
   )
 }

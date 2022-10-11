@@ -525,3 +525,15 @@ variable "gitlab_hpa_max_replicas_webservice" {
   description = "Set the maximum hpa pod replicas for the Gitlab webservice."
   default     = 10
 }
+
+variable "gitlab_monitoring_restrict_to_pod_subnet" {
+  type        = bool
+  description = "Restricrt access to the Gitlab monitoring paths (readiness, liveness and metrics) to the pod cidr. If you specify the 'gitlab_monitoring_allowed_cidrs' list, the pod subnet will be automatically added to the list to grant access to the probes."
+  default     = true
+}
+
+variable "gitlab_monitoring_allowed_cidrs" {
+  type        = list(string)
+  description = "Set the list of the allowed CIDRs for the Gitlab monitoring paths (readiness, liveness and metrics)."
+  default     = []
+}
