@@ -201,6 +201,13 @@ gitlab:
   webservice:
     minReplicas: ${HPA_MIN_REPLICAS_WEBSERVICE}
     maxReplicas: ${HPA_MAX_REPLICAS_WEBSERVICE}
+%{ if length(MONITORING_ALLOWED_CIDRS) > 0 ~}
+    monitoring:
+      ipWhitelist:
+%{ for cidr_block in MONITORING_ALLOWED_CIDRS ~}
+        - ${cidr_block}
+%{ endfor ~}
+%{ endif ~}
   sidekiq:
     minReplicas: ${HPA_MIN_REPLICAS_SIDEKIQ}
     maxReplicas: ${HPA_MAX_REPLICAS_SIDEKIQ}

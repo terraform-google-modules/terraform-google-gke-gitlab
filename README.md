@@ -74,6 +74,8 @@ Then perform the following commands on the root folder:
 | gitlab\_install\_kas | Choose whether to install the Gitlab agent server in the cluster. Default to false. | `bool` | `false` | no |
 | gitlab\_install\_prometheus | Choose whether to install a Prometheus instance using the Gitlab chart. Default to false. | `bool` | `false` | no |
 | gitlab\_install\_runner | Choose whether to install the gitlab runner in the cluster | `string` | `true` | no |
+| gitlab\_monitoring\_allowed\_cidrs | Set the list of the allowed CIDRs for the Gitlab monitoring paths (readiness, liveness and metrics). | `list(string)` | `[]` | no |
+| gitlab\_monitoring\_restrict\_to\_pod\_subnet | Restricrt access to the Gitlab monitoring paths (readiness, liveness and metrics) to the pod cidr. If you specify the 'gitlab\_monitoring\_allowed\_cidrs' list, the pod subnet will be automatically added to the list to grant access to the probes. | `bool` | `true` | no |
 | gitlab\_namespace | Setup  the Kubernetes Namespace where to install gitlab | `string` | `"gitlab"` | no |
 | gitlab\_restore\_pv\_size | Set the size of the additional storage for Backup TAR Restoration Process | `number` | `100` | no |
 | gitlab\_schedule\_cron\_backup | Setup Cron Job for Gitlab Scheduled Backup using unix-cron string format. Default to '0 1 \* \* \*' (Everyday at 1 AM). | `string` | `"0 1 * * *"` | no |
@@ -100,7 +102,6 @@ Then perform the following commands on the root folder:
 | gke\_storage\_class | Default storage class for GKE Cluster. Default pd-sdd. | `string` | `"pd-ssd"` | no |
 | gke\_version | Version of GKE to use for the GitLab cluster | `string` | `"latest"` | no |
 | helm\_chart\_version | Helm chart version to install during deployment - Default Gitlab 14.9.3 | `string` | `"5.9.3"` | no |
-| notification\_channels | Identifies the notification channels to which notifications should be sent when incidents are opened or closed. The syntax of the entries in this field is projects/[PROJECT\_ID]/notificationChannels/[CHANNEL\_ID] | `list(string)` | <pre>[<br>  ""<br>]</pre> | no |
 | postgresql\_availability\_type | The availability type of the Cloud SQL instance, high availability (REGIONAL) or single zone (ZONAL). | `string` | `"REGIONAL"` | no |
 | postgresql\_backup\_retained\_count | Numeber of postgres backup to be retained. Default 30. | `number` | `"30"` | no |
 | postgresql\_backup\_start\_time | HH:MM format time indicating when postgres backup configuration starts. | `string` | `"02:00"` | no |
@@ -115,12 +116,13 @@ Then perform the following commands on the root folder:
 | redis\_size | Redis memory size in GiB. | `number` | `1` | no |
 | redis\_tier | The service tier of the instance. Must be one of these values BASIC and STANDARD\_HA | `string` | `"STANDARD_HA"` | no |
 | region | GCP region to deploy resources to | `string` | `"europe-west1"` | no |
-| uptime\_monitoring\_path | The path to the page to run the check against. | `string` | `"/-/liveness"` | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
+| cluster\_ca\_certificate | Certification Authority of the GKE cluster API server that GitLab is deployed in. |
+| cluster\_endpoint | Endpoint of the GKE cluster API server that GitLab is deployed in. |
 | cluster\_location | Location of the GKE cluster that GitLab is deployed in. |
 | cluster\_name | Name of the GKE cluster that GitLab is deployed in. |
 | gitlab\_address | IP address where you can connect to your GitLab instance |
