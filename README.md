@@ -121,6 +121,7 @@ Then perform the following commands on the root folder:
 
 | Name | Description |
 |------|-------------|
+| buckets\_random\_suffix | The random suffix used to have unique bucket names. |
 | cluster\_ca\_certificate | Certification Authority of the GKE cluster API server that GitLab is deployed in. |
 | cluster\_endpoint | Endpoint of the GKE cluster API server that GitLab is deployed in. |
 | cluster\_location | Location of the GKE cluster that GitLab is deployed in. |

@@ -62,3 +62,8 @@ output "service_account_id" {
   value       = google_service_account.gitlab_gcs.account_id
   description = "The id of the default service account"
 }
+
+output "buckets_random_suffix" {
+  value       = random_string.random_suffix.result
+  description = "The random suffix used to have unique bucket names."
+}
