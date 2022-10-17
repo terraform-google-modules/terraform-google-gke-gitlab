@@ -201,6 +201,8 @@ gitlab:
   webservice:
     minReplicas: ${HPA_MIN_REPLICAS_WEBSERVICE}
     maxReplicas: ${HPA_MAX_REPLICAS_WEBSERVICE}
+    registry:
+      enabled: ${ENABLE_REGISTRY}
 %{ if length(MONITORING_ALLOWED_CIDRS) > 0 ~}
     monitoring:
       ipWhitelist:
@@ -211,6 +213,8 @@ gitlab:
   sidekiq:
     minReplicas: ${HPA_MIN_REPLICAS_SIDEKIQ}
     maxReplicas: ${HPA_MAX_REPLICAS_SIDEKIQ}
+    registry:
+      enabled: ${ENABLE_REGISTRY}
   migrations:
     enabled: ${ENABLE_MIGRATIONS}
   gitlab-exporter:
