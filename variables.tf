@@ -285,40 +285,26 @@ variable "gke_gitaly_pv_labels" {
   default     = {}
 }
 
-variable "gke_autoscaling_profile" {
-  type        = string
-  description = "Setup Profile for Cluster Autoscaler - Possible Values: BALANCED (Defult Profile) or OPTIMIZE_UTILIZATION (Prioritize optimizing utilization of resources.)"
-  default     = "BALANCED"
-}
-
-variable "gke_enable_autoscaling" {
-  type        = bool
-  description = "Enable Cluster Autoscaler - Default False (Different from NodePool Autoscaler)"
-  default     = false
-}
-
-variable "gke_max_autoscale_cpu" {
-  type        = number
-  description = "Setup Maximum CPU Number for Cluster Autoscaling"
-  default     = 0
-}
-
-variable "gke_min_autoscale_cpu" {
-  type        = number
-  description = "Setup Minimum CPU Number for Cluster Autoscaling"
-  default     = 0
-}
-
-variable "gke_max_autoscale_gb_mem" {
-  type        = number
-  description = "Setup Maximum GB Memory for Cluster Autoscaling"
-  default     = 0
-}
-
-variable "gke_min_autoscale_gb_mem" {
-  type        = number
-  description = "Setup Minimum GB Memory for Cluster Autoscaling"
-  default     = 0
+variable "gke_cluster_autoscaling" {
+  type = object({
+    enabled             = bool
+    autoscaling_profile = string
+    min_cpu_cores       = number
+    max_cpu_cores       = number
+    min_memory_gb       = number
+    max_memory_gb       = number
+    gpu_resources       = list(object({ resource_type = string, minimum = number, maximum = number }))
+  })
+  description = "Setup Profile and Resources for Cluster Autoscaler - BALANCED (Default Profile) or OPTIMIZE UTILIZATION (Prioritize optimizing utilization of resources)"
+  default = {
+    "autoscaling_profile" : "BALANCED",
+    "enabled" : false,
+    "gpu_resources" : [],
+    "max_cpu_cores" : 0,
+    "max_memory_gb" : 0,
+    "min_cpu_cores" : 0,
+    "min_memory_gb" : 0
+  }
 }
 
 ##################
