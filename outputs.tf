@@ -63,6 +63,11 @@ output "service_account_id" {
   description = "The id of the default service account"
 }
 
+output "created_bucket_names" {
+  value       = [for bucket in google_storage_bucket.gitlab_bucket : bucket.name]
+  description = "The list of the created buckets."
+}
+
 output "buckets_random_suffix" {
   value       = random_string.random_suffix.result
   description = "The random suffix used to have unique bucket names."
