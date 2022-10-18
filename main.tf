@@ -338,6 +338,16 @@ module "gke" {
   istio      = var.gke_enable_istio_addon
   istio_auth = var.gke_istio_auth
 
+  cluster_autoscaling = {
+    "autoscaling_profile" : (var.gke_autoscaling_profile),
+    "enabled" : (var.gke_enable_autoscaling),
+    "max_cpu_cores" : (var.gke_max_autoscale_cpu),
+    "min_cpu_cores" : (var.gke_min_autoscale_cpu),
+    "max_memory_gb" : (var.gke_max_autoscale_gb_mem),
+    "min_memory_gb" : (var.gke_min_autoscale_gb_mem),
+    "gpu_resources" : [],
+  }
+
   node_pools = [
     {
       name                       = "gitlab"

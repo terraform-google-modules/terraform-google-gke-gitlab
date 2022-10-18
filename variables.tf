@@ -285,6 +285,42 @@ variable "gke_gitaly_pv_labels" {
   default     = {}
 }
 
+variable "gke_autoscaling_profile" {
+  type        = string
+  description = "Setup Profile for Cluster Autoscaler - Possible Values: BALANCED (Defult Profile) or OPTIMIZE_UTILIZATION (Prioritize optimizing utilization of resources.)"
+  default     = "BALANCED"
+}
+
+variable "gke_enable_autoscaling" {
+  type        = bool
+  description = "Enable Cluster Autoscaler - Default False (Different from NodePool Autoscaler)"
+  default     = false
+}
+
+variable "gke_max_autoscale_cpu" {
+  type        = number
+  description = "Setup Maximum CPU Number for Cluster Autoscaling"
+  default     = 0
+}
+
+variable "gke_min_autoscale_cpu" {
+  type        = number
+  description = "Setup Minimum CPU Number for Cluster Autoscaling"
+  default     = 0
+}
+
+variable "gke_max_autoscale_gb_mem" {
+  type        = number
+  description = "Setup Maximum GB Memory for Cluster Autoscaling"
+  default     = 0
+}
+
+variable "gke_min_autoscale_gb_mem" {
+  type        = number
+  description = "Setup Minimum GB Memory for Cluster Autoscaling"
+  default     = 0
+}
+
 ##################
 # GITLAB SECTION #
 ##################

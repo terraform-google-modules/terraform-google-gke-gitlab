@@ -81,9 +81,11 @@ Then perform the following commands on the root folder:
 | gitlab\_schedule\_cron\_backup | Setup Cron Job for Gitlab Scheduled Backup using unix-cron string format. Default to '0 1 \* \* \*' (Everyday at 1 AM). | `string` | `"0 1 * * *"` | no |
 | gitlab\_smtp\_user | Setup email sender address for Gitlab smtp server to send emails. | `string` | `"user@example.com"` | no |
 | gitlab\_time\_zone | Setup timezone for gitlab containers | `string` | `"Europe/Rome"` | no |
+| gke\_autoscaling\_profile | Setup Profile for Cluster Autoscaler - Possible Values: BALANCED (Defult Profile) or OPTIMIZE\_UTILIZATION (Prioritize optimizing utilization of resources.) | `string` | `"BALANCED"` | no |
 | gke\_cluster\_resource\_labels | The GCE resource labels (a map of key/value pairs) to be applied to the cluster | `map(string)` | `{}` | no |
 | gke\_datapath | The desired datapath provider for this cluster. By default, DATAPATH\_PROVIDER\_UNSPECIFIED enables the IPTables-based kube-proxy implementation. ADVANCED\_DATAPATH enables Dataplane-V2 feature. | `string` | `"DATAPATH_PROVIDER_UNSPECIFIED"` | no |
 | gke\_disk\_replication | Setup replication type for disk persistent volune. Possible values none or regional-pd. Default to none. | `string` | `"none"` | no |
+| gke\_enable\_autoscaling | Enable Cluster Autoscaler - Default False (Different from NodePool Autoscaler) | `bool` | `false` | no |
 | gke\_enable\_backup\_agent | Whether Backup for GKE agent is enabled for this cluster. | `bool` | `false` | no |
 | gke\_enable\_cloudrun | Enable Google Cloudrun on GKE Cluster. Default false | `bool` | `false` | no |
 | gke\_enable\_image\_stream | Google Container File System (gcfs) has to be enabled for image streaming to be active. Needs image\_type to be set to COS\_CONTAINERD. | `bool` | `false` | no |
@@ -92,7 +94,11 @@ Then perform the following commands on the root folder:
 | gke\_google\_group\_rbac\_mail | The name of the RBAC security group for use with Google security groups in Kubernetes RBAC. Group name must be in format gke-security-groups@yourdomain.com | `string` | `"null"` | no |
 | gke\_istio\_auth | The authentication type between services in Istio | `string` | `"AUTH_MUTUAL_TLS"` | no |
 | gke\_machine\_type | Machine type used for the node-pool | `string` | `"n1-standard-4"` | no |
+| gke\_max\_autoscale\_cpu | Setup Maximum CPU Number for Cluster Autoscaling | `number` | `0` | no |
+| gke\_max\_autoscale\_gb\_mem | Setup Maximum GB Memory for Cluster Autoscaling | `number` | `0` | no |
 | gke\_max\_node\_count | Define the maximum number of nodes of the autoscaling cluster. Default 5 | `number` | `5` | no |
+| gke\_min\_autoscale\_cpu | Setup Minimum CPU Number for Cluster Autoscaling | `number` | `0` | no |
+| gke\_min\_autoscale\_gb\_mem | Setup Minimum GB Memory for Cluster Autoscaling | `number` | `0` | no |
 | gke\_min\_node\_count | Define the minimum number of nodes of the autoscaling cluster. Default 1 | `number` | `1` | no |
 | gke\_nodes\_subnet\_cidr | Cidr range to use for gitlab GKE nodes subnet | `string` | `"10.10.0.0/16"` | no |
 | gke\_pods\_subnet\_cidr | Cidr range to use for gitlab GKE pods subnet | `string` | `"10.30.0.0/16"` | no |
@@ -126,6 +132,7 @@ Then perform the following commands on the root folder:
 | cluster\_endpoint | Endpoint of the GKE cluster API server that GitLab is deployed in. |
 | cluster\_location | Location of the GKE cluster that GitLab is deployed in. |
 | cluster\_name | Name of the GKE cluster that GitLab is deployed in. |
+| created\_bucket\_names | The list of the created buckets. |
 | gitlab\_address | IP address where you can connect to your GitLab instance |
 | gitlab\_url | URL where you can access your GitLab instance |
 | root\_password\_instructions | Instructions for getting the root user's password for initial setup |
