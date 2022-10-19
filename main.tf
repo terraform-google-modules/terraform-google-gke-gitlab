@@ -338,6 +338,8 @@ module "gke" {
   istio      = var.gke_enable_istio_addon
   istio_auth = var.gke_istio_auth
 
+  cluster_autoscaling = var.gke_cluster_autoscaling
+  
   node_pools = [
     {
       name                       = "gitlab"
