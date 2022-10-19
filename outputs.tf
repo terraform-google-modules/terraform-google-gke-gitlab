@@ -64,7 +64,7 @@ output "service_account_id" {
 }
 
 output "created_bucket_names" {
-  value       = [for bucket in google_storage_bucket.gitlab_bucket : bucket.name]
+  value       = { for short_name, bucket in google_storage_bucket.gitlab_bucket : short_name => bucket.name }
   description = "The list of the created buckets."
 }
 
