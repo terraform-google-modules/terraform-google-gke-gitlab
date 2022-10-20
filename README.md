@@ -129,6 +129,7 @@ Then perform the following commands on the root folder:
 | cluster\_name | Name of the GKE cluster that GitLab is deployed in. |
 | created\_bucket\_names | The list of the created buckets. |
 | gitlab\_address | IP address where you can connect to your GitLab instance |
+| gitlab\_namespace | The namespace where Gitlab is installed. |
 | gitlab\_url | URL where you can access your GitLab instance |
 | root\_password\_instructions | Instructions for getting the root user's password for initial setup |
 | service\_account\_id | The id of the default service account |
