@@ -72,3 +72,8 @@ output "buckets_random_suffix" {
   value       = random_string.random_suffix.result
   description = "The random suffix used to have unique bucket names."
 }
+
+output "gitlab_namespace" {
+  value       = var.gitlab_namespace
+  description = "The namespace where Gitlab is installed."
+}
