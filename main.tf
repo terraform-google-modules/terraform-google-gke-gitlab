@@ -83,7 +83,8 @@ module "project_services" {
     "redis.googleapis.com",
     "secretmanager.googleapis.com",
     "containerfilesystem.googleapis.com",
-    "storagetransfer.googleapis.com"
+    "storagetransfer.googleapis.com",
+    "storage.googleapis.com",
   ]
 }
 
@@ -235,15 +236,17 @@ resource "google_sql_database" "gitlabhq_production" {
 
 # Redis
 resource "google_redis_instance" "gitlab" {
+  display_name       = "GitLab Redis"
   name               = "gitlab"
   tier               = var.redis_tier
   memory_size_gb     = var.redis_size
   region             = var.region
   authorized_network = google_compute_network.gitlab.self_link
+  redis_configs = {
+    "maxmemory-gb" = var.redis_maxmemory_gb
+  }
 
   depends_on = [module.project_services.project_id]
-
-  display_name = "GitLab Redis"
 }
 
 # Cloud Storage
@@ -343,7 +346,7 @@ module "gke" {
   istio_auth = var.gke_istio_auth
 
   cluster_autoscaling = var.gke_cluster_autoscaling
-  
+
   node_pools = [
     {
       name                       = "gitlab"
