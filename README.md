@@ -114,6 +114,7 @@ Then perform the following commands on the root folder:
 | postgresql\_tier | (Required) The machine type to use.Postgres supports only shared-core machine types, and custom machine types such as db-custom-2-13312 | `string` | `"db-custom-2-8192"` | no |
 | postgresql\_version | (Required) The PostgreSQL version to use. Supported values for Gitlab POSTGRES\_12, POSTGRES\_13. Default: POSTGRES\_12 | `string` | `"POSTGRES_12"` | no |
 | project\_id | GCP Project to deploy resources | `string` | n/a | yes |
+| redis\_maxmemory\_gb | Set a Max memory usage limit for Redis specified in GiB. | `number` | `0.8` | no |
 | redis\_size | Redis memory size in GiB. | `number` | `1` | no |
 | redis\_tier | The service tier of the instance. Must be one of these values BASIC and STANDARD\_HA | `string` | `"STANDARD_HA"` | no |
 | region | GCP region to deploy resources to | `string` | `"europe-west1"` | no |

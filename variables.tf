@@ -115,6 +115,12 @@ variable "redis_size" {
   default     = 1
 }
 
+variable "redis_maxmemory_gb" {
+  type        = number
+  description = "Set a Max memory usage limit for Redis specified in GiB."
+  default     = 0.8
+}
+
 ##################
 #  GCS SECTION   #
 ##################
