@@ -565,3 +565,9 @@ variable "gitlab_monitoring_allowed_cidrs" {
   description = "Set the list of the allowed CIDRs for the Gitlab monitoring paths (readiness, liveness and metrics)."
   default     = []
 }
+
+variable "gitlab_gitaly_max_unavailable" {
+  type        = number
+  description = "For PodDisruptionBudget, how many pods can be unavailable at one time for Gitaly StatefulSet"
+  default     = 0
+}
