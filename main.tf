@@ -560,6 +560,7 @@ locals {
       ENABLE_MIGRATIONS      = var.gitab_enable_migrations
       ENABLE_PROM_EXPORTER   = var.gitab_enable_prom_exporter
       GITALY_MAX_UNAVAILABLE = var.gitlab_gitaly_max_unavailable
+      ENABLE_SERVICE_PING    = var.gitlab_enable_service_ping
 
       #Bucket Names
       ARTIFACTS_BCKT    = google_storage_bucket.gitlab_bucket["artifacts"].name
