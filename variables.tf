@@ -493,6 +493,12 @@ variable "gitab_enable_prom_exporter" {
   default     = false
 }
 
+variable "gitlab_enable_service_ping" {
+  type        = bool
+  description = "Enable Gitlab Service Ping"
+  default     = true
+}
+
 # Peformance optimization. Max and min pod replicas for HPA.
 variable "gitlab_hpa_min_replicas_registry" {
   type        = number

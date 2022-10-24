@@ -47,6 +47,9 @@ global:
   ## doc/charts/globals.md#configure-appconfig-settings
   ## Rails based portions of this chart share many settings
   appConfig:
+    ## doc/charts/globals.md#general-application-settings
+    enableUsagePing: ${ENABLE_SERVICE_PING}
+
     ## https://docs.gitlab.com/charts/charts/globals#cron-jobs-related-settings
     cron_jobs: {}
 
