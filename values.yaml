@@ -244,6 +244,7 @@ gitlab:
       size: "${RESTORE_PV_SIZE}Gi"
   ## https://docs.gitlab.com/charts/charts/gitlab/gitaly
   gitaly:
+    maxUnavailable: ${GITALY_MAX_UNAVAILABLE}
     persistence:
       size: "${GITALY_PV_SIZE}Gi"
       storageClass: ${PV_STORAGE_CLASS}
