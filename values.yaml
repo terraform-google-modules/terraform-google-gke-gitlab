@@ -47,9 +47,6 @@ global:
   ## doc/charts/globals.md#configure-appconfig-settings
   ## Rails based portions of this chart share many settings
   appConfig:
-    ## doc/charts/globals.md#general-application-settings
-    enableUsagePing: false
-
     ## https://docs.gitlab.com/charts/charts/globals#cron-jobs-related-settings
     cron_jobs: {}
 
@@ -118,8 +115,11 @@ global:
       secret: gitlab-smtp-secret
       key: password
     starttls_auto: true
-    email:
-      from: ${SMTP_USER}
+
+  ## GLOBAL Outgoing email server settings
+  email:
+    from: ${SMTP_USER}
+    reply_to: ${SMTP_USER}
 
   ## Timezone for containers.
   time_zone: ${TIMEZONE}
