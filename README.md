@@ -59,6 +59,7 @@ Then perform the following commands on the root folder:
 | gitlab\_enable\_restore\_pv | Enable additional storage for TAR Restoration creation of any appreciable size | `bool` | `false` | no |
 | gitlab\_enable\_smtp | Setup Gitlab email address to send email. | `bool` | `false` | no |
 | gitlab\_gitaly\_disk\_size | Setup persistent disk size for gitaly data in GB. Default 100 GB | `number` | `100` | no |
+| gitlab\_gitaly\_max\_unavailable | For PodDisruptionBudget, how many pods can be unavailable at one time for Gitaly StatefulSet | `number` | `0` | no |
 | gitlab\_hpa\_max\_replicas\_kas | Set the maximum hpa pod replicas for the Gitlab Kas. | `number` | `10` | no |
 | gitlab\_hpa\_max\_replicas\_registry | Set the maximum hpa pod replicas for the Gitlab Registry. | `number` | `10` | no |
 | gitlab\_hpa\_max\_replicas\_shell | Set the maximum hpa pod replicas for the Gitlab Shell. | `number` | `10` | no |
