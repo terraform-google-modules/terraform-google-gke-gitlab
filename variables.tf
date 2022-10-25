@@ -577,3 +577,21 @@ variable "gitlab_gitaly_max_unavailable" {
   description = "For PodDisruptionBudget, how many pods can be unavailable at one time for Gitaly StatefulSet"
   default     = 0
 }
+
+variable "cloud_nat_min_ports_per_vm" {
+  type        = string
+  description = "Minimum number of ports allocated to a VM from this NAT config."
+  default     = "64"
+}
+
+variable "cloud_nat_log_config_enable" {
+  type        = bool
+  description = "Indicates whether or not to export logs."
+  default     = false
+}
+
+variable "cloud_nat_log_config_filter" {
+  type        = string
+  description = "Specifies the desired filtering of logs on this NAT. Valid values are: 'ERRORS_ONLY', 'TRANSLATIONS_ONLY', 'ALL'."
+  default     = "ALL"
+}

@@ -137,15 +137,20 @@ resource "random_id" "cloudnat_suffix" {
 }
 
 module "cloud_nat" {
-  source           = "terraform-google-modules/cloud-nat/google"
-  version          = "~> 2.2.0"
-  project_id       = var.project_id
-  region           = var.region
-  router           = format("%s-router", var.project_id)
-  name             = "${var.project_id}-cloud-nat-${random_id.cloudnat_suffix.hex}"
-  network          = google_compute_network.gitlab.self_link
-  create_router    = true
-  min_ports_per_vm = "2048"
+  source        = "terraform-google-modules/cloud-nat/google"
+  version       = "~> 2.2.0"
+  project_id    = var.project_id
+  region        = var.region
+  router        = format("%s-router", var.project_id)
+  name          = "${var.project_id}-cloud-nat-${random_id.cloudnat_suffix.hex}"
+  network       = google_compute_network.gitlab.self_link
+  create_router = true
+  # We force the endpoint independent mapping to false as described in this issue:
+  # https://github.com/hashicorp/terraform-provider-google/issues/10609
+  enable_endpoint_independent_mapping = false
+  min_ports_per_vm                    = var.cloud_nat_min_ports_per_vm
+  log_config_enable                   = var.cloud_nat_log_config_enable
+  log_config_filter                   = var.cloud_nat_log_config_filter
 }
 
 resource "google_compute_firewall" "admission_webhook" {
