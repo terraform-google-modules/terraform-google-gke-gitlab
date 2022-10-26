@@ -382,6 +382,29 @@ module "gke" {
   }
 }
 
+# Fix Cilium warning message about patching the nodes
+# https://github.com/cilium/cilium/issues/19816#issuecomment-1144551910
+resource "kubernetes_cluster_role_binding" "cilium_node_patcher" {
+  metadata {
+    name = "cilium-node-patcher"
+  }
+  role_ref {
+    api_group = "rbac.authorization.k8s.io"
+    kind      = "ClusterRole"
+    name      = "system:node"
+  }
+  subject {
+    api_group = ""
+    kind      = "ServiceAccount"
+    name      = "cilium"
+    namespace = "kube-system"
+  }
+
+  depends_on = [
+    module.gke
+  ]
+}
+
 resource "kubernetes_namespace" "gitlab_namespace" {
   metadata {
     name = var.gitlab_namespace
