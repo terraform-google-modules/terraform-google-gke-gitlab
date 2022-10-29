@@ -416,19 +416,7 @@ resource "kubernetes_storage_class" "storage_class" {
   metadata {
     name = var.gke_storage_class
   }
-  storage_provisioner = "kubernetes.io/gce-pd"
-  parameters = {
-    type             = var.gke_storage_class
-    replication-type = var.gke_disk_replication == "" ? null : var.gke_disk_replication
-  }
-  depends_on = [time_sleep.sleep_for_cluster_fix_helm_6361]
-}
-
-resource "kubernetes_storage_class" "storage_class_retain" {
-  metadata {
-    name = "$(var.gke_storage_class)_retain"
-  }
-  reclaim_policy      = "Retain"
+  reclaim_policy      = var.gke_storage_class_reclaim_policy
   storage_provisioner = "kubernetes.io/gce-pd"
   parameters = {
     type             = var.gke_storage_class

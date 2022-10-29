@@ -191,8 +191,14 @@ variable "gke_machine_type" {
 
 variable "gke_storage_class" {
   type        = string
-  description = "Default storage class for GKE Cluster. Default pd-sdd."
+  description = "Default storage class for GKE Cluster. Default pd-sdd"
   default     = "pd-ssd"
+}
+
+variable "gke_storage_class_reclaim_policy" {
+  type        = string
+  description = "Set storage class reclaim policy. Default Retain"
+  default     = "Retain"
 }
 
 variable "gke_disk_replication" {
