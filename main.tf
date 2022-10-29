@@ -340,13 +340,13 @@ module "gke" {
 
   remove_default_node_pool = true
 
-  # Kube-proxy - eBPF setting 
+  # Kube-proxy - eBPF setting
   datapath_provider = var.gke_datapath
   # Google Group for RBAC
   authenticator_security_group = var.gke_google_group_rbac_mail
-  # Backup for GKE 
+  # Backup for GKE
   gke_backup_agent_config = var.gke_enable_backup_agent
-  # Istio 
+  # Istio
   istio      = var.gke_enable_istio_addon
   istio_auth = var.gke_istio_auth
 
@@ -419,7 +419,20 @@ resource "kubernetes_storage_class" "storage_class" {
   storage_provisioner = "kubernetes.io/gce-pd"
   parameters = {
     type             = var.gke_storage_class
-    replication-type = var.gke_disk_replication
+    replication-type = var.gke_disk_replication == "" ? null : var.gke_disk_replication
+  }
+  depends_on = [time_sleep.sleep_for_cluster_fix_helm_6361]
+}
+
+resource "kubernetes_storage_class" "storage_class_retain" {
+  metadata {
+    name = "$(var.gke_storage_class)_retain"
+  }
+  reclaim_policy      = "Retain"
+  storage_provisioner = "kubernetes.io/gce-pd"
+  parameters = {
+    type             = var.gke_storage_class
+    replication-type = var.gke_disk_replication == "" ? null : var.gke_disk_replication
   }
   depends_on = [time_sleep.sleep_for_cluster_fix_helm_6361]
 }
