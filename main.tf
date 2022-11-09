@@ -340,13 +340,13 @@ module "gke" {
 
   remove_default_node_pool = true
 
-  # Kube-proxy - eBPF setting 
+  # Kube-proxy - eBPF setting
   datapath_provider = var.gke_datapath
   # Google Group for RBAC
   authenticator_security_group = var.gke_google_group_rbac_mail
-  # Backup for GKE 
+  # Backup for GKE
   gke_backup_agent_config = var.gke_enable_backup_agent
-  # Istio 
+  # Istio
   istio      = var.gke_enable_istio_addon
   istio_auth = var.gke_istio_auth
 
@@ -416,6 +416,7 @@ resource "kubernetes_storage_class" "storage_class" {
   metadata {
     name = var.gke_storage_class
   }
+  reclaim_policy      = var.gke_storage_class_reclaim_policy
   storage_provisioner = "kubernetes.io/gce-pd"
   parameters = {
     type             = var.gke_storage_class
