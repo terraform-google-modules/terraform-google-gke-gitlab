@@ -34,6 +34,9 @@ Then perform the following commands on the root folder:
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | certmanager\_email | Email used to retrieve SSL certificates from Let's Encrypt | `string` | n/a | yes |
+| cloud\_nat\_log\_config\_enable | Indicates whether or not to export logs. | `bool` | `false` | no |
+| cloud\_nat\_log\_config\_filter | Specifies the desired filtering of logs on this NAT. Valid values are: 'ERRORS\_ONLY', 'TRANSLATIONS\_ONLY', 'ALL'. | `string` | `"ALL"` | no |
+| cloud\_nat\_min\_ports\_per\_vm | Minimum number of ports allocated to a VM from this NAT config. | `string` | `"64"` | no |
 | domain | Domain for hosting gitlab functionality (ie mydomain.com would access gitlab at gitlab.mydomain.com) | `string` | `""` | no |
 | gcp\_existing\_db\_secret\_name | Setup the GCP secret name where to retrieve the password value that will be used for postgres DB. In case an empty string is passed,a random value will be filled in a default gcp secret named gitlab-db-password | `string` | `""` | no |
 | gcp\_existing\_omniauth\_secret\_name | Only if Omniauth is enabled. Setup the GCP secret name where to retrieve the configuration that will be used for Omniauth Configuration. | `string` | `""` | no |
@@ -42,8 +45,10 @@ Then perform the following commands on the root folder:
 | gcs\_bucket\_allow\_force\_destroy | Allows full cleanup of buckets by disabling any deletion safe guards | `bool` | `false` | no |
 | gcs\_bucket\_backup\_duration | When the backup lifecycle is enabled, set the number of days after which the backup files are deleted | `number` | `120` | no |
 | gcs\_bucket\_enable\_backup\_lifecycle\_rule | Enable lifecycle rule for backup bucket | `bool` | `false` | no |
+| gcs\_bucket\_num\_newer\_version | When the bucket versioning is enabled, Delete noncurrent versions of objects if there are X newer versions of the object in the bucket. Objects subject to this rule are permanently deleted and cannot be recovered. | `number` | `2` | no |
 | gcs\_bucket\_storage\_class | Bucket storage class. Supported values include: STANDARD, MULTI\_REGIONAL, REGIONAL, NEARLINE, COLDLINE, ARCHIVE | `string` | `"STANDARD"` | no |
 | gcs\_bucket\_target\_storage\_class | The target Storage Class of objects affected by this Lifecycle Rule. Supported values include: STANDARD, MULTI\_REGIONAL, REGIONAL, NEARLINE, COLDLINE, ARCHIVE. | `string` | `"COLDLINE"` | no |
+| gcs\_bucket\_versioned\_files\_duration | When the bucket versioning is enabled, Delete noncurrent versions of objects after they've been noncurrent for X days. Objects subject to this rule are permanently deleted and cannot be recovered. | `number` | `120` | no |
 | gcs\_bucket\_versioning | Setup Object Storage versioning for all Bucket created. | `bool` | `true` | no |
 | gitab\_enable\_migrations | Enable migrations sub chart | `bool` | `true` | no |
 | gitab\_enable\_prom\_exporter | Enable gitlab prometheus exporter | `bool` | `false` | no |
@@ -102,7 +107,8 @@ Then perform the following commands on the root folder:
 | gke\_sc\_gitlab\_backup\_disk | Storage class for Perstistent Volume used for extra space in Backup Cron Job . Default pd-sdd. | `string` | `"standard"` | no |
 | gke\_sc\_gitlab\_restore\_disk | Storage class for Perstistent Volume used for extra space in Backup Restore Job. Default pd-sdd. | `string` | `"standard"` | no |
 | gke\_services\_subnet\_cidr | Cidr range to use for gitlab GKE services subnet | `string` | `"10.20.0.0/16"` | no |
-| gke\_storage\_class | Default storage class for GKE Cluster. Default pd-sdd. | `string` | `"pd-ssd"` | no |
+| gke\_storage\_class | Default storage class for GKE Cluster. Default pd-sdd | `string` | `"pd-ssd"` | no |
+| gke\_storage\_class\_reclaim\_policy | Set storage class reclaim policy. Default Retain | `string` | `"Retain"` | no |
 | gke\_version | Version of GKE to use for the GitLab cluster | `string` | `"latest"` | no |
 | helm\_chart\_version | Helm chart version to install during deployment - Default Gitlab 14.9.3 | `string` | `"5.9.3"` | no |
 | postgresql\_availability\_type | The availability type of the Cloud SQL instance, high availability (REGIONAL) or single zone (ZONAL). | `string` | `"REGIONAL"` | no |
