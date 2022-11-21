@@ -276,14 +276,24 @@ resource "google_storage_bucket" "gitlab_bucket" {
     enabled = var.gcs_bucket_versioning
   }
   dynamic "lifecycle_rule" {
-    for_each = each.value && var.gcs_bucket_versioning == true ? [1] : []
+    for_each = var.gcs_bucket_versioning == true ? [1] : []
+    content {
+      action {
+        type = "Delete"
+      }
+      condition {
+        num_newer_versions = var.gcs_bucket_num_newer_version
+      }
+    }
+  }
+  dynamic "lifecycle_rule" {
+    for_each = var.gcs_bucket_versioning == true ? [1] : []
     content {
       action {
         type = "Delete"
       }
       condition {
         days_since_noncurrent_time = var.gcs_bucket_versioned_files_duration
-        num_newer_versions = var.gcs_bucket_num_newer_version
       }
     }
   }
