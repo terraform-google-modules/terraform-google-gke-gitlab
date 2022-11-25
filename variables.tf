@@ -167,6 +167,18 @@ variable "gcs_bucket_backup_duration" {
   default     = 120
 }
 
+variable "gcs_bucket_versioned_files_duration" {
+  type        = number
+  description = "When the bucket versioning is enabled, Delete noncurrent versions of objects after they've been noncurrent for X days. Objects subject to this rule are permanently deleted and cannot be recovered."
+  default     = 120
+}
+
+variable "gcs_bucket_num_newer_version" {
+  type        = number
+  description = "When the bucket versioning is enabled, Delete noncurrent versions of objects if there are X newer versions of the object in the bucket. Objects subject to this rule are permanently deleted and cannot be recovered."
+  default     = 2
+}
+
 ##################
 #  GKE SECTION   #
 ##################
