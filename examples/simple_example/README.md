@@ -7,7 +7,7 @@ This example illustrates how to use the `gke-gitlab` module.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| project\_id | The project ID to deploy to | `any` | n/a | yes |
+| project\_id | The project ID to deploy to | `string` | n/a | yes |
 
 ## Outputs
 
