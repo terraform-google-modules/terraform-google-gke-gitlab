@@ -50,7 +50,7 @@ Then perform the following commands on the root folder:
 | gitlab\_runner\_install | Choose whether to install the gitlab runner in the cluster | `bool` | `true` | no |
 | gitlab\_services\_subnet\_cidr | Cidr range to use for gitlab GKE services subnet | `string` | `"10.2.0.0/16"` | no |
 | gke\_machine\_type | Machine type used for the node-pool | `string` | `"n1-standard-4"` | no |
-| gke\_version | Version of GKE to use for the GitLab cluster | `string` | `"1.22"` | no |
+| gke\_version | Version of GKE to use for the GitLab cluster | `string` | `"1.21"` | no |
 | helm\_chart\_version | Helm chart version to install during deployment | `string` | `"4.2.4"` | no |
 | project\_id | GCP Project to deploy resources | `string` | n/a | yes |
 | region | GCP region to deploy resources to | `string` | `"us-central1"` | no |
