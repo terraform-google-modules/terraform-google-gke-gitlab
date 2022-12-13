@@ -38,7 +38,7 @@ Then perform the following commands on the root folder:
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | allow\_force\_destroy | Allows full cleanup of resources by disabling any deletion safe guards | `bool` | `false` | no |
-| certmanager\_email | Email used to retrieve SSL certificates from Let's Encrypt | `any` | n/a | yes |
+| certmanager\_email | Email used to retrieve SSL certificates from Let's Encrypt | `string` | n/a | yes |
 | domain | Domain for hosting gitlab functionality (ie mydomain.com would access gitlab at gitlab.mydomain.com) | `string` | `""` | no |
 | gitlab\_address\_name | Name of the address to use for GitLab ingress | `string` | `""` | no |
 | gitlab\_db\_name | Instance name for the GitLab Postgres database. | `string` | `"gitlab-db"` | no |
@@ -50,9 +50,9 @@ Then perform the following commands on the root folder:
 | gitlab\_runner\_install | Choose whether to install the gitlab runner in the cluster | `bool` | `true` | no |
 | gitlab\_services\_subnet\_cidr | Cidr range to use for gitlab GKE services subnet | `string` | `"10.2.0.0/16"` | no |
 | gke\_machine\_type | Machine type used for the node-pool | `string` | `"n1-standard-4"` | no |
-| gke\_version | Version of GKE to use for the GitLab cluster | `string` | `"1.20"` | no |
+| gke\_version | Version of GKE to use for the GitLab cluster | `string` | `"1.21"` | no |
 | helm\_chart\_version | Helm chart version to install during deployment | `string` | `"4.2.4"` | no |
-| project\_id | GCP Project to deploy resources | `any` | n/a | yes |
+| project\_id | GCP Project to deploy resources | `string` | n/a | yes |
 | region | GCP region to deploy resources to | `string` | `"us-central1"` | no |
 
 ## Outputs
