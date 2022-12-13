@@ -15,5 +15,5 @@
 ruby '2.7.1'
 
 source 'https://rubygems.org/' do
-  gem 'kitchen-terraform', '~> 5.5.0'
+  gem 'kitchen-terraform', '~> 5.8.0'
 end
