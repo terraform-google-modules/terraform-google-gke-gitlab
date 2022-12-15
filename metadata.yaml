@@ -1,0 +1,144 @@
+# Copyright 2022 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+apiVersion: blueprints.cloud.google.com/v1alpha1
+kind: BlueprintMetadata
+metadata:
+  name: terraform-google-gke-gitlab
+  annotations:
+    config.kubernetes.io/local-config: "true"
+spec:
+  title: terraform-google-gke-gitlab
+  source:
+    repo: https://github.com/terraform-google-modules/terraform-google-gke-gitlab
+    sourceType: git
+  version: 2.0.0
+  actuationTool:
+    type: Terraform
+    version: '>= 0.13.0'
+  examples:
+  - name: simple_example
+    location: examples/simple_example
+  variables:
+  - name: allow_force_destroy
+    description: Allows full cleanup of resources by disabling any deletion safe guards
+    type: bool
+    default: false
+    required: false
+  - name: certmanager_email
+    description: Email used to retrieve SSL certificates from Let's Encrypt
+    type: string
+    required: true
+  - name: domain
+    description: Domain for hosting gitlab functionality (ie mydomain.com would access gitlab at gitlab.mydomain.com)
+    type: string
+    default: ""
+    required: false
+  - name: gitlab_address_name
+    description: Name of the address to use for GitLab ingress
+    type: string
+    default: ""
+    required: false
+  - name: gitlab_db_name
+    description: Instance name for the GitLab Postgres database.
+    type: string
+    default: gitlab-db
+    required: false
+  - name: gitlab_db_password
+    description: Password for the GitLab Postgres user
+    type: string
+    default: ""
+    required: false
+  - name: gitlab_db_random_prefix
+    description: Sets random suffix at the end of the Cloud SQL instance name.
+    type: bool
+    default: false
+    required: false
+  - name: gitlab_deletion_protection
+    description: Must be false to allow Terraform to destroy the Cloud SQL instance.
+    type: bool
+    default: true
+    required: false
+  - name: gitlab_nodes_subnet_cidr
+    description: Cidr range to use for gitlab GKE nodes subnet
+    type: string
+    default: 10.0.0.0/16
+    required: false
+  - name: gitlab_pods_subnet_cidr
+    description: Cidr range to use for gitlab GKE pods subnet
+    type: string
+    default: 10.3.0.0/16
+    required: false
+  - name: gitlab_runner_install
+    description: Choose whether to install the gitlab runner in the cluster
+    type: bool
+    default: true
+    required: false
+  - name: gitlab_services_subnet_cidr
+    description: Cidr range to use for gitlab GKE services subnet
+    type: string
+    default: 10.2.0.0/16
+    required: false
+  - name: gke_machine_type
+    description: Machine type used for the node-pool
+    type: string
+    default: n1-standard-4
+    required: false
+  - name: gke_version
+    description: Version of GKE to use for the GitLab cluster
+    type: string
+    default: "1.21"
+    required: false
+  - name: helm_chart_version
+    description: Helm chart version to install during deployment
+    type: string
+    default: 4.2.4
+    required: false
+  - name: project_id
+    description: GCP Project to deploy resources
+    type: string
+    required: true
+  - name: region
+    description: GCP region to deploy resources to
+    type: string
+    default: us-central1
+    required: false
+  outputs:
+  - name: cluster_ca_certificate
+    description: CA Certificate for the GKE cluster that GitLab is deployed in.
+  - name: cluster_location
+    description: Location of the GKE cluster that GitLab is deployed in.
+  - name: cluster_name
+    description: Name of the GKE cluster that GitLab is deployed in.
+  - name: gitlab_address
+    description: IP address where you can connect to your GitLab instance
+  - name: gitlab_url
+    description: URL where you can access your GitLab instance
+  - name: host
+    description: Host for the GKE cluster that GitLab is deployed in.
+  - name: root_password_instructions
+    description: Instructions for getting the root user's password for initial setup
+  - name: token
+    description: Token for the GKE cluster that GitLab is deployed in.
+  roles:
+  - level: Project
+    roles:
+    - roles/owner
+  services:
+  - iam.googleapis.com
+  - serviceusage.googleapis.com
+  - compute.googleapis.com
+  - container.googleapis.com
+  - cloudresourcemanager.googleapis.com
+  - sqladmin.googleapis.com
