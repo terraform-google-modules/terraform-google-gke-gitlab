@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this
 project adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.0.0](https://github.com/terraform-google-modules/terraform-google-gke-gitlab/compare/v2.0.0...v3.0.0) (2022-12-29)
+
+
+### ⚠ BREAKING CHANGES
+
+* update TPG 3.49, modules, and GKE for CI ([#120](https://github.com/terraform-google-modules/terraform-google-gke-gitlab/issues/120))
+
+### Bug Fixes
+
+* **deps:** update terraform null to &gt;=2.1.2 [#114](https://github.com/terraform-google-modules/terraform-google-gke-gitlab/issues/114) ([1add08e](https://github.com/terraform-google-modules/terraform-google-gke-gitlab/commit/1add08e223b47eba09aaf3c67fc71269a7e10784))
+* **deps:** update terraform template to &gt;= 2.1.2 [#110](https://github.com/terraform-google-modules/terraform-google-gke-gitlab/issues/110) ([f0a6661](https://github.com/terraform-google-modules/terraform-google-gke-gitlab/commit/f0a6661a4e680218a7d95364c197671132d084b0))
+* update TPG 3.49, modules, and GKE for CI ([#120](https://github.com/terraform-google-modules/terraform-google-gke-gitlab/issues/120)) ([bd15808](https://github.com/terraform-google-modules/terraform-google-gke-gitlab/commit/bd158085005fa45bb975a85bf74f2d1a523ca4bb))
+
 ## [2.0.0](https://github.com/terraform-google-modules/terraform-google-gke-gitlab/compare/v1.0.0...v2.0.0) (2022-07-01)
 
 
