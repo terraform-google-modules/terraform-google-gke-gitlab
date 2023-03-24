@@ -517,6 +517,33 @@ variable "gitlab_enable_service_ping" {
   default     = true
 }
 
+variable "gitlab_enable_incoming_mail" {
+  type        = bool
+  description = "Enable Gitlab Incoming Mail Service"
+  default     = false
+}
+
+variable "gitlab_incoming_mail_address" {
+  type        = string
+  description = "Email Address for Incoming Mail Service "
+}
+
+variable "gitlab_incoming_imap_user" {
+  type        = string
+  description = "Imap server user for Incoming Mail Imap server"
+}
+
+variable "gitlab_incoming_imap_host" {
+  type        = string
+  description = "Imap server address for the Incoming Mail"
+}
+
+variable "gitlab_incoming_imap_port" {
+  type        = number
+  description = "Imap Port for the Incoming Mail Host"
+  default     = 993
+}
+
 # Peformance optimization. Max and min pod replicas for HPA.
 variable "gitlab_hpa_min_replicas_registry" {
   type        = number

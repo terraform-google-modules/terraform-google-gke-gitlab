@@ -610,6 +610,11 @@ locals {
       ENABLE_PROM_EXPORTER   = var.gitab_enable_prom_exporter
       GITALY_MAX_UNAVAILABLE = var.gitlab_gitaly_max_unavailable
       ENABLE_SERVICE_PING    = var.gitlab_enable_service_ping
+      ENABLE_INCOMING_MAIL   = var.gitlab_enable_incoming_mail
+      INC_MAIL_ADDR          = var.gitlab_incoming_mail_address
+      INC_MAIL_IMAP_HOST     = var.gitlab_incoming_imap_host
+      INC_MAIL_IMAP_PORT     = var.gitlab_incoming_imap_port
+      INC_MAIL_USER          = var.gitlab_incoming_imap_user
 
       #Bucket Names
       ARTIFACTS_BCKT    = google_storage_bucket.gitlab_bucket["artifacts"].name
