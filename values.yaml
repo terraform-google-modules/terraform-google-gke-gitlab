@@ -53,6 +53,19 @@ global:
     ## https://docs.gitlab.com/charts/charts/globals#cron-jobs-related-settings
     cron_jobs: {}
 
+     ## https://docs.gitlab.com/charts/charts/globals.html#incoming-email-settings
+    incomingEmail:
+      enabled: ${ENABLE_INCOMING_MAIL}
+      address: "${INC_MAIL_ADDR}"
+      host: "${INC_MAIL_IMAP_HOST}"
+      port: ${INC_MAIL_IMAP_PORT}
+      ssl: true
+      startTls: false
+      user: "${INC_MAIL_USER}"
+      password:
+        secret: gitlab-incomingmail-secret
+        key: password
+
     ## https://docs.gitlab.com/charts/charts/globals#lfs-artifacts-uploads-packages-external-mr-diffs-and-dependency-proxy
     object_store:
       enabled: true
