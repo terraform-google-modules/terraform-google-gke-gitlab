@@ -73,7 +73,7 @@ global:
       port: "${SERVICE_DESK_IMAP_PORT}"
       ssl: true
       startTls: false
-      user: "${SERVICE_DESK_MAIL_ADDR}"
+      user: "${SERVICE_DESK_MAIL_USER}"
       password:
         secret: gitlab-servicedesk-secret
         key: password
