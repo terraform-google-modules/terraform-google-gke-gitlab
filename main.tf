@@ -554,6 +554,34 @@ module "gitlab_omniauth_pass" {
   depends_on = [kubernetes_namespace.gitlab_namespace]
 }
 
+#Secret for Incoming Mail Pass
+module "gitlab_incomingmail_pass" {
+  source          = "./modules/secret_manager"
+  project         = var.project_id
+  region          = var.region
+  secret_id       = var.gcp_existing_incomingmail_secret_name
+  k8s_namespace   = var.gitlab_namespace
+  k8s_secret_name = "gitlab-incomingmail-secret"
+  k8s_secret_key  = "password"
+
+  count      = var.gitlab_enable_incoming_mail ? 1 : 0
+  depends_on = [kubernetes_namespace.gitlab_namespace]
+}
+
+#Secret for Service Desk Mail Pass
+module "gitlab_servicedesk_pass" {
+  source          = "./modules/secret_manager"
+  project         = var.project_id
+  region          = var.region
+  secret_id       = var.gcp_existing_servicedesk_secret_name
+  k8s_namespace   = var.gitlab_namespace
+  k8s_secret_name = "gitlab-servicedesk-secret"
+  k8s_secret_key  = "password"
+
+  count      = var.gitlab_enable_service_desk ? 1 : 0
+  depends_on = [kubernetes_namespace.gitlab_namespace]
+}
+
 data "google_compute_address" "gitlab" {
   name   = var.gitlab_address_name
   region = var.region
@@ -615,6 +643,11 @@ locals {
       INC_MAIL_IMAP_HOST     = var.gitlab_incoming_imap_host
       INC_MAIL_IMAP_PORT     = var.gitlab_incoming_imap_port
       INC_MAIL_USER          = var.gitlab_incoming_imap_user
+      ENABLE_SERVICE_DESK    = var.gitlab_enable_service_desk
+      SERVICE_DESK_MAIL_ADDR = var.gitlab_service_desk_mail_address
+      SERVIVE_DESK_IMAP_HOST = var.gitlab_service_desk_imap_host
+      SERVICE_DESK_IMAP_PORT = var.gitlab_service_desk_imap_port
+      SERVICE_DESK_MAIL_USER = var.gitlab_service_desk_imap_user
 
       #Bucket Names
       ARTIFACTS_BCKT    = google_storage_bucket.gitlab_bucket["artifacts"].name

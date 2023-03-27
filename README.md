@@ -39,7 +39,9 @@ Then perform the following commands on the root folder:
 | cloud\_nat\_min\_ports\_per\_vm | Minimum number of ports allocated to a VM from this NAT config. | `string` | `"64"` | no |
 | domain | Domain for hosting gitlab functionality (ie mydomain.com would access gitlab at gitlab.mydomain.com) | `string` | `""` | no |
 | gcp\_existing\_db\_secret\_name | Setup the GCP secret name where to retrieve the password value that will be used for postgres DB. In case an empty string is passed,a random value will be filled in a default gcp secret named gitlab-db-password | `string` | `""` | no |
+| gcp\_existing\_incomingmail\_secret\_name | Only if Incoming Mail is enabled. Setup the GCP secret name where to retrieve the configuration that will be used for Incoming Mail Configuration. | `string` | `""` | no |
 | gcp\_existing\_omniauth\_secret\_name | Only if Omniauth is enabled. Setup the GCP secret name where to retrieve the configuration that will be used for Omniauth Configuration. | `string` | `""` | no |
+| gcp\_existing\_servicedesk\_secret\_name | Only if Service Desk is enabled. Setup the GCP secret name where to retrieve the configuration that will be used for Service Desk Configuration. | `string` | `""` | no |
 | gcp\_existing\_smtp\_secret\_name | Only if STMP is enabled. Setup the GCP secret name where to retrieve the password value that will be used for Smtp Account. | `string` | `""` | no |
 | gcs\_bucket\_age\_backup\_sc\_change | When the backup lifecycle is enabled, set the number of days after the storage class changes | `number` | `30` | no |
 | gcs\_bucket\_allow\_force\_destroy | Allows full cleanup of buckets by disabling any deletion safe guards | `bool` | `false` | no |
@@ -63,6 +65,7 @@ Then perform the following commands on the root folder:
 | gitlab\_enable\_omniauth | Choose whether to enable Gitlab Omniauth integration. Default to false. | `bool` | `false` | no |
 | gitlab\_enable\_registry | Choose whether to enable Gitlab Container registry. Default to false. | `bool` | `false` | no |
 | gitlab\_enable\_restore\_pv | Enable additional storage for TAR Restoration creation of any appreciable size | `bool` | `false` | no |
+| gitlab\_enable\_service\_desk | Enable Gitlab Incoming Mail Service | `bool` | `false` | no |
 | gitlab\_enable\_service\_ping | Enable Gitlab Service Ping | `bool` | `true` | no |
 | gitlab\_enable\_smtp | Setup Gitlab email address to send email. | `bool` | `false` | no |
 | gitlab\_gitaly\_disk\_size | Setup persistent disk size for gitaly data in GB. Default 100 GB | `number` | `100` | no |
@@ -91,6 +94,10 @@ Then perform the following commands on the root folder:
 | gitlab\_namespace | Setup  the Kubernetes Namespace where to install gitlab | `string` | `"gitlab"` | no |
 | gitlab\_restore\_pv\_size | Set the size of the additional storage for Backup TAR Restoration Process | `number` | `100` | no |
 | gitlab\_schedule\_cron\_backup | Setup Cron Job for Gitlab Scheduled Backup using unix-cron string format. Default to '0 1 \* \* \*' (Everyday at 1 AM). | `string` | `"0 1 * * *"` | no |
+| gitlab\_service\_desk\_imap\_host | Imap server address for the Service Desk | `string` | n/a | yes |
+| gitlab\_service\_desk\_imap\_port | Imap Port for the Service Desk Mail Host | `number` | `993` | no |
+| gitlab\_service\_desk\_imap\_user | Imap server user for Service Desk Imap Service | `string` | n/a | yes |
+| gitlab\_service\_desk\_mail\_address | Email Address for Service Desk Service | `string` | n/a | yes |
 | gitlab\_smtp\_user | Setup email sender address for Gitlab smtp server to send emails. | `string` | `"user@example.com"` | no |
 | gitlab\_time\_zone | Setup timezone for gitlab containers | `string` | `"Europe/Rome"` | no |
 | gke\_cluster\_autoscaling | Setup Profile and Resources for Cluster Autoscaler - BALANCED (Default Profile) or OPTIMIZE UTILIZATION (Prioritize optimizing utilization of resources) | <pre>object({<br>    enabled             = bool<br>    autoscaling_profile = string<br>    min_cpu_cores       = number<br>    max_cpu_cores       = number<br>    min_memory_gb       = number<br>    max_memory_gb       = number<br>    gpu_resources       = list(object({ resource_type = string, minimum = number, maximum = number }))<br>  })</pre> | <pre>{<br>  "autoscaling_profile": "BALANCED",<br>  "enabled": false,<br>  "gpu_resources": [],<br>  "max_cpu_cores": 0,<br>  "max_memory_gb": 0,<br>  "min_cpu_cores": 0,<br>  "min_memory_gb": 0<br>}</pre> | no |

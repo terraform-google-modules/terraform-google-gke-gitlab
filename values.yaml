@@ -65,6 +65,18 @@ global:
       password:
         secret: gitlab-incomingmail-secret
         key: password
+    
+    serviceDeskEmail:
+      enabled: ${ENABLE_SERVICE_DESK}
+      address: "${SERVICE_DESK_MAIL_ADDR}"
+      host: "${SERVIVE_DESK_IMAP_HOST}"
+      port: "${SERVICE_DESK_IMAP_PORT}"
+      ssl: true
+      startTls: false
+      user: "${SERVICE_DESK_MAIL_ADDR}"
+      password:
+        secret: gitlab-servicedesk-secret
+        key: password
 
     ## https://docs.gitlab.com/charts/charts/globals#lfs-artifacts-uploads-packages-external-mr-diffs-and-dependency-proxy
     object_store:
