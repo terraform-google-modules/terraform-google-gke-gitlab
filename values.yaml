@@ -69,7 +69,7 @@ global:
     serviceDeskEmail:
       enabled: ${ENABLE_SERVICE_DESK}
       address: "${SERVICE_DESK_MAIL_ADDR}"
-      host: "${SERVIVE_DESK_IMAP_HOST}"
+      host: "${SERVICE_DESK_IMAP_HOST}"
       port: "${SERVICE_DESK_IMAP_PORT}"
       ssl: true
       startTls: false

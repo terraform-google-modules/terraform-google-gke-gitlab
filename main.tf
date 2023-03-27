@@ -645,7 +645,7 @@ locals {
       INC_MAIL_USER          = var.gitlab_incoming_imap_user
       ENABLE_SERVICE_DESK    = var.gitlab_enable_service_desk
       SERVICE_DESK_MAIL_ADDR = var.gitlab_service_desk_mail_address
-      SERVIVE_DESK_IMAP_HOST = var.gitlab_service_desk_imap_host
+      SERVICE_DESK_IMAP_HOST = var.gitlab_service_desk_imap_host
       SERVICE_DESK_IMAP_PORT = var.gitlab_service_desk_imap_port
       SERVICE_DESK_MAIL_USER = var.gitlab_service_desk_imap_user
 
