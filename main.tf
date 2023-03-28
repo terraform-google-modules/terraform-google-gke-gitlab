@@ -561,7 +561,7 @@ module "gitlab_incomingmail_pass" {
   region          = var.region
   secret_id       = var.gcp_existing_incomingmail_secret_name
   k8s_namespace   = var.gitlab_namespace
-  k8s_secret_name = "gitlab-incomingmail-secret"
+  k8s_secret_name = local.gitlab_incomingmail_k8ssecret
   k8s_secret_key  = "password"
 
   count      = var.gitlab_enable_incoming_mail ? 1 : 0
@@ -575,7 +575,7 @@ module "gitlab_servicedesk_pass" {
   region          = var.region
   secret_id       = var.gcp_existing_servicedesk_secret_name
   k8s_namespace   = var.gitlab_namespace
-  k8s_secret_name = "gitlab-servicedesk-secret"
+  k8s_secret_name = local.gitlab_servicedesk_k8ssecret
   k8s_secret_key  = "password"
 
   count      = var.gitlab_enable_service_desk ? 1 : 0
@@ -591,9 +591,11 @@ data "google_compute_address" "gitlab" {
 }
 
 locals {
-  gitlab_address   = var.gitlab_address_name == "" ? google_compute_address.gitlab[0].address : data.google_compute_address.gitlab[0].address
-  domain           = var.domain != "" ? var.domain : "${local.gitlab_address}.xip.io"
-  gitlab_smtp_user = var.gitlab_enable_smtp != false ? var.gitlab_smtp_user : ""
+  gitlab_address                = var.gitlab_address_name == "" ? google_compute_address.gitlab[0].address : data.google_compute_address.gitlab[0].address
+  domain                        = var.domain != "" ? var.domain : "${local.gitlab_address}.xip.io"
+  gitlab_smtp_user              = var.gitlab_enable_smtp != false ? var.gitlab_smtp_user : ""
+  gitlab_incomingmail_k8ssecret = var.gitlab_enable_incoming_mail != false ? var.gitlab_incoming_mail_k8s_secret : ""
+  gitlab_servicedesk_k8ssecret  = var.gitlab_enable_service_desk != false ? var.gitlab_service_desk_k8s_secret : ""
 
   monitoring_allowed_cidrs = distinct(
     concat(
@@ -605,49 +607,51 @@ locals {
   gitlab_release_helm_values = templatefile(
     "${path.module}/values.yaml",
     {
-      DOMAIN                 = local.domain
-      INGRESS_IP             = local.gitlab_address
-      DB_PRIVATE_IP          = google_sql_database_instance.gitlab_db.private_ip_address
-      REDIS_PRIVATE_IP       = google_redis_instance.gitlab.host
-      PROJECT_ID             = var.project_id
-      ENABLE_CERT_MANAGER    = var.gitlab_enable_certmanager
-      CERT_MANAGER_EMAIL     = var.certmanager_email
-      INSTALL_RUNNER         = var.gitlab_install_runner
-      INSTALL_INGRESS_NGINX  = var.gitlab_install_ingress_nginx
-      INSTALL_PROMETHEUS     = var.gitlab_install_prometheus
-      INSTALL_GRAFANA        = var.gitlab_install_grafana
-      INSTALL_KAS            = var.gitlab_install_kas
-      ENABLE_REGISTRY        = var.gitlab_enable_registry
-      ENABLE_CRON_BACKUP     = var.gitlab_enable_cron_backup
-      SCHEDULE_CRON_BACKUP   = var.gitlab_schedule_cron_backup
-      GITALY_PV_SIZE         = var.gitlab_gitaly_disk_size
-      PV_STORAGE_CLASS       = var.gke_storage_class
-      ENABLE_SMTP            = var.gitlab_enable_smtp
-      SMTP_USER              = local.gitlab_smtp_user
-      BACKUP_EXTRA           = var.gitlab_backup_extra_args
-      TIMEZONE               = var.gitlab_time_zone
-      ENABLE_OMNIAUTH        = var.gitlab_enable_omniauth
-      ENABLE_BACKUP_PV       = var.gitlab_enable_backup_pv
-      BACKUP_PV_SIZE         = var.gitlab_backup_pv_size
-      ENABLE_RESTORE_PV      = var.gitlab_enable_restore_pv
-      RESTORE_PV_SIZE        = var.gitlab_restore_pv_size
-      BACKUP_PV_SC           = var.gke_sc_gitlab_backup_disk
-      RESTORE_PV_SC          = var.gke_sc_gitlab_restore_disk
-      PV_MATCH_LABEL         = var.gke_gitaly_pv_labels
-      ENABLE_MIGRATIONS      = var.gitab_enable_migrations
-      ENABLE_PROM_EXPORTER   = var.gitab_enable_prom_exporter
-      GITALY_MAX_UNAVAILABLE = var.gitlab_gitaly_max_unavailable
-      ENABLE_SERVICE_PING    = var.gitlab_enable_service_ping
-      ENABLE_INCOMING_MAIL   = var.gitlab_enable_incoming_mail
-      INC_MAIL_ADDR          = var.gitlab_incoming_mail_address
-      INC_MAIL_IMAP_HOST     = var.gitlab_incoming_imap_host
-      INC_MAIL_IMAP_PORT     = var.gitlab_incoming_imap_port
-      INC_MAIL_USER          = var.gitlab_incoming_imap_user
-      ENABLE_SERVICE_DESK    = var.gitlab_enable_service_desk
-      SERVICE_DESK_MAIL_ADDR = var.gitlab_service_desk_mail_address
-      SERVICE_DESK_IMAP_HOST = var.gitlab_service_desk_imap_host
-      SERVICE_DESK_IMAP_PORT = var.gitlab_service_desk_imap_port
-      SERVICE_DESK_MAIL_USER = var.gitlab_service_desk_imap_user
+      DOMAIN                  = local.domain
+      INGRESS_IP              = local.gitlab_address
+      DB_PRIVATE_IP           = google_sql_database_instance.gitlab_db.private_ip_address
+      REDIS_PRIVATE_IP        = google_redis_instance.gitlab.host
+      PROJECT_ID              = var.project_id
+      ENABLE_CERT_MANAGER     = var.gitlab_enable_certmanager
+      CERT_MANAGER_EMAIL      = var.certmanager_email
+      INSTALL_RUNNER          = var.gitlab_install_runner
+      INSTALL_INGRESS_NGINX   = var.gitlab_install_ingress_nginx
+      INSTALL_PROMETHEUS      = var.gitlab_install_prometheus
+      INSTALL_GRAFANA         = var.gitlab_install_grafana
+      INSTALL_KAS             = var.gitlab_install_kas
+      ENABLE_REGISTRY         = var.gitlab_enable_registry
+      ENABLE_CRON_BACKUP      = var.gitlab_enable_cron_backup
+      SCHEDULE_CRON_BACKUP    = var.gitlab_schedule_cron_backup
+      GITALY_PV_SIZE          = var.gitlab_gitaly_disk_size
+      PV_STORAGE_CLASS        = var.gke_storage_class
+      ENABLE_SMTP             = var.gitlab_enable_smtp
+      SMTP_USER               = local.gitlab_smtp_user
+      BACKUP_EXTRA            = var.gitlab_backup_extra_args
+      TIMEZONE                = var.gitlab_time_zone
+      ENABLE_OMNIAUTH         = var.gitlab_enable_omniauth
+      ENABLE_BACKUP_PV        = var.gitlab_enable_backup_pv
+      BACKUP_PV_SIZE          = var.gitlab_backup_pv_size
+      ENABLE_RESTORE_PV       = var.gitlab_enable_restore_pv
+      RESTORE_PV_SIZE         = var.gitlab_restore_pv_size
+      BACKUP_PV_SC            = var.gke_sc_gitlab_backup_disk
+      RESTORE_PV_SC           = var.gke_sc_gitlab_restore_disk
+      PV_MATCH_LABEL          = var.gke_gitaly_pv_labels
+      ENABLE_MIGRATIONS       = var.gitab_enable_migrations
+      ENABLE_PROM_EXPORTER    = var.gitab_enable_prom_exporter
+      GITALY_MAX_UNAVAILABLE  = var.gitlab_gitaly_max_unavailable
+      ENABLE_SERVICE_PING     = var.gitlab_enable_service_ping
+      ENABLE_INCOMING_MAIL    = var.gitlab_enable_incoming_mail
+      INC_MAIL_ADDR           = var.gitlab_incoming_mail_address
+      INC_MAIL_IMAP_HOST      = var.gitlab_incoming_imap_host
+      INC_MAIL_IMAP_PORT      = var.gitlab_incoming_imap_port
+      INC_MAIL_USER           = var.gitlab_incoming_imap_user
+      INC_MAIL_K8S_SECRET     = local.gitlab_incomingmail_k8ssecret
+      ENABLE_SERVICE_DESK     = var.gitlab_enable_service_desk
+      SERVICE_DESK_MAIL_ADDR  = var.gitlab_service_desk_mail_address
+      SERVICE_DESK_IMAP_HOST  = var.gitlab_service_desk_imap_host
+      SERVICE_DESK_IMAP_PORT  = var.gitlab_service_desk_imap_port
+      SERVICE_DESK_MAIL_USER  = var.gitlab_service_desk_imap_user
+      SERVICE_DESK_K8S_SECRET = local.gitlab_servicedesk_k8ssecret
 
       #Bucket Names
       ARTIFACTS_BCKT    = google_storage_bucket.gitlab_bucket["artifacts"].name
