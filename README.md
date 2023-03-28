@@ -65,7 +65,7 @@ Then perform the following commands on the root folder:
 | gitlab\_enable\_omniauth | Choose whether to enable Gitlab Omniauth integration. Default to false. | `bool` | `false` | no |
 | gitlab\_enable\_registry | Choose whether to enable Gitlab Container registry. Default to false. | `bool` | `false` | no |
 | gitlab\_enable\_restore\_pv | Enable additional storage for TAR Restoration creation of any appreciable size | `bool` | `false` | no |
-| gitlab\_enable\_service\_desk | Enable Gitlab Incoming Mail Service | `bool` | `false` | no |
+| gitlab\_enable\_service\_desk | Enable Gitlab Service Desk | `bool` | `false` | no |
 | gitlab\_enable\_service\_ping | Enable Gitlab Service Ping | `bool` | `true` | no |
 | gitlab\_enable\_smtp | Setup Gitlab email address to send email. | `bool` | `false` | no |
 | gitlab\_gitaly\_disk\_size | Setup persistent disk size for gitaly data in GB. Default 100 GB | `number` | `100` | no |
@@ -80,10 +80,11 @@ Then perform the following commands on the root folder:
 | gitlab\_hpa\_min\_replicas\_shell | Set the minimum hpa pod replicas for the Gitlab Shell. | `number` | `2` | no |
 | gitlab\_hpa\_min\_replicas\_sidekiq | Set the minimum hpa pod replicas for the Gitlab sidekiq. | `number` | `1` | no |
 | gitlab\_hpa\_min\_replicas\_webservice | Set the minimum hpa pod replicas for the Gitlab webservice. | `number` | `2` | no |
-| gitlab\_incoming\_imap\_host | Imap server address for the Incoming Mail | `string` | n/a | yes |
+| gitlab\_incoming\_imap\_host | Imap server address for the Incoming Mail | `string` | `""` | no |
 | gitlab\_incoming\_imap\_port | Imap Port for the Incoming Mail Host | `number` | `993` | no |
-| gitlab\_incoming\_imap\_user | Imap server user for Incoming Mail Imap server | `string` | n/a | yes |
-| gitlab\_incoming\_mail\_address | Email Address for Incoming Mail Service | `string` | n/a | yes |
+| gitlab\_incoming\_imap\_user | Imap server user for Incoming Mail Imap server | `string` | `""` | no |
+| gitlab\_incoming\_mail\_address | Email Address for Incoming Mail Service | `string` | `""` | no |
+| gitlab\_incoming\_mail\_k8s\_secret | Kubernetes secret name for storing Incoming Mail account password | `string` | `"gitlab-incomingmail-secret"` | no |
 | gitlab\_install\_grafana | Choose whether to install a Grafana instance using the Gitlab chart. Default to false. | `bool` | `false` | no |
 | gitlab\_install\_ingress\_nginx | Choose whether to install the ingress nginx controller in the cluster. Default to true. | `bool` | `true` | no |
 | gitlab\_install\_kas | Choose whether to install the Gitlab agent server in the cluster. Default to false. | `bool` | `false` | no |
@@ -94,10 +95,11 @@ Then perform the following commands on the root folder:
 | gitlab\_namespace | Setup  the Kubernetes Namespace where to install gitlab | `string` | `"gitlab"` | no |
 | gitlab\_restore\_pv\_size | Set the size of the additional storage for Backup TAR Restoration Process | `number` | `100` | no |
 | gitlab\_schedule\_cron\_backup | Setup Cron Job for Gitlab Scheduled Backup using unix-cron string format. Default to '0 1 \* \* \*' (Everyday at 1 AM). | `string` | `"0 1 * * *"` | no |
-| gitlab\_service\_desk\_imap\_host | Imap server address for the Service Desk | `string` | n/a | yes |
+| gitlab\_service\_desk\_imap\_host | Imap server address for the Service Desk | `string` | `""` | no |
 | gitlab\_service\_desk\_imap\_port | Imap Port for the Service Desk Mail Host | `number` | `993` | no |
-| gitlab\_service\_desk\_imap\_user | Imap server user for Service Desk Imap Service | `string` | n/a | yes |
-| gitlab\_service\_desk\_mail\_address | Email Address for Service Desk Service | `string` | n/a | yes |
+| gitlab\_service\_desk\_imap\_user | Imap server user for Service Desk Imap Service | `string` | `""` | no |
+| gitlab\_service\_desk\_k8s\_secret | Kubernetes secret name for storing Service Desk Mail account password | `string` | `"gitlab-servicedesk-secret"` | no |
+| gitlab\_service\_desk\_mail\_address | Email Address for Service Desk Service | `string` | `""` | no |
 | gitlab\_smtp\_user | Setup email sender address for Gitlab smtp server to send emails. | `string` | `"user@example.com"` | no |
 | gitlab\_time\_zone | Setup timezone for gitlab containers | `string` | `"Europe/Rome"` | no |
 | gke\_cluster\_autoscaling | Setup Profile and Resources for Cluster Autoscaler - BALANCED (Default Profile) or OPTIMIZE UTILIZATION (Prioritize optimizing utilization of resources) | <pre>object({<br>    enabled             = bool<br>    autoscaling_profile = string<br>    min_cpu_cores       = number<br>    max_cpu_cores       = number<br>    min_memory_gb       = number<br>    max_memory_gb       = number<br>    gpu_resources       = list(object({ resource_type = string, minimum = number, maximum = number }))<br>  })</pre> | <pre>{<br>  "autoscaling_profile": "BALANCED",<br>  "enabled": false,<br>  "gpu_resources": [],<br>  "max_cpu_cores": 0,<br>  "max_memory_gb": 0,<br>  "min_cpu_cores": 0,<br>  "min_memory_gb": 0<br>}</pre> | no |

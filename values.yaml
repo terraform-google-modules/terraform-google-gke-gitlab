@@ -63,7 +63,7 @@ global:
       startTls: false
       user: "${INC_MAIL_USER}"
       password:
-        secret: gitlab-incomingmail-secret
+        secret: "${INC_MAIL_K8S_SECRET}"
         key: password
     
     serviceDeskEmail:
@@ -75,7 +75,7 @@ global:
       startTls: false
       user: "${SERVICE_DESK_MAIL_USER}"
       password:
-        secret: gitlab-servicedesk-secret
+        secret: "${SERVICE_DESK_K8S_SECRET}"
         key: password
 
     ## https://docs.gitlab.com/charts/charts/globals#lfs-artifacts-uploads-packages-external-mr-diffs-and-dependency-proxy

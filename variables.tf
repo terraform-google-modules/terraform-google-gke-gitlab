@@ -537,17 +537,20 @@ variable "gitlab_enable_incoming_mail" {
 
 variable "gitlab_incoming_mail_address" {
   type        = string
-  description = "Email Address for Incoming Mail Service "
+  description = "Email Address for Incoming Mail Service"
+  default     = ""
 }
 
 variable "gitlab_incoming_imap_user" {
   type        = string
   description = "Imap server user for Incoming Mail Imap server"
+  default     = ""
 }
 
 variable "gitlab_incoming_imap_host" {
   type        = string
   description = "Imap server address for the Incoming Mail"
+  default     = ""
 }
 
 variable "gitlab_incoming_imap_port" {
@@ -556,31 +559,46 @@ variable "gitlab_incoming_imap_port" {
   default     = 993
 }
 
+variable "gitlab_incoming_mail_k8s_secret" {
+  type        = string
+  description = "Kubernetes secret name for storing Incoming Mail account password"
+  default     = "gitlab-incomingmail-secret"
+}
+
 variable "gitlab_enable_service_desk" {
   type        = bool
-  description = "Enable Gitlab Incoming Mail Service"
+  description = "Enable Gitlab Service Desk"
   default     = false
 }
 
 variable "gitlab_service_desk_mail_address" {
   type        = string
-  description = "Email Address for Service Desk Service "
+  description = "Email Address for Service Desk Service"
+  default     = ""
 }
 
 variable "gitlab_service_desk_imap_user" {
   type        = string
   description = "Imap server user for Service Desk Imap Service"
+  default     = ""
 }
 
 variable "gitlab_service_desk_imap_host" {
   type        = string
   description = "Imap server address for the Service Desk"
+  default     = ""
 }
 
 variable "gitlab_service_desk_imap_port" {
   type        = number
   description = "Imap Port for the Service Desk Mail Host"
   default     = 993
+}
+
+variable "gitlab_service_desk_k8s_secret" {
+  type        = string
+  description = "Kubernetes secret name for storing Service Desk Mail account password"
+  default     = "gitlab-servicedesk-secret"
 }
 
 # Peformance optimization. Max and min pod replicas for HPA.
