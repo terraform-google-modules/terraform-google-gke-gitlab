@@ -593,7 +593,7 @@ data "google_compute_address" "gitlab" {
 locals {
   gitlab_address                = var.gitlab_address_name == "" ? google_compute_address.gitlab[0].address : data.google_compute_address.gitlab[0].address
   domain                        = var.domain != "" ? var.domain : "${local.gitlab_address}.xip.io"
-  gitlab_smtp_user              = var.gitlab_enable_smtp != false ? var.gitlab_smtp_user : ""
+  gitlab_smtp_user              = var.gitlab_enable_smtp ? var.gitlab_smtp_user : ""
   gitlab_incomingmail_k8ssecret = var.gitlab_enable_incoming_mail ? var.gitlab_incoming_mail_k8s_secret : ""
   gitlab_servicedesk_k8ssecret  = var.gitlab_enable_service_desk ? var.gitlab_service_desk_k8s_secret : ""
 
