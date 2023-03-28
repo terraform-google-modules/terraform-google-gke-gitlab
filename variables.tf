@@ -374,6 +374,18 @@ variable "gcp_existing_omniauth_secret_name" {
   default     = ""
 }
 
+variable "gcp_existing_incomingmail_secret_name" {
+  type        = string
+  description = "Only if Incoming Mail is enabled. Setup the GCP secret name where to retrieve the configuration that will be used for Incoming Mail Configuration."
+  default     = ""
+}
+
+variable "gcp_existing_servicedesk_secret_name" {
+  type        = string
+  description = "Only if Service Desk is enabled. Setup the GCP secret name where to retrieve the configuration that will be used for Service Desk Configuration."
+  default     = ""
+}
+
 variable "certmanager_email" {
   type        = string
   description = "Email used to retrieve SSL certificates from Let's Encrypt"
@@ -541,6 +553,33 @@ variable "gitlab_incoming_imap_host" {
 variable "gitlab_incoming_imap_port" {
   type        = number
   description = "Imap Port for the Incoming Mail Host"
+  default     = 993
+}
+
+variable "gitlab_enable_service_desk" {
+  type        = bool
+  description = "Enable Gitlab Incoming Mail Service"
+  default     = false
+}
+
+variable "gitlab_service_desk_mail_address" {
+  type        = string
+  description = "Email Address for Service Desk Service "
+}
+
+variable "gitlab_service_desk_imap_user" {
+  type        = string
+  description = "Imap server user for Service Desk Imap Service"
+}
+
+variable "gitlab_service_desk_imap_host" {
+  type        = string
+  description = "Imap server address for the Service Desk"
+}
+
+variable "gitlab_service_desk_imap_port" {
+  type        = number
+  description = "Imap Port for the Service Desk Mail Host"
   default     = 993
 }
 
