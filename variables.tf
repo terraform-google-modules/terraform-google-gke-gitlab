@@ -331,6 +331,11 @@ variable "gke_cluster_autoscaling" {
   }
 }
 
+variable "gke_location_policy" {
+  type        = string
+  description = "Location policy specifies the algorithm used when scaling-up the node pool. Location policy is supported only in 1.24.1+ clusters.Supported values BALANCED or ANY. Default BALANCED"
+  default     = "BALANCED"
+}
 ##################
 # GITLAB SECTION #
 ##################

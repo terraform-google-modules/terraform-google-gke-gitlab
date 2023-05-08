@@ -113,6 +113,7 @@ Then perform the following commands on the root folder:
 | gke\_gitaly\_pv\_labels | The GITALY Persistent Volume labels (a map of key/value pairs comma separeted) to match against when choosing a volume to bind. This is used in the PersistentVolumeClaim selector section | `map(string)` | `{}` | no |
 | gke\_google\_group\_rbac\_mail | The name of the RBAC security group for use with Google security groups in Kubernetes RBAC. Group name must be in format gke-security-groups@yourdomain.com | `string` | `"null"` | no |
 | gke\_istio\_auth | The authentication type between services in Istio | `string` | `"AUTH_MUTUAL_TLS"` | no |
+| gke\_location\_policy | Location policy specifies the algorithm used when scaling-up the node pool. Location policy is supported only in 1.24.1+ clusters.Supported values BALANCED or ANY. Default BALANCED | `string` | `"BALANCED"` | no |
 | gke\_machine\_type | Machine type used for the node-pool | `string` | `"n1-standard-4"` | no |
 | gke\_max\_node\_count | Define the maximum number of nodes of the autoscaling cluster. Default 5 | `number` | `5` | no |
 | gke\_min\_node\_count | Define the minimum number of nodes of the autoscaling cluster. Default 1 | `number` | `1` | no |
