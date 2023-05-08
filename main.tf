@@ -336,7 +336,7 @@ resource "google_storage_bucket_iam_binding" "gitlab_bucket_iam_binding_admin" {
 # GKE Cluster
 module "gke" {
   source  = "terraform-google-modules/kubernetes-engine/google//modules/beta-private-cluster"
-  version = "~> 23.0"
+  version = "~> 24.0"
 
   # Create an implicit dependency on service activation
   project_id = module.project_services.project_id
@@ -390,6 +390,7 @@ module "gke" {
       enable_pod_security_policy = false
       preemptible                = false
       autoscaling                = true
+      location_policy            = var.gke_location_policy
 
       #Image Streaming
       enable_gcfs = var.gke_enable_image_stream
