@@ -98,12 +98,12 @@ spec:
   - name: gke_version
     description: Version of GKE to use for the GitLab cluster
     type: string
-    default: "1.21"
+    default: "1.25"
     required: false
   - name: helm_chart_version
     description: Helm chart version to install during deployment
     type: string
-    default: 4.2.4
+    default: 7.0.1
     required: false
   - name: project_id
     description: GCP Project to deploy resources

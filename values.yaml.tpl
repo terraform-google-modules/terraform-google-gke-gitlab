@@ -85,7 +85,7 @@ gitlab:
     persistence:
       size: 200Gi
       storageClass: "pd-ssd"
-  task-runner:
+  toolbox:
     backups:
       objectStorage:
         backend: gcs

@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this
 project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.0.0](https://github.com/terraform-google-modules/terraform-google-gke-gitlab/compare/v2.0.0...v3.0.0) (2022-12-29)
+
+* update gitlab helm version to 7.0.1
+* modify helm values to use [gitlab.toolbox](https://gitlab.com/gitlab-org/charts/gitlab/-/issues/2832)
+* update postgres to version 12
+* update default kubernetes engine version to 1.25
+
 ## [3.0.0](https://github.com/terraform-google-modules/terraform-google-gke-gitlab/compare/v2.0.0...v3.0.0) (2022-12-29)
 
 
