@@ -132,6 +132,7 @@ global:
   ## If we do not set the legacy bucket name here, the registry is not included
   ## in the Gitlab backup archive.
   registry:
+    enabled: ${ENABLE_REGISTRY}
     bucket: ${REGISTRY_BCKT}
 
   ## https://docs.gitlab.com/charts/installation/deployment#outgoing-email
@@ -193,7 +194,6 @@ postgresql:
 ## https://docs.gitlab.com/charts/architecture/decisions#registry
 ## https://docs.gitlab.com/charts/charts/registry/
 registry:
-  enabled: ${ENABLE_REGISTRY}
   hpa:
     minReplicas: ${HPA_MIN_REPLICAS_REGISTRY}
     maxReplicas: ${HPA_MAX_REPLICAS_REGISTRY}
