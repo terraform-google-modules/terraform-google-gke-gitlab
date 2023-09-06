@@ -87,9 +87,10 @@ Then perform the following commands on the root folder:
 | gitlab\_incoming\_mail\_k8s\_secret | Kubernetes secret name for storing Incoming Mail account password | `string` | `"gitlab-incomingmail-secret"` | no |
 | gitlab\_install\_grafana | Choose whether to install a Grafana instance using the Gitlab chart. Default to false. | `bool` | `false` | no |
 | gitlab\_install\_ingress\_nginx | Choose whether to install the ingress nginx controller in the cluster. Default to true. | `bool` | `true` | no |
-| gitlab\_install\_kas | Choose whether to install the Gitlab agent server in the cluster. Default to false. | `bool` | `false` | no |
+| gitlab\_install\_kas | Choose whether to install the Gitlab agent server in the cluster. Default to false. If enabled with gitlab\_kas\_hostname variable empty, kas address will be defaulted to kas.<domain\_variable\_value> (i.e. for domain set to example.com, kas will be enabled to kas.example.com) | `bool` | `false` | no |
 | gitlab\_install\_prometheus | Choose whether to install a Prometheus instance using the Gitlab chart. Default to false. | `bool` | `false` | no |
 | gitlab\_install\_runner | Choose whether to install the gitlab runner in the cluster | `string` | `true` | no |
+| gitlab\_kas\_hostname | Gitlab custom hostname KAS. If set, this hostname is used with domain set in domain variable (i.e. my\_kas\_hostname.example.com) | `string` | `""` | no |
 | gitlab\_monitoring\_allowed\_cidrs | Set the list of the allowed CIDRs for the Gitlab monitoring paths (readiness, liveness and metrics). | `list(string)` | `[]` | no |
 | gitlab\_monitoring\_restrict\_to\_pod\_subnet | Restricrt access to the Gitlab monitoring paths (readiness, liveness and metrics) to the pod cidr. If you specify the 'gitlab\_monitoring\_allowed\_cidrs' list, the pod subnet will be automatically added to the list to grant access to the probes. | `bool` | `true` | no |
 | gitlab\_namespace | Setup  the Kubernetes Namespace where to install gitlab | `string` | `"gitlab"` | no |
