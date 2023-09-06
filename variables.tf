@@ -422,8 +422,14 @@ variable "gitlab_install_ingress_nginx" {
 
 variable "gitlab_install_kas" {
   type        = bool
-  description = "Choose whether to install the Gitlab agent server in the cluster. Default to false."
+  description = "Choose whether to install the Gitlab agent server in the cluster. Default to false. If enabled with gitlab_kas_hostname variable empty, kas address will be defaulted to kas.<domain_variable_value> (i.e. for domain set to example.com, kas will be enabled to kas.example.com)"
   default     = false
+}
+
+variable "gitlab_kas_hostname" {
+  type        = string
+  description = "Gitlab custom hostname KAS. If set, this hostname is used with domain set in domain variable (i.e. my_kas_hostname.example.com)"
+  default     = ""
 }
 
 variable "gitlab_enable_certmanager" {

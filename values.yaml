@@ -7,6 +7,8 @@ global:
     gitlab: {}
     externalIP: ${INGRESS_IP}
     ssh: ~
+    kas:
+      name: ${KAS_DOMAIN}
 
   ## doc/charts/globals.md#configure-ingress-settings
   ingress:

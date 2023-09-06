@@ -594,6 +594,7 @@ data "google_compute_address" "gitlab" {
 locals {
   gitlab_address                = var.gitlab_address_name == "" ? google_compute_address.gitlab[0].address : data.google_compute_address.gitlab[0].address
   domain                        = var.domain != "" ? var.domain : "${local.gitlab_address}.xip.io"
+  kas_domain                    = var.gitlab_kas_hostname != "" ? "${var.gitlab_kas_hostname}.${local.domain}" : ""
   gitlab_smtp_user              = var.gitlab_enable_smtp ? var.gitlab_smtp_user : ""
   gitlab_incomingmail_k8ssecret = var.gitlab_enable_incoming_mail ? var.gitlab_incoming_mail_k8s_secret : ""
   gitlab_servicedesk_k8ssecret  = var.gitlab_enable_service_desk ? var.gitlab_service_desk_k8s_secret : ""
@@ -653,6 +654,7 @@ locals {
       SERVICE_DESK_IMAP_PORT  = var.gitlab_service_desk_imap_port
       SERVICE_DESK_MAIL_USER  = var.gitlab_service_desk_imap_user
       SERVICE_DESK_K8S_SECRET = local.gitlab_servicedesk_k8ssecret
+      KAS_DOMAIN              = local.kas_domain
 
       #Bucket Names
       ARTIFACTS_BCKT    = google_storage_bucket.gitlab_bucket["artifacts"].name
