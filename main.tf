@@ -60,6 +60,33 @@ locals {
 
   subnet_name_pod_cidr     = "gitlab-cluster-pod-cidr"
   subnet_name_service_cidr = "gitlab-cluster-service-cidr"
+
+  gke_gitlab_node_pool = [{
+    name                       = var.gke_node_pool_name
+    description                = var.gke_node_pool_description
+    machine_type               = var.gke_machine_type
+    node_count                 = var.gke_node_count
+    min_count                  = var.gke_min_node_count
+    max_count                  = var.gke_max_node_count
+    disk_size_gb               = var.gke_disk_size_gb
+    disk_type                  = var.gke_disk_type
+    image_type                 = var.gke_image_type
+    auto_repair                = var.gke_auto_repair
+    auto_upgrade               = var.gke_auto_upgrade
+    cloudrun                   = var.gke_enable_cloudrun
+    enable_pod_security_policy = var.gke_enable_pod_security_policy
+    preemptible                = var.gke_preemptible
+    autoscaling                = var.gke_auto_scaling
+    location_policy            = var.gke_location_policy
+
+    #Image Streaming
+    enable_gcfs = var.gke_enable_image_stream
+  }]
+
+  gke_node_pools = concat(
+    local.gke_gitlab_node_pool,
+    var.gke_additional_node_pools
+  )
 }
 
 resource "random_id" "postgres_suffix" {
@@ -70,7 +97,7 @@ resource "random_id" "postgres_suffix" {
 # Services
 module "project_services" {
   source  = "terraform-google-modules/project-factory/google//modules/project_services"
-  version = "~> 13.0"
+  version = "~> 14.3.0"
 
   project_id                  = var.project_id
   disable_services_on_destroy = false
@@ -138,7 +165,7 @@ resource "random_id" "cloudnat_suffix" {
 
 module "cloud_nat" {
   source        = "terraform-google-modules/cloud-nat/google"
-  version       = "~> 2.2.0"
+  version       = "~> 4.1.0"
   project_id    = var.project_id
   region        = var.region
   router        = format("%s-router", var.project_id)
@@ -336,7 +363,7 @@ resource "google_storage_bucket_iam_binding" "gitlab_bucket_iam_binding_admin" {
 # GKE Cluster
 module "gke" {
   source  = "terraform-google-modules/kubernetes-engine/google//modules/beta-private-cluster"
-  version = "~> 24.0"
+  version = "~> 27.0.0"
 
   # Create an implicit dependency on service activation
   project_id = module.project_services.project_id
@@ -373,32 +400,13 @@ module "gke" {
 
   cluster_autoscaling = var.gke_cluster_autoscaling
 
-  node_pools = [
-    {
-      name                       = "gitlab"
-      description                = "Gitlab Cluster"
-      machine_type               = var.gke_machine_type
-      node_count                 = 1
-      min_count                  = var.gke_min_node_count
-      max_count                  = var.gke_max_node_count
-      disk_size_gb               = 100
-      disk_type                  = "pd-balanced"
-      image_type                 = "COS_CONTAINERD"
-      auto_repair                = true
-      auto_upgrade               = true
-      cloudrun                   = var.gke_enable_cloudrun
-      enable_pod_security_policy = false
-      preemptible                = false
-      autoscaling                = true
-      location_policy            = var.gke_location_policy
+  node_pools = local.gke_node_pools
 
-      #Image Streaming
-      enable_gcfs = var.gke_enable_image_stream
-    },
-  ]
+  gce_pd_csi_driver = var.gke_gce_pd_csi_driver
 
   cluster_resource_labels = var.gke_cluster_resource_labels
 
+  node_pools_taints = var.gke_node_pools_taints
   node_pools_oauth_scopes = {
     all = ["https://www.googleapis.com/auth/cloud-platform"]
   }
