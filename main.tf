@@ -60,33 +60,6 @@ locals {
 
   subnet_name_pod_cidr     = "gitlab-cluster-pod-cidr"
   subnet_name_service_cidr = "gitlab-cluster-service-cidr"
-
-  gke_gitlab_node_pool = [{
-    name                       = var.gke_node_pool_name
-    description                = var.gke_node_pool_description
-    machine_type               = var.gke_machine_type
-    node_count                 = var.gke_node_count
-    min_count                  = var.gke_min_node_count
-    max_count                  = var.gke_max_node_count
-    disk_size_gb               = var.gke_disk_size_gb
-    disk_type                  = var.gke_disk_type
-    image_type                 = var.gke_image_type
-    auto_repair                = var.gke_auto_repair
-    auto_upgrade               = var.gke_auto_upgrade
-    cloudrun                   = var.gke_enable_cloudrun
-    enable_pod_security_policy = var.gke_enable_pod_security_policy
-    preemptible                = var.gke_preemptible
-    autoscaling                = var.gke_auto_scaling
-    location_policy            = var.gke_location_policy
-
-    #Image Streaming
-    enable_gcfs = var.gke_enable_image_stream
-  }]
-
-  gke_node_pools = concat(
-    local.gke_gitlab_node_pool,
-    var.gke_additional_node_pools
-  )
 }
 
 resource "random_id" "postgres_suffix" {
@@ -400,7 +373,32 @@ module "gke" {
 
   cluster_autoscaling = var.gke_cluster_autoscaling
 
-  node_pools = local.gke_node_pools
+  node_pools = concat(
+    [
+      {
+        name                       = var.gke_node_pool_name
+        description                = var.gke_node_pool_description
+        machine_type               = var.gke_machine_type
+        node_count                 = var.gke_node_count
+        min_count                  = var.gke_min_node_count
+        max_count                  = var.gke_max_node_count
+        disk_size_gb               = var.gke_disk_size_gb
+        disk_type                  = var.gke_disk_type
+        image_type                 = var.gke_image_type
+        auto_repair                = var.gke_auto_repair
+        auto_upgrade               = var.gke_auto_upgrade
+        cloudrun                   = var.gke_enable_cloudrun
+        enable_pod_security_policy = var.gke_enable_pod_security_policy
+        preemptible                = var.gke_preemptible
+        autoscaling                = var.gke_auto_scaling
+        location_policy            = var.gke_location_policy
+
+        #Image Streaming
+        enable_gcfs = var.gke_enable_image_stream
+      },
+    ],
+    var.gke_additional_node_pools
+  )
 
   gce_pd_csi_driver = var.gke_gce_pd_csi_driver
 
