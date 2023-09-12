@@ -103,23 +103,37 @@ Then perform the following commands on the root folder:
 | gitlab\_service\_desk\_mail\_address | Email Address for Service Desk Service | `string` | `""` | no |
 | gitlab\_smtp\_user | Setup email sender address for Gitlab smtp server to send emails. | `string` | `"user@example.com"` | no |
 | gitlab\_time\_zone | Setup timezone for gitlab containers | `string` | `"Europe/Rome"` | no |
-| gke\_cluster\_autoscaling | Setup Profile and Resources for Cluster Autoscaler - BALANCED (Default Profile) or OPTIMIZE UTILIZATION (Prioritize optimizing utilization of resources) | <pre>object({<br>    enabled             = bool<br>    autoscaling_profile = string<br>    min_cpu_cores       = number<br>    max_cpu_cores       = number<br>    min_memory_gb       = number<br>    max_memory_gb       = number<br>    gpu_resources       = list(object({ resource_type = string, minimum = number, maximum = number }))<br>  })</pre> | <pre>{<br>  "autoscaling_profile": "BALANCED",<br>  "enabled": false,<br>  "gpu_resources": [],<br>  "max_cpu_cores": 0,<br>  "max_memory_gb": 0,<br>  "min_cpu_cores": 0,<br>  "min_memory_gb": 0<br>}</pre> | no |
+| gke\_additional\_node\_pools | Additional node pools to create in the cluster | `list(map(any))` | `[]` | no |
+| gke\_auto\_repair | Enable auto repair for the cluster. Default true | `bool` | `true` | no |
+| gke\_auto\_scaling | Enable auto scaling for the cluster. Default true | `bool` | `true` | no |
+| gke\_auto\_upgrade | Enable auto upgrade for the cluster. Default true | `bool` | `true` | no |
+| gke\_cluster\_autoscaling | Setup Profile and Resources for Cluster Autoscaler - BALANCED (Default Profile) or OPTIMIZE UTILIZATION (Prioritize optimizing utilization of resources) | <pre>object({<br>    enabled             = bool<br>    auto_repair         = bool<br>    auto_upgrade        = bool<br>    autoscaling_profile = string<br>    min_cpu_cores       = number<br>    max_cpu_cores       = number<br>    min_memory_gb       = number<br>    max_memory_gb       = number<br>    gpu_resources       = list(object({ resource_type = string, minimum = number, maximum = number }))<br>  })</pre> | <pre>{<br>  "auto_repair": true,<br>  "auto_upgrade": true,<br>  "autoscaling_profile": "BALANCED",<br>  "enabled": false,<br>  "gpu_resources": [],<br>  "max_cpu_cores": 0,<br>  "max_memory_gb": 0,<br>  "min_cpu_cores": 0,<br>  "min_memory_gb": 0<br>}</pre> | no |
 | gke\_cluster\_resource\_labels | The GCE resource labels (a map of key/value pairs) to be applied to the cluster | `map(string)` | `{}` | no |
 | gke\_datapath | The desired datapath provider for this cluster. By default, DATAPATH\_PROVIDER\_UNSPECIFIED enables the IPTables-based kube-proxy implementation. ADVANCED\_DATAPATH enables Dataplane-V2 feature. | `string` | `"DATAPATH_PROVIDER_UNSPECIFIED"` | no |
 | gke\_disk\_replication | Setup replication type for disk persistent volune. Possible values none or regional-pd. Default to none. | `string` | `"none"` | no |
+| gke\_disk\_size\_gb | Define the size of the disk of the cluster. Default 100 | `number` | `100` | no |
+| gke\_disk\_type | Define the type of the disk of the cluster. Default pd-balanced | `string` | `"pd-balanced"` | no |
 | gke\_enable\_backup\_agent | Whether Backup for GKE agent is enabled for this cluster. | `bool` | `false` | no |
 | gke\_enable\_cloudrun | Enable Google Cloudrun on GKE Cluster. Default false | `bool` | `false` | no |
 | gke\_enable\_image\_stream | Google Container File System (gcfs) has to be enabled for image streaming to be active. Needs image\_type to be set to COS\_CONTAINERD. | `bool` | `false` | no |
 | gke\_enable\_istio\_addon | Enable Istio addon | `bool` | `false` | no |
+| gke\_enable\_pod\_security\_policy | Enable Pod Security Policy for the cluster. Default false | `bool` | `false` | no |
+| gke\_gce\_pd\_csi\_driver | Enable GCE Persistent Disk CSI Driver for GKE Cluster. Default false | `bool` | `false` | no |
 | gke\_gitaly\_pv\_labels | The GITALY Persistent Volume labels (a map of key/value pairs comma separeted) to match against when choosing a volume to bind. This is used in the PersistentVolumeClaim selector section | `map(string)` | `{}` | no |
 | gke\_google\_group\_rbac\_mail | The name of the RBAC security group for use with Google security groups in Kubernetes RBAC. Group name must be in format gke-security-groups@yourdomain.com | `string` | `"null"` | no |
+| gke\_image\_type | Define the image type of the cluster. Default COS\_CONTAINERD | `string` | `"COS_CONTAINERD"` | no |
 | gke\_istio\_auth | The authentication type between services in Istio | `string` | `"AUTH_MUTUAL_TLS"` | no |
 | gke\_location\_policy | Location policy specifies the algorithm used when scaling-up the node pool. Location policy is supported only in 1.24.1+ clusters.Supported values BALANCED or ANY. Default BALANCED | `string` | `"BALANCED"` | no |
 | gke\_machine\_type | Machine type used for the node-pool | `string` | `"n1-standard-4"` | no |
 | gke\_max\_node\_count | Define the maximum number of nodes of the autoscaling cluster. Default 5 | `number` | `5` | no |
 | gke\_min\_node\_count | Define the minimum number of nodes of the autoscaling cluster. Default 1 | `number` | `1` | no |
+| gke\_node\_count | Define the number of nodes of the cluster. Default 1 | `number` | `1` | no |
+| gke\_node\_pool\_description | Description of the node pool for the GitLab cluster | `string` | `"Gitlab Cluster"` | no |
+| gke\_node\_pool\_name | Name of the node pool for the GitLab cluster | `string` | `"gitlab"` | no |
+| gke\_node\_pools\_taints | Map of lists containing node taints by node-pool name | `map(list(object({ key = string, value = string, effect = string })))` | <pre>{<br>  "gitlab": []<br>}</pre> | no |
 | gke\_nodes\_subnet\_cidr | Cidr range to use for gitlab GKE nodes subnet | `string` | `"10.10.0.0/16"` | no |
 | gke\_pods\_subnet\_cidr | Cidr range to use for gitlab GKE pods subnet | `string` | `"10.30.0.0/16"` | no |
+| gke\_preemptible | Enable preemptible nodes for the cluster. Default false | `bool` | `false` | no |
 | gke\_sc\_gitlab\_backup\_disk | Storage class for Perstistent Volume used for extra space in Backup Cron Job . Default pd-sdd. | `string` | `"standard"` | no |
 | gke\_sc\_gitlab\_restore\_disk | Storage class for Perstistent Volume used for extra space in Backup Restore Job. Default pd-sdd. | `string` | `"standard"` | no |
 | gke\_services\_subnet\_cidr | Cidr range to use for gitlab GKE services subnet | `string` | `"10.20.0.0/16"` | no |

@@ -183,6 +183,72 @@ variable "gcs_bucket_num_newer_version" {
 #  GKE SECTION   #
 ##################
 
+variable "gke_node_pool_name" {
+  type        = string
+  description = "Name of the node pool for the GitLab cluster"
+  default     = "gitlab"
+}
+
+variable "gke_node_pool_description" {
+  type        = string
+  description = "Description of the node pool for the GitLab cluster"
+  default     = "Gitlab Cluster"
+}
+
+variable "gke_node_count" {
+  type        = number
+  description = "Define the number of nodes of the cluster. Default 1"
+  default     = 1
+}
+
+variable "gke_disk_size_gb" {
+  type        = number
+  description = "Define the size of the disk of the cluster. Default 100"
+  default     = 100
+}
+
+variable "gke_disk_type" {
+  type        = string
+  description = "Define the type of the disk of the cluster. Default pd-balanced"
+  default     = "pd-balanced"
+}
+
+variable "gke_image_type" {
+  type        = string
+  description = "Define the image type of the cluster. Default COS_CONTAINERD"
+  default     = "COS_CONTAINERD"
+}
+
+variable "gke_auto_repair" {
+  type        = bool
+  description = "Enable auto repair for the cluster. Default true"
+  default     = true
+}
+
+variable "gke_auto_upgrade" {
+  type        = bool
+  description = "Enable auto upgrade for the cluster. Default true"
+  default     = true
+}
+
+variable "gke_enable_pod_security_policy" {
+  type        = bool
+  description = "Enable Pod Security Policy for the cluster. Default false"
+  default     = false
+}
+
+variable "gke_preemptible" {
+  type        = bool
+  description = "Enable preemptible nodes for the cluster. Default false"
+  default     = false
+}
+
+variable "gke_auto_scaling" {
+  type        = bool
+  description = "Enable auto scaling for the cluster. Default true"
+  default     = true
+}
+
 variable "gke_min_node_count" {
   type        = number
   description = "Define the minimum number of nodes of the autoscaling cluster. Default 1"
@@ -312,6 +378,8 @@ variable "gke_gitaly_pv_labels" {
 variable "gke_cluster_autoscaling" {
   type = object({
     enabled             = bool
+    auto_repair         = bool
+    auto_upgrade        = bool
     autoscaling_profile = string
     min_cpu_cores       = number
     max_cpu_cores       = number
@@ -323,6 +391,8 @@ variable "gke_cluster_autoscaling" {
   default = {
     "autoscaling_profile" : "BALANCED",
     "enabled" : false,
+    "auto_repair" : true,
+    "auto_upgrade" : true,
     "gpu_resources" : [],
     "max_cpu_cores" : 0,
     "max_memory_gb" : 0,
@@ -336,12 +406,32 @@ variable "gke_location_policy" {
   description = "Location policy specifies the algorithm used when scaling-up the node pool. Location policy is supported only in 1.24.1+ clusters.Supported values BALANCED or ANY. Default BALANCED"
   default     = "BALANCED"
 }
+
+variable "gke_additional_node_pools" {
+  type        = list(map(any))
+  description = "Additional node pools to create in the cluster"
+  default     = []
+}
+
+variable "gke_node_pools_taints" {
+  type        = map(list(object({ key = string, value = string, effect = string })))
+  description = "Map of lists containing node taints by node-pool name"
+  default = {
+    gitlab = []
+  }
+}
+
+variable "gke_gce_pd_csi_driver" {
+  type        = bool
+  description = "Enable GCE Persistent Disk CSI Driver for GKE Cluster. Default false"
+  default     = false
+}
+
 ##################
 # GITLAB SECTION #
 ##################
 
 # Gitlab Version Helm CHart
-
 variable "helm_chart_version" {
   type        = string
   default     = "5.9.3"
@@ -365,7 +455,6 @@ variable "gcp_existing_db_secret_name" {
   description = "Setup the GCP secret name where to retrieve the password value that will be used for postgres DB. In case an empty string is passed,a random value will be filled in a default gcp secret named gitlab-db-password"
   default     = ""
 }
-
 
 variable "gcp_existing_smtp_secret_name" {
   type        = string
