@@ -118,7 +118,7 @@ Then perform the following commands on the root folder:
 | gke\_enable\_image\_stream | Google Container File System (gcfs) has to be enabled for image streaming to be active. Needs image\_type to be set to COS\_CONTAINERD. | `bool` | `false` | no |
 | gke\_enable\_istio\_addon | Enable Istio addon | `bool` | `false` | no |
 | gke\_enable\_pod\_security\_policy | Enable Pod Security Policy for the cluster. Default false | `bool` | `false` | no |
-| gke\_gce\_pd\_csi\_driver | Enable GCE Persistent Disk CSI Driver for GKE Cluster. Default false | `bool` | `false` | no |
+| gke\_gce\_pd\_csi\_driver | Enable GCE Persistent Disk CSI Driver for GKE Cluster. Default true | `bool` | `true` | no |
 | gke\_gitaly\_pv\_labels | The GITALY Persistent Volume labels (a map of key/value pairs comma separeted) to match against when choosing a volume to bind. This is used in the PersistentVolumeClaim selector section | `map(string)` | `{}` | no |
 | gke\_google\_group\_rbac\_mail | The name of the RBAC security group for use with Google security groups in Kubernetes RBAC. Group name must be in format gke-security-groups@yourdomain.com | `string` | `"null"` | no |
 | gke\_image\_type | Define the image type of the cluster. Default COS\_CONTAINERD | `string` | `"COS_CONTAINERD"` | no |
