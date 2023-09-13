@@ -421,10 +421,11 @@ variable "gke_node_pools_taints" {
   }
 }
 
+# Migration from in-tree to CSI Driver: https://kubernetes.io/blog/2019/12/09/kubernetes-1-17-feature-csi-migration-beta/
 variable "gke_gce_pd_csi_driver" {
   type        = bool
-  description = "Enable GCE Persistent Disk CSI Driver for GKE Cluster. Default false"
-  default     = false
+  description = "Enable GCE Persistent Disk CSI Driver for GKE Cluster. Default true"
+  default     = true
 }
 
 ##################
