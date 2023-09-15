@@ -369,20 +369,6 @@ locals {
   domain         = var.domain != "" ? var.domain : "${local.gitlab_address}.nip.io"
 }
 
-data "template_file" "helm_values" {
-  template = file("${path.module}/values.yaml.tpl")
-
-  vars = {
-    DOMAIN                = local.domain
-    INGRESS_IP            = local.gitlab_address
-    DB_PRIVATE_IP         = google_sql_database_instance.gitlab_db.private_ip_address
-    REDIS_PRIVATE_IP      = google_redis_instance.gitlab.host
-    PROJECT_ID            = var.project_id
-    CERT_MANAGER_EMAIL    = var.certmanager_email
-    GITLAB_RUNNER_INSTALL = var.gitlab_runner_install
-  }
-}
-
 resource "time_sleep" "sleep_for_cluster_fix_helm_6361" {
   create_duration  = "180s"
   destroy_duration = "180s"
@@ -396,7 +382,15 @@ resource "helm_release" "gitlab" {
   version    = var.helm_chart_version
   timeout    = 1200
 
-  values = [data.template_file.helm_values.rendered]
+values = [templatefile("${path.module}/values.yaml.tpl", {
+  DOMAIN                = local.domain
+  INGRESS_IP            = local.gitlab_address
+  DB_PRIVATE_IP         = google_sql_database_instance.gitlab_db.private_ip_address
+  REDIS_PRIVATE_IP      = google_redis_instance.gitlab.host
+  PROJECT_ID            = var.project_id
+  CERT_MANAGER_EMAIL    = var.certmanager_email
+  GITLAB_RUNNER_INSTALL = var.gitlab_runner_install
+})]
 
   depends_on = [
     google_redis_instance.gitlab,
