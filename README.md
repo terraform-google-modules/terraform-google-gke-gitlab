@@ -32,7 +32,7 @@ Then perform the following commands on the root folder:
 - `terraform destroy` to destroy the built infrastructure
 
 
- <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Inputs
 
 | Name | Description | Type | Default | Required |
@@ -67,8 +67,7 @@ Then perform the following commands on the root folder:
 | host | Host for the GKE cluster that GitLab is deployed in. |
 | root\_password\_instructions | Instructions for getting the root user's password for initial setup |
 | token | Token for the GKE cluster that GitLab is deployed in. |
-
- <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
 ## Requirements
 
