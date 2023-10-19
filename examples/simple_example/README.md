@@ -15,6 +15,7 @@ This example illustrates how to use the `gke-gitlab` module.
 |------|-------------|
 | gitlab\_url | n/a |
 | root\_password\_instructions | n/a |
+
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
 To provision this example, run the following from within this directory:
