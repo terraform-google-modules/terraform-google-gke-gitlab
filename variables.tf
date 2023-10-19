@@ -33,7 +33,7 @@ variable "certmanager_email" {
 variable "gke_version" {
   description = "Version of GKE to use for the GitLab cluster"
   type        = string
-  default     = "1.21"
+  default     = "1.28"
 }
 
 variable "gke_machine_type" {
