@@ -15,7 +15,9 @@
  */
 
 module "gke-gitlab" {
-  source                     = "../../"
+  source  = "terraform-google-modules/gke-gitlab/google"
+  version = "~> 3.0"
+
   project_id                 = var.project_id
   certmanager_email          = "no-reply@${var.project_id}.example.com"
   gitlab_deletion_protection = false
