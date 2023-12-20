@@ -175,6 +175,9 @@ certmanager:
 ## Installation & configuration of charts/ingress-nginx:
 nginx-ingress:
   enabled: ${INSTALL_INGRESS_NGINX}
+  controller:
+    config:
+      ssl-reject-handshake: "true"
 
 ## Installation & configuration of stable/prometheus
 ## See requirements.yaml for current version
