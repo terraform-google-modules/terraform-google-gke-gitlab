@@ -68,7 +68,7 @@ Then perform the following commands on the root folder:
 | root\_password\_instructions | Instructions for getting the root user's password for initial setup |
 | token | Token for the GKE cluster that GitLab is deployed in. |
 
- <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
 ## Requirements
 
