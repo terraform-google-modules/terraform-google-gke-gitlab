@@ -205,6 +205,10 @@ resource "google_sql_database_instance" "gitlab_db" {
       require_ssl     = "true"
     }
 
+    insights_config {
+      query_insights_enabled  = false
+    } 
+
     backup_configuration {
       enabled    = var.postgresql_enable_backup
       start_time = var.postgresql_backup_start_time
