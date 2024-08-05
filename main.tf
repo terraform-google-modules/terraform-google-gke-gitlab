@@ -147,8 +147,10 @@ module "cloud_nat" {
   create_router = true
   # We force the endpoint independent mapping to false as described in this issue:
   # https://github.com/hashicorp/terraform-provider-google/issues/10609
-  enable_endpoint_independent_mapping = false
+  enable_endpoint_independent_mapping = var.cloud_nat_endpoint_independent_mapping
+  enable_dynamic_port_allocation      = var.cloud_nat_dynamic_port_allocation
   min_ports_per_vm                    = var.cloud_nat_min_ports_per_vm
+  max_ports_per_vm                    = var.cloud_nat_max_ports_per_vm
   log_config_enable                   = var.cloud_nat_log_config_enable
   log_config_filter                   = var.cloud_nat_log_config_filter
 }
