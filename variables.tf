@@ -781,10 +781,28 @@ variable "gitlab_gitaly_max_unavailable" {
   default     = 0
 }
 
+variable "cloud_nat_endpoint_independent_mapping" {
+  type        = bool
+  description = "Specifies if endpoint independent mapping is enabled."
+  default     = false
+}
+
 variable "cloud_nat_min_ports_per_vm" {
   type        = string
   description = "Minimum number of ports allocated to a VM from this NAT config."
   default     = "64"
+}
+
+variable "cloud_nat_max_ports_per_vm" {
+  type        = string
+  description = "Maximum number of ports allocated to a VM from this NAT. This field can only be set when cloud_nat_dynamic_port_allocation is enabled.This will be ignored if cloud_nat_dynamic_port_allocation is set to false."
+  default     = null
+}
+
+variable "cloud_nat_dynamic_port_allocation" {
+  type        = bool
+  description = "Enable Dynamic Port Allocation. If cloud_nat_min_ports_per_vm is set, cloud_nat_min_ports_per_vm must be set to a power of two greater than or equal to 32."
+  default     = false
 }
 
 variable "cloud_nat_log_config_enable" {
