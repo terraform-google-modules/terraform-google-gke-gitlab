@@ -208,8 +208,8 @@ resource "google_sql_database_instance" "gitlab_db" {
     }
 
     insights_config {
-      query_insights_enabled  = false
-    } 
+      query_insights_enabled = false
+    }
 
     backup_configuration {
       enabled    = var.postgresql_enable_backup
@@ -327,6 +327,12 @@ resource "google_storage_bucket" "gitlab_bucket" {
         age                   = var.gcs_bucket_backup_duration
         matches_storage_class = [var.gcs_bucket_target_storage_class]
       }
+    }
+  }
+  dynamic "soft_delete_policy" {
+    for_each = var.gcs_bucket_soft_delete_retention >= 604800 && var.gcs_bucket_soft_delete_retention <= 7776000 ? [1] : []
+    content {
+      retention_duration_seconds = var.gcs_bucket_soft_delete_retention
     }
   }
 }
