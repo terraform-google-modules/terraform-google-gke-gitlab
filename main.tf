@@ -330,7 +330,7 @@ resource "google_storage_bucket" "gitlab_bucket" {
     }
   }
   dynamic "soft_delete_policy" {
-    for_each = var.gcs_bucket_soft_delete_retention >= 604800 && var.gcs_bucket_soft_delete_retention <= 7776000 ? [1] : []
+    for_each = var.gcs_bucket_soft_delete_retention == 0 || (var.gcs_bucket_soft_delete_retention >= 604800 && var.gcs_bucket_soft_delete_retention <= 7776000) ? [1] : []
     content {
       retention_duration_seconds = var.gcs_bucket_soft_delete_retention
     }
