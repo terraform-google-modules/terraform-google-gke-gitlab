@@ -143,6 +143,16 @@ variable "gcs_bucket_versioning" {
   default     = true
 }
 
+variable "gcs_bucket_soft_delete_retention" {
+  type        = number
+  description = "The duration in seconds that soft-deleted objects in the bucket will be retained and cannot be permanently deleted.The value must be in between 604800(7 days) and 7776000(90 days). Note: To disable the soft delete policy on a bucket, This field must be set to 0"
+  default     = 0
+  validation {
+    condition     = var.gcs_bucket_soft_delete_retention == 0 || (var.gcs_bucket_soft_delete_retention >= 604800 && var.gcs_bucket_soft_delete_retention <= 7776000)
+    error_message = "The value must be in between 604800(7 days) and 7776000(90 days).To turn off this feature this field must be set to 0."
+  }
+}
+
 variable "gcs_bucket_enable_backup_lifecycle_rule" {
   type        = bool
   description = "Enable lifecycle rule for backup bucket"
