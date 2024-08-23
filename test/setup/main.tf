@@ -16,7 +16,7 @@
 
 module "gke-gitlab-proj" {
   source  = "terraform-google-modules/project-factory/google"
-  version = "~> 14.0"
+  version = "~> 16.0"
 
   name                        = "ci-gitlab"
   random_project_id           = true
