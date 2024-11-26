@@ -660,6 +660,8 @@ locals {
       ENABLE_MIGRATIONS       = var.gitab_enable_migrations
       ENABLE_PROM_EXPORTER    = var.gitab_enable_prom_exporter
       GITALY_MAX_UNAVAILABLE  = var.gitlab_gitaly_max_unavailable
+      GITALY_REQUEST_CPU      = var.gitlab_gitaly_request_cpu
+      GITALY_REQUEST_MEMORY   = var.gitlab_gitaly_request_mem
       ENABLE_SERVICE_PING     = var.gitlab_enable_service_ping
       ENABLE_INCOMING_MAIL    = var.gitlab_enable_incoming_mail
       INC_MAIL_ADDR           = var.gitlab_incoming_mail_address

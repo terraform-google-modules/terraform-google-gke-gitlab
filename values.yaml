@@ -286,3 +286,7 @@ gitlab:
 %{ for key, value in PV_MATCH_LABEL ~}
         ${key}: ${value}
 %{ endfor ~}
+    resources:
+      requests:
+        cpu: ${GITALY_REQUEST_CPU}
+        memory: ${GITALY_REQUEST_MEMORY}
