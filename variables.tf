@@ -791,6 +791,26 @@ variable "gitlab_gitaly_max_unavailable" {
   default     = 0
 }
 
+variable "gitlab_gitaly_request_cpu" {
+  type        = string
+  description = "CPU request for gitaly POD. Measurement unit needs to be specified. Default 100m."
+  default     = "100m"
+  validation {
+    condition     = can(regex("^[0-9]+(m|\\.[0-9]+)$", var.gitlab_gitaly_request_cpu))
+    error_message = "CPU request must be a valid Kubernetes CPU value (e.g., 100m or 0.1)."
+  }
+}
+
+variable "gitlab_gitaly_request_mem" {
+  type        = string
+  description = "Memory request for gitaly POD. Measurement unit needs to be specified. Default 200Mi."
+  default     = "200Mi"
+  validation {
+    condition     = can(regex("^[0-9]+(Mi|Gi|Ti|Ki)$", var.gitlab_gitaly_request_mem))
+    error_message = "Memory request must be a valid Kubernetes memory value (e.g., 200Mi, 1Gi)."
+  }
+}
+
 variable "cloud_nat_endpoint_independent_mapping" {
   type        = bool
   description = "Specifies if endpoint independent mapping is enabled."
