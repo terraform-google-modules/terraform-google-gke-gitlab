@@ -70,7 +70,7 @@ resource "random_id" "postgres_suffix" {
 # Services
 module "project_services" {
   source  = "terraform-google-modules/project-factory/google//modules/project_services"
-  version = "~> 15.0.0"
+  version = "~> 17.0.0"
 
   project_id                  = var.project_id
   disable_services_on_destroy = false
@@ -138,7 +138,7 @@ resource "random_id" "cloudnat_suffix" {
 
 module "cloud_nat" {
   source        = "terraform-google-modules/cloud-nat/google"
-  version       = "~> 5.2.0"
+  version       = "~> 5.3.0"
   project_id    = var.project_id
   region        = var.region
   router        = format("%s-router", var.project_id)
@@ -349,7 +349,7 @@ resource "google_storage_bucket_iam_binding" "gitlab_bucket_iam_binding_admin" {
 # GKE Cluster
 module "gke" {
   source  = "terraform-google-modules/kubernetes-engine/google//modules/beta-private-cluster"
-  version = "~> 31.1.0"
+  version = "~> 34.0.0"
 
   # Create an implicit dependency on service activation
   project_id = module.project_services.project_id
