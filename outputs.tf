@@ -77,3 +77,8 @@ output "gitlab_namespace" {
   value       = var.gitlab_namespace
   description = "The namespace where Gitlab is installed."
 }
+
+output "gke_service_account" {
+  value       = module.gke.service_account
+  description = "The service account used by the GKE cluster."
+}
