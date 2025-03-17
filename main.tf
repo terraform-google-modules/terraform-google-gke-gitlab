@@ -418,6 +418,7 @@ module "gke" {
   cluster_resource_labels = var.gke_cluster_resource_labels
 
   node_pools_taints = var.gke_node_pools_taints
+  node_pools_labels = var.gke_node_pools_labels
   node_pools_oauth_scopes = {
     all = ["https://www.googleapis.com/auth/cloud-platform"]
   }
@@ -676,6 +677,8 @@ locals {
       SERVICE_DESK_MAIL_USER  = var.gitlab_service_desk_imap_user
       SERVICE_DESK_K8S_SECRET = local.gitlab_servicedesk_k8ssecret
       KAS_DOMAIN              = local.kas_domain
+      BACKUP_JOB_NODESELECTOR = var.gitlab_backup_job_nodeselector
+      BACKUP_JOB_TOLERATIONS  = var.gitlab_backup_job_tolerations
 
       #Bucket Names
       ARTIFACTS_BCKT    = google_storage_bucket.gitlab_bucket["artifacts"].name
