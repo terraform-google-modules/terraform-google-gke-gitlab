@@ -266,6 +266,21 @@ gitlab:
           enabled: ${ENABLE_BACKUP_PV}
           storageClass: ${BACKUP_PV_SC}
           size: "${BACKUP_PV_SIZE}Gi"
+%{ if length(BACKUP_JOB_TOLERATIONS) > 0 ~}
+        tolerations:
+%{ for toleration in BACKUP_JOB_TOLERATIONS ~}
+        - key: ${toleration.key}
+          value: ${toleration.value}
+          operator: ${toleration.operator}
+          effect: ${toleration.effect}
+%{ endfor ~}
+%{ endif ~}
+%{ if length(BACKUP_JOB_NODESELECTOR) > 0 ~}
+        nodeSelector:
+%{ for key, value in BACKUP_JOB_NODESELECTOR ~}
+          ${key}: ${value}
+%{ endfor ~}
+%{ endif ~}
       objectStorage:
         backend: gcs
         config:

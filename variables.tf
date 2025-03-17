@@ -431,6 +431,15 @@ variable "gke_node_pools_taints" {
   }
 }
 
+variable "gke_node_pools_labels" {
+  type        = map(map(string))
+  description = "Map of maps containing node labels by node-pool name"
+  default = {
+    all               = {}
+    default-node-pool = {}
+  }
+}
+
 # Migration from in-tree to CSI Driver: https://kubernetes.io/blog/2019/12/09/kubernetes-1-17-feature-csi-migration-beta/
 variable "gke_gce_pd_csi_driver" {
   type        = bool
@@ -845,4 +854,21 @@ variable "cloud_nat_log_config_filter" {
   type        = string
   description = "Specifies the desired filtering of logs on this NAT. Valid values are: 'ERRORS_ONLY', 'TRANSLATIONS_ONLY', 'ALL'."
   default     = "ALL"
+}
+
+variable "gitlab_backup_job_nodeselector" {
+  type        = map(string)
+  description = "Map of node selector labels for backup jobs"
+  default     = {}
+}
+
+variable "gitlab_backup_job_tolerations" {
+  description = "List of tolerations for backup jobs"
+  type = list(object({
+    key      = string
+    value    = string
+    operator = string
+    effect   = string
+  }))
+  default = []
 }
