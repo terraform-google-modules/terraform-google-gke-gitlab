@@ -60,6 +60,8 @@ Then perform the following commands on the root folder:
 | gitab\_enable\_prom\_exporter | Enable gitlab prometheus exporter | `bool` | `false` | no |
 | gitlab\_address\_name | Name of the address to use for GitLab ingress | `string` | `""` | no |
 | gitlab\_backup\_extra\_args | Add a string of extra arguments for the gitlab backup-utility. | `string` | `""` | no |
+| gitlab\_backup\_job\_nodeselector | Map of node selector labels for backup jobs | `map(string)` | `{}` | no |
+| gitlab\_backup\_job\_tolerations | List of tolerations for backup jobs | <pre>list(object({<br>    key      = string<br>    value    = string<br>    operator = string<br>    effect   = string<br>  }))</pre> | `[]` | no |
 | gitlab\_backup\_pv\_size | Set the size of the additional storage for Backup TAR Creation | `number` | `100` | no |
 | gitlab\_db\_name | Instance name for the GitLab Postgres database. | `string` | `"gitlab-db"` | no |
 | gitlab\_enable\_backup\_pv | Enable additional storage for TAR backup creation of any appreciable size | `bool` | `false` | no |
@@ -74,6 +76,8 @@ Then perform the following commands on the root folder:
 | gitlab\_enable\_smtp | Setup Gitlab email address to send email. | `bool` | `false` | no |
 | gitlab\_gitaly\_disk\_size | Setup persistent disk size for gitaly data in GB. Default 100 GB | `number` | `100` | no |
 | gitlab\_gitaly\_max\_unavailable | For PodDisruptionBudget, how many pods can be unavailable at one time for Gitaly StatefulSet | `number` | `0` | no |
+| gitlab\_gitaly\_request\_cpu | CPU request for gitaly POD. Measurement unit needs to be specified. Default 100m. | `string` | `"100m"` | no |
+| gitlab\_gitaly\_request\_mem | Memory request for gitaly POD. Measurement unit needs to be specified. Default 200Mi. | `string` | `"200Mi"` | no |
 | gitlab\_hpa\_max\_replicas\_kas | Set the maximum hpa pod replicas for the Gitlab Kas. | `number` | `10` | no |
 | gitlab\_hpa\_max\_replicas\_registry | Set the maximum hpa pod replicas for the Gitlab Registry. | `number` | `10` | no |
 | gitlab\_hpa\_max\_replicas\_shell | Set the maximum hpa pod replicas for the Gitlab Shell. | `number` | `10` | no |
@@ -95,6 +99,7 @@ Then perform the following commands on the root folder:
 | gitlab\_install\_prometheus | Choose whether to install a Prometheus instance using the Gitlab chart. Default to false. | `bool` | `false` | no |
 | gitlab\_install\_runner | Choose whether to install the gitlab runner in the cluster | `string` | `true` | no |
 | gitlab\_kas\_hostname | Gitlab custom hostname KAS. If set, this hostname is used with domain set in domain variable (i.e. my\_kas\_hostname.example.com) | `string` | `""` | no |
+| gitlab\_log\_level | Override the minimum log level for GitLab loggers. Valid values are either a value of 0 to 5, or the name of the log level | `string` | `""` | no |
 | gitlab\_monitoring\_allowed\_cidrs | Set the list of the allowed CIDRs for the Gitlab monitoring paths (readiness, liveness and metrics). | `list(string)` | `[]` | no |
 | gitlab\_monitoring\_restrict\_to\_pod\_subnet | Restricrt access to the Gitlab monitoring paths (readiness, liveness and metrics) to the pod cidr. If you specify the 'gitlab\_monitoring\_allowed\_cidrs' list, the pod subnet will be automatically added to the list to grant access to the probes. | `bool` | `true` | no |
 | gitlab\_namespace | Setup  the Kubernetes Namespace where to install gitlab | `string` | `"gitlab"` | no |
@@ -134,6 +139,7 @@ Then perform the following commands on the root folder:
 | gke\_node\_count | Define the number of nodes of the cluster. Default 1 | `number` | `1` | no |
 | gke\_node\_pool\_description | Description of the node pool for the GitLab cluster | `string` | `"Gitlab Cluster"` | no |
 | gke\_node\_pool\_name | Name of the node pool for the GitLab cluster | `string` | `"gitlab"` | no |
+| gke\_node\_pools\_labels | Map of maps containing node labels by node-pool name | `map(map(string))` | <pre>{<br>  "all": {},<br>  "default-node-pool": {}<br>}</pre> | no |
 | gke\_node\_pools\_taints | Map of lists containing node taints by node-pool name | `map(list(object({ key = string, value = string, effect = string })))` | <pre>{<br>  "gitlab": []<br>}</pre> | no |
 | gke\_nodes\_subnet\_cidr | Cidr range to use for gitlab GKE nodes subnet | `string` | `"10.10.0.0/16"` | no |
 | gke\_pods\_subnet\_cidr | Cidr range to use for gitlab GKE pods subnet | `string` | `"10.30.0.0/16"` | no |
@@ -174,6 +180,7 @@ Then perform the following commands on the root folder:
 | gitlab\_address | IP address where you can connect to your GitLab instance |
 | gitlab\_namespace | The namespace where Gitlab is installed. |
 | gitlab\_url | URL where you can access your GitLab instance |
+| gke\_service\_account | The service account used by the GKE cluster. |
 | root\_password\_instructions | Instructions for getting the root user's password for initial setup |
 | service\_account\_id | The id of the default service account |
 
