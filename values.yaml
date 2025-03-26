@@ -1,10 +1,6 @@
 # Values for gitlab/gitlab chart on GKE
 global:
   edition: ce
-%{ if LOG_LEVEL != "" ~}
-  extraEnv: 
-    GITLAB_LOG_LEVEL: ${LOG_LEVEL}
-%{ endif ~}
   hosts:
     domain: ${DOMAIN}
     https: true
@@ -164,6 +160,9 @@ global:
     PGSSLCERT: "/etc/gitlab/postgres/ssl/client-certificate.pem"
     PGSSLKEY: "/etc/gitlab/postgres/ssl/client-key.pem"
     PGSSLROOTCERT: "/etc/gitlab/postgres/ssl/server-ca.pem"
+%{ if LOG_LEVEL != "" ~}
+    GITLAB_LOG_LEVEL: ${LOG_LEVEL}
+%{ endif ~}
 
 ## Settings to for the Let's Encrypt ACME Issuer
 certmanager-issuer:
