@@ -1,6 +1,10 @@
 # Values for gitlab/gitlab chart on GKE
 global:
   edition: ce
+%{ if LOG_LEVEL != "" ~}
+  extraEnv: 
+    GITLAB_LOG_LEVEL: ${LOG_LEVEL}
+%{ endif ~}
   hosts:
     domain: ${DOMAIN}
     https: true

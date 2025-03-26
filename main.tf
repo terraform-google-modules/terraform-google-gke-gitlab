@@ -679,6 +679,7 @@ locals {
       KAS_DOMAIN              = local.kas_domain
       BACKUP_JOB_NODESELECTOR = var.gitlab_backup_job_nodeselector
       BACKUP_JOB_TOLERATIONS  = var.gitlab_backup_job_tolerations
+      LOG_LEVEL               = var.gitlab_log_level
 
       #Bucket Names
       ARTIFACTS_BCKT    = google_storage_bucket.gitlab_bucket["artifacts"].name

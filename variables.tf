@@ -872,3 +872,16 @@ variable "gitlab_backup_job_tolerations" {
   }))
   default = []
 }
+
+variable "gitlab_log_level" {
+  type        = string
+  description = "Override the minimum log level for GitLab loggers. Valid values are either a value of 0 to 5, or the name of the log level"
+  default     = ""
+  validation {
+    condition = contains([
+      "0", "1", "2", "3", "4", "5",
+      "debug", "info", "warn", "error", "fatal", "unknown"
+    ], lower(var.gitlab_log_level))
+    error_message = "Log level must be an integer between 0-5 or a valid log level (debug, info, warn, error, fatal, unknown). Case-insensitive."
+  }
+}
