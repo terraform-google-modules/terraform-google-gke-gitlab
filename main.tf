@@ -107,10 +107,11 @@ resource "google_compute_network" "gitlab" {
 }
 
 resource "google_compute_subnetwork" "subnetwork" {
-  name          = "gitlab"
-  ip_cidr_range = var.gke_nodes_subnet_cidr
-  region        = var.region
-  network       = google_compute_network.gitlab.self_link
+  name                     = "gitlab"
+  ip_cidr_range            = var.gke_nodes_subnet_cidr
+  region                   = var.region
+  network                  = google_compute_network.gitlab.self_link
+  private_ip_google_access = true
 
   secondary_ip_range {
     range_name    = local.subnet_name_pod_cidr
