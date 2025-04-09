@@ -82,3 +82,8 @@ output "gke_service_account" {
   value       = module.gke.service_account
   description = "The service account used by the GKE cluster."
 }
+
+output "gitlab_subnet_selflink" {
+  value       = google_compute_subnetwork.subnetwork.self_link
+  description = "The self link of the subnet used by the GKE cluster."
+}
