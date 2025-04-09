@@ -84,6 +84,6 @@ output "gke_service_account" {
 }
 
 output "gitlab_subnet_selflink" {
-  value       = google_compute_subnetwork.subnetwork
+  value       = google_compute_subnetwork.subnetwork.self_link
   description = "The self link of the subnet used by the GKE cluster."
 }
