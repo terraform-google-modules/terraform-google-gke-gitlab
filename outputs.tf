@@ -87,3 +87,8 @@ output "gitlab_subnet_selflink" {
   value       = google_compute_subnetwork.subnetwork.self_link
   description = "The self link of the subnet used by the GKE cluster."
 }
+
+output "gitlab_network_selflink" {
+  value       = google_compute_network.gitlab.self_link
+  description = "The self link of the network used by the GKE cluster."
+}
