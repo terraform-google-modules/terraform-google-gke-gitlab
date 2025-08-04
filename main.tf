@@ -195,12 +195,13 @@ resource "google_sql_database_instance" "gitlab_db" {
   deletion_protection = var.postgresql_del_protection
 
   settings {
-    tier              = var.postgresql_tier
-    availability_type = var.postgresql_availability_type
-    disk_size         = var.postgresql_disk_size
-    disk_type         = var.postgresql_disk_type
-    disk_autoresize   = true
-    user_labels       = var.gke_cluster_resource_labels
+    tier                        = var.postgresql_tier
+    availability_type           = var.postgresql_availability_type
+    disk_size                   = var.postgresql_disk_size
+    disk_type                   = var.postgresql_disk_type
+    disk_autoresize             = true
+    user_labels                 = var.gke_cluster_resource_labels
+    deletion_protection_enabled = var.postgresql_del_protection
 
     ip_configuration {
       ipv4_enabled    = "false"
