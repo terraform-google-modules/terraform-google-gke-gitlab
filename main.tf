@@ -638,6 +638,7 @@ locals {
       PROJECT_ID              = var.project_id
       ENABLE_CERT_MANAGER     = var.gitlab_enable_certmanager
       CERT_MANAGER_EMAIL      = var.certmanager_email
+      IMAGE_REGISTRY          = var.gitlab_image_registry
       INSTALL_RUNNER          = var.gitlab_install_runner
       INSTALL_INGRESS_NGINX   = var.gitlab_install_ingress_nginx
       INSTALL_PROMETHEUS      = var.gitlab_install_prometheus

@@ -88,6 +88,7 @@ Then perform the following commands on the root folder:
 | gitlab\_hpa\_min\_replicas\_shell | Set the minimum hpa pod replicas for the Gitlab Shell. | `number` | `2` | no |
 | gitlab\_hpa\_min\_replicas\_sidekiq | Set the minimum hpa pod replicas for the Gitlab sidekiq. | `number` | `1` | no |
 | gitlab\_hpa\_min\_replicas\_webservice | Set the minimum hpa pod replicas for the Gitlab webservice. | `number` | `2` | no |
+| gitlab\_image\_registry | The container registry to use for GitLab images | `string` | `"registry.gitlab.com"` | no |
 | gitlab\_incoming\_imap\_host | Imap server address for the Incoming Mail | `string` | `""` | no |
 | gitlab\_incoming\_imap\_port | Imap Port for the Incoming Mail Host | `number` | `993` | no |
 | gitlab\_incoming\_imap\_user | Imap server user for Incoming Mail Imap server | `string` | `""` | no |
@@ -179,6 +180,8 @@ Then perform the following commands on the root folder:
 | created\_bucket\_names | The list of the created buckets. |
 | gitlab\_address | IP address where you can connect to your GitLab instance |
 | gitlab\_namespace | The namespace where Gitlab is installed. |
+| gitlab\_network\_selflink | The self link of the network used by the GKE cluster. |
+| gitlab\_subnet\_selflink | The self link of the subnet used by the GKE cluster. |
 | gitlab\_url | URL where you can access your GitLab instance |
 | gke\_service\_account | The service account used by the GKE cluster. |
 | root\_password\_instructions | Instructions for getting the root user's password for initial setup |

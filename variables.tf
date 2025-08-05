@@ -885,3 +885,9 @@ variable "gitlab_log_level" {
     error_message = "Log level must be an integer between 0-5 or a valid log level (debug, info, warn, error, fatal, unknown). Case-insensitive."
   }
 }
+
+variable "gitlab_image_registry" {
+  type        = string
+  description = "The container registry to use for GitLab images"
+  default     = "registry.gitlab.com"
+}

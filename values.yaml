@@ -9,6 +9,19 @@ global:
     ssh: ~
     kas:
       name: ${KAS_DOMAIN}
+  communityImages:
+    # Default repositories used to pull Gitlab Community Edition images.
+    # See the image.repository and workhorse.repository template helpers.
+    migrations:
+      repository: ${IMAGE_REGISTRY}/gitlab-org/build/cng/gitlab-toolbox-ce
+    sidekiq:
+      repository: ${IMAGE_REGISTRY}/gitlab-org/build/cng/gitlab-sidekiq-ce
+    toolbox:
+      repository: ${IMAGE_REGISTRY}/gitlab-org/build/cng/gitlab-toolbox-ce
+    webservice:
+      repository: ${IMAGE_REGISTRY}/gitlab-org/build/cng/gitlab-webservice-ce
+    workhorse:
+      repository: ${IMAGE_REGISTRY}/gitlab-org/build/cng/gitlab-workhorse-ce
 
   ## doc/charts/globals.md#configure-ingress-settings
   ingress:
