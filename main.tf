@@ -212,8 +212,8 @@ resource "google_sql_database_instance" "gitlab_db" {
     dynamic "database_flags" {
       for_each = var.postgresql_database_flags
       content {
-        name  = database_flags.value.name
-        value = database_flags.value.value
+        name  = lookup(database_flags.value, "name", null)
+        value = lookup(database_flags.value, "value", null)
       }
     }
 
