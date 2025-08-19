@@ -209,6 +209,14 @@ resource "google_sql_database_instance" "gitlab_db" {
       require_ssl     = "true"
     }
 
+    dynamic "database_flags" {
+      for_each = var.postgresql_database_flags
+      content {
+        name  = database_flags.value.name
+        value = database_flags.value.value
+      }
+    }
+
     insights_config {
       query_insights_enabled = false
     }

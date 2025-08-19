@@ -154,6 +154,7 @@ Then perform the following commands on the root folder:
 | postgresql\_availability\_type | The availability type of the Cloud SQL instance, high availability (REGIONAL) or single zone (ZONAL). | `string` | `"REGIONAL"` | no |
 | postgresql\_backup\_retained\_count | Numeber of postgres backup to be retained. Default 30. | `number` | `"30"` | no |
 | postgresql\_backup\_start\_time | HH:MM format time indicating when postgres backup configuration starts. | `string` | `"02:00"` | no |
+| postgresql\_database\_flags | List of database flags for Cloud SQL instance. Each item must be an object with 'name' and 'value'. | <pre>list(object({<br>    name  = string<br>    value = string<br>  }))</pre> | `[]` | no |
 | postgresql\_db\_random\_suffix | Sets random suffix at the end of the Cloud SQL instance name. | `bool` | `false` | no |
 | postgresql\_del\_protection | Whether or not to allow Terraform to destroy the instance. Unless this field is set to false in Terraform state, a terraform destroy or terraform apply command that deletes the instance will fail. | `bool` | `true` | no |
 | postgresql\_disk\_size | he size of data disk, in GB. Size of a running instance cannot be reduced but can be increased. Default to 100 GB | `number` | `"100"` | no |
@@ -179,6 +180,8 @@ Then perform the following commands on the root folder:
 | created\_bucket\_names | The list of the created buckets. |
 | gitlab\_address | IP address where you can connect to your GitLab instance |
 | gitlab\_namespace | The namespace where Gitlab is installed. |
+| gitlab\_network\_selflink | The self link of the network used by the GKE cluster. |
+| gitlab\_subnet\_selflink | The self link of the subnet used by the GKE cluster. |
 | gitlab\_url | URL where you can access your GitLab instance |
 | gke\_service\_account | The service account used by the GKE cluster. |
 | root\_password\_instructions | Instructions for getting the root user's password for initial setup |

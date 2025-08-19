@@ -99,6 +99,16 @@ variable "postgresql_db_random_suffix" {
   default     = false
 }
 
+# Allow passing 0..N database flags (name/value pairs) for Cloud SQL instance
+variable "postgresql_database_flags" {
+  type = list(object({
+    name  = string
+    value = string
+  }))
+  description = "List of database flags for Cloud SQL instance. Each item must be an object with 'name' and 'value'."
+  default     = []
+}
+
 ####################
 #  REDIS SECTION   #
 ####################
