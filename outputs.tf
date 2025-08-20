@@ -92,3 +92,8 @@ output "gitlab_network_selflink" {
   value       = google_compute_network.gitlab.self_link
   description = "The self link of the network used by the GKE cluster."
 }
+
+output "gitlab_database_name" {
+  value       = google_sql_database_instance.gitlab_db.name
+  description = "The name of the Cloud SQL database instance used by GitLab."
+}
