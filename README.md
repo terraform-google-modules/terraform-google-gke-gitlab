@@ -179,6 +179,7 @@ Then perform the following commands on the root folder:
 | cluster\_name | Name of the GKE cluster that GitLab is deployed in. |
 | created\_bucket\_names | The list of the created buckets. |
 | gitlab\_address | IP address where you can connect to your GitLab instance |
+| gitlab\_database\_name | The name of the Cloud SQL database instance used by GitLab. |
 | gitlab\_namespace | The namespace where Gitlab is installed. |
 | gitlab\_network\_selflink | The self link of the network used by the GKE cluster. |
 | gitlab\_subnet\_selflink | The self link of the subnet used by the GKE cluster. |
