@@ -67,7 +67,7 @@ global:
       password:
         secret: "${INC_MAIL_K8S_SECRET}"
         key: password
-    
+
     serviceDeskEmail:
       enabled: ${ENABLE_SERVICE_DESK}
       address: "${SERVICE_DESK_MAIL_ADDR}"
@@ -168,10 +168,10 @@ global:
 certmanager-issuer:
   email: ${CERT_MANAGER_EMAIL}
 
-## Installation & configuration of jetstack/cert-manager
-## See requirements.yaml for current version
-certmanager:
-  install: ${ENABLE_CERT_MANAGER}
+## Installation of certmananger.
+## This value replaces `certmanager.install` to allow certmanager schema validation to pass.
+## See dependencies in Chart.yaml for current version
+installCertmanager: ${ENABLE_CERT_MANAGER}
 
 ## https://docs.gitlab.com/charts/charts/nginx/
 ## https://docs.gitlab.com/charts/architecture/decisions#nginx-ingress

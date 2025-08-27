@@ -464,8 +464,8 @@ variable "gke_gce_pd_csi_driver" {
 # Gitlab Version Helm CHart
 variable "helm_chart_version" {
   type        = string
-  default     = "5.9.3"
-  description = "Helm chart version to install during deployment - Default Gitlab 14.9.3"
+  default     = "9.2.4"
+  description = "Helm chart version to install during deployment - Default Gitlab 18.2.4"
 }
 
 variable "domain" {
