@@ -34,7 +34,7 @@ resource "random_id" "suffix" {
 
 module "gke_auth" {
   source  = "terraform-google-modules/kubernetes-engine/google//modules/auth"
-  version = "~> 24.0"
+  version = "~> 40.0"
 
   project_id   = module.project_services.project_id
   cluster_name = module.gke.name
@@ -247,7 +247,7 @@ resource "google_storage_bucket" "gitlab-runner-cache" {
 // GKE Cluster
 module "gke" {
   source  = "terraform-google-modules/kubernetes-engine/google"
-  version = "~> 24.0"
+  version = "~> 40.0"
 
   # Create an implicit dependency on service activation
   project_id = module.project_services.project_id
